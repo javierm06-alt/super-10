@@ -636,6 +636,50 @@
       }
     }
 
+    /* ═══════════════════════════════════════════════════════════
+       DESKTOP RESPONSIVE — 600px+
+    ═══════════════════════════════════════════════════════════ */
+    @media (min-width: 600px) {
+      /* Centra y limita el ancho máximo del contenido */
+      .header { padding: 12px 24px 10px; }
+      .header__top, .cat-bar { max-width: 960px; margin-left: auto; margin-right: auto; }
+
+      .greeting { max-width: 960px; margin-left: auto; margin-right: auto; }
+      .section__head { max-width: 960px; margin-left: auto; margin-right: auto; padding: 0 24px; }
+
+      /* Favoritos: grid en lugar de scroll horizontal */
+      .fav-scroll {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+        overflow-x: visible;
+        padding: 4px 24px 8px;
+        max-width: 960px;
+        margin: 0 auto;
+        gap: 16px;
+      }
+      .fav-scroll .product-card {
+        flex: unset;
+        width: auto;
+      }
+
+      /* Explorar: más columnas en desktop */
+      .explorar-grid {
+        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+        justify-content: unset;
+        max-width: 960px;
+        margin: 0 auto;
+        padding: 4px 24px 120px;
+        gap: 16px;
+      }
+
+      /* Cart drawer más ancho en desktop */
+      .cart-drawer { max-width: 480px; margin: 0 auto; }
+    }
+
+    @media (min-width: 960px) {
+      .fav-scroll, .explorar-grid { padding-left: 0; padding-right: 0; }
+    }
+
   </style>
 </head>
 <body>
