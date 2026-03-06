@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QR — Mi Tienda</title>
+  <link href="https://fonts.googleapis.com/css2?family=Varela+Round&family=Nunito+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Nunito Sans', sans-serif;
+      background: #fff;
+      min-height: 100vh;
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    .card {
+      display: flex; flex-direction: column; align-items: center;
+      gap: 24px; padding: 48px 40px;
+      max-width: 380px; width: 100%;
+    }
+
+    .brand { display: flex; align-items: center; gap: 10px; }
+    .brand__logo {
+      width: 44px; height: 44px;
+      background: #25a244; border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .brand__logo svg { width: 24px; height: 24px; }
+    .brand__name {
+      font-family: 'Varela Round', sans-serif;
+      font-size: 1.5rem; color: #1C1917;
+    }
+    .brand__name span { color: #25a244; }
+
+    .qr-wrap {
+      padding: 16px;
+      border: 3px solid #25a244;
+      border-radius: 20px;
+      background: #fff;
+    }
+    #qrcode canvas, #qrcode img { display: block; }
+
+    .caption {
+      text-align: center;
+      font-size: .95rem; color: #555; line-height: 1.5;
+      max-width: 260px;
+    }
+
+    .url-tag {
+      font-size: .75rem; color: #999;
+      word-break: break-all; text-align: center;
+      max-width: 300px;
+    }
+
+    .btn-print {
+      padding: 14px 36px;
+      background: #25a244; color: #fff;
+      font-family: 'Varela Round', sans-serif; font-size: 1rem;
+      border: none; border-radius: 12px; cursor: pointer;
+      display: flex; align-items: center; gap: 8px;
+      transition: background 150ms ease;
+    }
+    .btn-print:hover { background: #1e8a38; }
+    .btn-print svg { width: 18px; height: 18px; }
+
+    @media print {
+      .btn-print { display: none; }
+      body { background: #fff; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="card">
+
+  <div class="brand">
+    <div class="brand__logo" aria-hidden="true">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+           stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+        <line x1="3" y1="6" x2="21" y2="6"/>
+        <path d="M16 10a4 4 0 0 1-8 0"/>
+      </svg>
+    </div>
+    <h1 class="brand__name">Mi <span>Tienda</span></h1>
+  </div>
+
+  <div class="qr-wrap">
+    <div id="qrcode"></div>
+  </div>
+
+  <p class="caption">Escanea para ver nuestro catálogo y hacer tu pedido</p>
+
+  <p class="url-tag" id="urlTag"></p>
+
+  <button class="btn-print" onclick="window.print()">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+         stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="6 9 6 2 18 2 18 9"/>
+      <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/>
+      <rect x="6" y="14" width="12" height="8"/>
+    </svg>
+    Imprimir QR
+  </button>
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script>
+const TIENDA_URL = 'http://localhost:8080/tienda.html';
+
+document.getElementById('urlTag').textContent = TIENDA_URL;
+
+new QRCode(document.getElementById('qrcode'), {
+  text:          TIENDA_URL,
+  width:         256,
+  height:        256,
+  colorDark:     '#1C1917',
+  colorLight:    '#ffffff',
+  correctLevel:  QRCode.CorrectLevel.H
+});
+</script>
+</body>
+</html>

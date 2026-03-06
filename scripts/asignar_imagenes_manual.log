@@ -1,0 +1,329 @@
+10:11:45 [INFO] rembg listo (GPU/CUDA)
+10:11:45 [INFO] =================================================================
+10:11:45 [INFO]   ASIGNACIÓN MANUAL DE IMÁGENES
+10:11:45 [INFO]   6 producto(s) a procesar: [6, 9, 10, 12, 13, 14]
+10:11:45 [INFO] =================================================================
+10:11:46 [INFO] HTTP Request: GET https://dqrhqzdfzhkqpgawgjga.supabase.co/rest/v1/catalogo_productos?select=id%2Cnombre%2Ccategoria&id=in.%286%2C9%2C10%2C12%2C13%2C14%29 "HTTP/2 200 OK"
+10:11:46 [INFO] 
+[1/6] Frijol Negro La Sierra 560g (ID 6, Abarrotes)
+10:11:46 [INFO]   URL origen: https://i5.walmartimages.com.mx/gr/images/product-images/img_large/00750105019218L.jpg
+10:11:46 [ERROR]   Error descargando https://i5.walmartimages.com.mx/gr/images/product-images/img_large/0075010501921: 404 Client Error: Not Found for url: https://i5-mx.walmartimages.com/gr/images/product-images/img_large/00750105019218L.jpg
+10:11:46 [INFO] 
+[2/6] Jabón Roma 1kg (ID 9, Limpieza)
+10:11:46 [INFO]   URL origen: https://i5.walmartimages.com.mx/gr/images/product-images/img_large/00884860002419L.jpg
+10:11:47 [ERROR]   Error descargando https://i5.walmartimages.com.mx/gr/images/product-images/img_large/0088486000241: 404 Client Error: Not Found for url: https://i5-mx.walmartimages.com/gr/images/product-images/img_large/00884860002419L.jpg
+10:11:47 [INFO] 
+[3/6] Papel Higiénico Pétalo 4r (ID 10, Higiene)
+10:11:47 [INFO]   URL origen: https://i5.walmartimages.com.mx/gr/images/product-images/img_large/00750105563004L.jpg
+10:11:48 [ERROR]   Error descargando https://i5.walmartimages.com.mx/gr/images/product-images/img_large/0075010556300: 404 Client Error: Not Found for url: https://i5-mx.walmartimages.com/gr/images/product-images/img_large/00750105563004L.jpg
+10:11:48 [INFO] 
+[4/6] Azúcar Morena 1kg (ID 12, Abarrotes)
+10:11:48 [INFO]   URL origen: https://i5.walmartimages.com.mx/gr/images/product-images/img_large/00750590116008L.jpg
+10:11:49 [ERROR]   Error descargando https://i5.walmartimages.com.mx/gr/images/product-images/img_large/0075059011600: 404 Client Error: Not Found for url: https://i5-mx.walmartimages.com/gr/images/product-images/img_large/00750590116008L.jpg
+10:11:49 [INFO] 
+[5/6] Café Nescafé Clásico 120g (ID 13, Bebidas)
+10:11:49 [INFO]   URL origen: https://i5.walmartimages.com.mx/gr/images/product-images/img_large/00028000697976L.jpg
+10:11:50 [ERROR]   Error descargando https://i5.walmartimages.com.mx/gr/images/product-images/img_large/0002800069797: 404 Client Error: Not Found for url: https://i5-mx.walmartimages.com/gr/images/product-images/img_large/00028000697976L.jpg
+10:11:50 [INFO] 
+[6/6] Crema Lala 200ml (ID 14, Lácteos)
+10:11:50 [INFO]   URL origen: https://i5.walmartimages.com.mx/gr/images/product-images/img_large/00750105048966L.jpg
+10:11:50 [ERROR]   Error descargando https://i5.walmartimages.com.mx/gr/images/product-images/img_large/0075010504896: 404 Client Error: Not Found for url: https://i5-mx.walmartimages.com/gr/images/product-images/img_large/00750105048966L.jpg
+10:11:50 [INFO] 
+=================================================================
+10:11:50 [INFO]   RESUMEN
+10:11:50 [INFO]   OK     : 0 — IDs []
+10:11:50 [INFO]   ERROR  : 6 — IDs [6, 9, 10, 12, 13, 14]
+10:11:50 [INFO] =================================================================
+10:11:50 [INFO] Log completo en: asignar_imagenes_manual.log
+10:19:28 [INFO] rembg listo (GPU/CUDA)
+10:19:28 [INFO] =================================================================
+10:19:28 [INFO]   ASIGNACIÓN MANUAL — Scraping de páginas de producto
+10:19:28 [INFO]   6 producto(s): [6, 9, 10, 12, 13, 14]
+10:19:28 [INFO] =================================================================
+10:19:29 [INFO] HTTP Request: GET https://dqrhqzdfzhkqpgawgjga.supabase.co/rest/v1/catalogo_productos?select=id%2Cnombre%2Ccategoria&id=in.%286%2C9%2C10%2C12%2C13%2C14%29 "HTTP/2 200 OK"
+10:19:29 [INFO] 
+[1/6] ID 6 — Frijol Negro La Sierra 560g (Abarrotes)
+10:19:29 [INFO]   Página: https://despensa.bodegaaurrera.com.mx/ip/frijoles-bayos-la-sierra-refritos-580-g/00750105242043
+10:19:30 [INFO] Playwright/Chromium iniciado (headless)
+10:19:30 [INFO]   🌐 Abriendo página...
+10:19:53 [WARNING]   ⚠  No se encontró imagen con walmartimages.com: Page.wait_for_selector: Timeout 20000ms exceeded.
+Call log:
+  - waiting for locator("img[src*=\"walmartimages.com\"]") to be visible
+
+10:19:53 [INFO]   🏷  Nombre: Verifica tu identidad
+10:19:53 [ERROR]   No se pudo extraer imagen de la página
+10:19:53 [INFO] 
+[2/6] ID 9 — Jabón Roma 1kg (Limpieza)
+10:19:53 [INFO]   Página: https://despensa.bodegaaurrera.com.mx/ip/detergente-en-polvo-roma-multiusos-biodegradable-1-kg/00750102600460
+10:19:53 [INFO]   🌐 Abriendo página...
+10:20:14 [WARNING]   ⚠  No se encontró imagen con walmartimages.com: Page.wait_for_selector: Timeout 20000ms exceeded.
+Call log:
+  - waiting for locator("img[src*=\"walmartimages.com\"]") to be visible
+
+10:20:14 [INFO]   🏷  Nombre: Verifica tu identidad
+10:20:14 [ERROR]   No se pudo extraer imagen de la página
+10:20:14 [INFO] 
+[3/6] ID 10 — Papel Higiénico Pétalo 4r (Higiene)
+10:20:14 [INFO]   Página: https://despensa.bodegaaurrera.com.mx/ip/papel-higienico-petalo-maxi-plus-12-rollos-de-250-hojas-dobles/00750642566283
+10:20:14 [INFO]   🌐 Abriendo página...
+10:20:35 [WARNING]   ⚠  No se encontró imagen con walmartimages.com: Page.wait_for_selector: Timeout 20000ms exceeded.
+Call log:
+  - waiting for locator("img[src*=\"walmartimages.com\"]") to be visible
+
+10:20:35 [INFO]   🏷  Nombre: Verifica tu identidad
+10:20:35 [ERROR]   No se pudo extraer imagen de la página
+10:20:35 [INFO] 
+[4/6] ID 12 — Azúcar Morena 1kg (Abarrotes)
+10:20:35 [INFO]   Página: https://despensa.bodegaaurrera.com.mx/ip/azucar-morena-zulka-2-kg/00066144000005
+10:20:35 [INFO]   🌐 Abriendo página...
+10:20:55 [WARNING]   ⚠  No se encontró imagen con walmartimages.com: Page.wait_for_selector: Timeout 20000ms exceeded.
+Call log:
+  - waiting for locator("img[src*=\"walmartimages.com\"]") to be visible
+
+10:20:55 [INFO]   🏷  Nombre: Verifica tu identidad
+10:20:55 [ERROR]   No se pudo extraer imagen de la página
+10:20:55 [INFO] 
+[5/6] ID 13 — Café Nescafé Clásico 120g (Bebidas)
+10:20:55 [INFO]   Página: https://despensa.bodegaaurrera.com.mx/ip/cafe-soluble-nescafe-reserva-mexicana-verarica-50-g/00750105862415
+10:20:55 [INFO]   🌐 Abriendo página...
+10:21:16 [WARNING]   ⚠  No se encontró imagen con walmartimages.com: Page.wait_for_selector: Timeout 20000ms exceeded.
+Call log:
+  - waiting for locator("img[src*=\"walmartimages.com\"]") to be visible
+
+10:21:16 [INFO]   🏷  Nombre: Verifica tu identidad
+10:21:16 [ERROR]   No se pudo extraer imagen de la página
+10:21:16 [INFO] 
+[6/6] ID 14 — Crema Lala 200ml (Lácteos)
+10:21:16 [INFO]   Página: https://despensa.bodegaaurrera.com.mx/ip/crema-acida-lala-entera-200-ml/00750102051313
+10:21:16 [INFO]   🌐 Abriendo página...
+10:21:37 [WARNING]   ⚠  No se encontró imagen con walmartimages.com: Page.wait_for_selector: Timeout 20000ms exceeded.
+Call log:
+  - waiting for locator("img[src*=\"walmartimages.com\"]") to be visible
+
+10:21:37 [INFO]   🏷  Nombre: Verifica tu identidad
+10:21:37 [ERROR]   No se pudo extraer imagen de la página
+10:21:37 [INFO] 
+=================================================================
+10:21:37 [INFO]   RESUMEN
+10:21:37 [INFO]   OK     : 0 — IDs []
+10:21:37 [INFO]   ERROR  : 6 — IDs [6, 9, 10, 12, 13, 14]
+10:21:37 [INFO] =================================================================
+10:21:37 [INFO] Log completo en: asignar_imagenes_manual.log
+21:30:51 [INFO] rembg listo (GPU/CUDA)
+21:30:51 [INFO] =================================================================
+21:30:51 [INFO]   ASIGNACIÓN MANUAL — Scraping de páginas de producto
+21:30:51 [INFO]   6 producto(s): [6, 9, 10, 12, 13, 14]
+21:30:51 [INFO] =================================================================
+21:30:53 [INFO] HTTP Request: GET https://dqrhqzdfzhkqpgawgjga.supabase.co/rest/v1/catalogo_productos?select=id%2Cnombre%2Ccategoria&id=in.%286%2C9%2C10%2C12%2C13%2C14%29 "HTTP/2 200 OK"
+21:30:53 [INFO] 
+[1/6] ID 6 — Frijol Negro La Sierra 560g (Abarrotes)
+21:30:53 [INFO]   Página: https://despensa.bodegaaurrera.com.mx/ip/frijoles-bayos-la-sierra-refritos-580-g/00750105242043
+21:31:00 [INFO] Playwright/Chromium iniciado (headless + stealth)
+21:31:00 [INFO]   🌐 Abriendo página...
+21:31:24 [WARNING]   ⚠  No se encontró imagen con walmartimages.com: Page.wait_for_selector: Timeout 20000ms exceeded.
+Call log:
+  - waiting for locator("img[src*=\"walmartimages.com\"]") to be visible
+
+21:31:24 [INFO]   🏷  Nombre: Verifica tu identidad
+21:31:24 [ERROR]   No se pudo extraer imagen de la página
+21:31:24 [INFO] 
+[2/6] ID 9 — Jabón Roma 1kg (Limpieza)
+21:31:24 [INFO]   Página: https://despensa.bodegaaurrera.com.mx/ip/detergente-en-polvo-roma-multiusos-biodegradable-1-kg/00750102600460
+21:31:24 [INFO]   🌐 Abriendo página...
+21:31:45 [WARNING]   ⚠  No se encontró imagen con walmartimages.com: Page.wait_for_selector: Timeout 20000ms exceeded.
+Call log:
+  - waiting for locator("img[src*=\"walmartimages.com\"]") to be visible
+
+21:31:45 [INFO]   🏷  Nombre: Verifica tu identidad
+21:31:45 [ERROR]   No se pudo extraer imagen de la página
+21:31:45 [INFO] 
+[3/6] ID 10 — Papel Higiénico Pétalo 4r (Higiene)
+21:31:45 [INFO]   Página: https://despensa.bodegaaurrera.com.mx/ip/papel-higienico-petalo-maxi-plus-12-rollos-de-250-hojas-dobles/00750642566283
+21:31:45 [INFO]   🌐 Abriendo página...
+21:32:06 [WARNING]   ⚠  No se encontró imagen con walmartimages.com: Page.wait_for_selector: Timeout 20000ms exceeded.
+Call log:
+  - waiting for locator("img[src*=\"walmartimages.com\"]") to be visible
+
+21:32:06 [INFO]   🏷  Nombre: Verifica tu identidad
+21:32:06 [ERROR]   No se pudo extraer imagen de la página
+21:32:06 [INFO] 
+[4/6] ID 12 — Azúcar Morena 1kg (Abarrotes)
+21:32:06 [INFO]   Página: https://despensa.bodegaaurrera.com.mx/ip/azucar-morena-zulka-2-kg/00066144000005
+21:32:06 [INFO]   🌐 Abriendo página...
+21:32:27 [WARNING]   ⚠  No se encontró imagen con walmartimages.com: Page.wait_for_selector: Timeout 20000ms exceeded.
+Call log:
+  - waiting for locator("img[src*=\"walmartimages.com\"]") to be visible
+
+21:32:27 [INFO]   🏷  Nombre: Verifica tu identidad
+21:32:27 [ERROR]   No se pudo extraer imagen de la página
+21:32:27 [INFO] 
+[5/6] ID 13 — Café Nescafé Clásico 120g (Bebidas)
+21:32:27 [INFO]   Página: https://despensa.bodegaaurrera.com.mx/ip/cafe-soluble-nescafe-reserva-mexicana-verarica-50-g/00750105862415
+21:32:27 [INFO]   🌐 Abriendo página...
+21:32:48 [WARNING]   ⚠  No se encontró imagen con walmartimages.com: Page.wait_for_selector: Timeout 20000ms exceeded.
+Call log:
+  - waiting for locator("img[src*=\"walmartimages.com\"]") to be visible
+
+21:32:48 [INFO]   🏷  Nombre: Verifica tu identidad
+21:32:48 [ERROR]   No se pudo extraer imagen de la página
+21:32:48 [INFO] 
+[6/6] ID 14 — Crema Lala 200ml (Lácteos)
+21:32:48 [INFO]   Página: https://despensa.bodegaaurrera.com.mx/ip/crema-acida-lala-entera-200-ml/00750102051313
+21:32:48 [INFO]   🌐 Abriendo página...
+21:33:09 [WARNING]   ⚠  No se encontró imagen con walmartimages.com: Page.wait_for_selector: Timeout 20000ms exceeded.
+Call log:
+  - waiting for locator("img[src*=\"walmartimages.com\"]") to be visible
+
+21:33:09 [INFO]   🏷  Nombre: Verifica tu identidad
+21:33:09 [ERROR]   No se pudo extraer imagen de la página
+21:33:09 [INFO] 
+=================================================================
+21:33:09 [INFO]   RESUMEN
+21:33:09 [INFO]   OK     : 0 — IDs []
+21:33:09 [INFO]   ERROR  : 6 — IDs [6, 9, 10, 12, 13, 14]
+21:33:09 [INFO] =================================================================
+21:33:09 [INFO] Log completo en: asignar_imagenes_manual.log
+21:35:09 [INFO] rembg listo (GPU/CUDA)
+21:35:09 [INFO] =================================================================
+21:35:09 [INFO]   ASIGNACIÓN MANUAL — Barcode + Open Food Facts + Unsplash
+21:35:09 [INFO]   6 producto(s): [6, 9, 10, 12, 13, 14]
+21:35:09 [INFO] =================================================================
+21:35:10 [INFO] HTTP Request: GET https://dqrhqzdfzhkqpgawgjga.supabase.co/rest/v1/catalogo_productos?select=id%2Cnombre%2Ccategoria&id=in.%286%2C9%2C10%2C12%2C13%2C14%29 "HTTP/2 200 OK"
+21:35:10 [INFO] 
+[1/6] ID 6 — Frijol Negro La Sierra 560g (Abarrotes)
+21:35:10 [INFO]   Barcode: 00750105242043
+21:35:28 [WARNING]   ⏭  Sin imagen en ninguna fuente
+21:35:28 [INFO] 
+[2/6] ID 9 — Jabón Roma 1kg (Limpieza)
+21:35:28 [INFO]   Barcode: 00750102600460
+21:35:45 [WARNING]   ⏭  Sin imagen en ninguna fuente
+21:35:45 [INFO] 
+[3/6] ID 10 — Papel Higiénico Pétalo 4r (Higiene)
+21:35:45 [INFO]   Barcode: 00750642566283
+21:36:03 [INFO]   📷 Fuente: Unsplash ('Papel Higiénico Pétalo 4r')
+21:36:03 [INFO]   ⬇  Descargada: 66 KB
+21:36:03 [INFO]   🔧 Procesando con rembg...
+21:36:04 [INFO]   ✔  Procesada: 196 KB
+21:36:05 [INFO] HTTP Request: POST https://dqrhqzdfzhkqpgawgjga.supabase.co/storage/v1/object/productos/10_papel_higienico_petalo_4r.png "HTTP/2 200 OK"
+21:36:05 [INFO]   ☁  Storage: 10_papel_higienico_petalo_4r.png
+21:36:05 [INFO] HTTP Request: PATCH https://dqrhqzdfzhkqpgawgjga.supabase.co/rest/v1/catalogo_productos?id=eq.10 "HTTP/2 200 OK"
+21:36:05 [INFO]   ✅ DB actualizada (imagen_url)
+21:36:05 [INFO] 
+[4/6] ID 12 — Azúcar Morena 1kg (Abarrotes)
+21:36:05 [INFO]   Barcode: 00066144000005
+21:36:23 [WARNING]   ⏭  Sin imagen en ninguna fuente
+21:36:23 [INFO] 
+[5/6] ID 13 — Café Nescafé Clásico 120g (Bebidas)
+21:36:23 [INFO]   Barcode: 00750105862415
+21:36:41 [WARNING]   ⏭  Sin imagen en ninguna fuente
+21:36:41 [INFO] 
+[6/6] ID 14 — Crema Lala 200ml (Lácteos)
+21:36:41 [INFO]   Barcode: 00750102051313
+21:36:58 [WARNING]   ⏭  Sin imagen en ninguna fuente
+21:36:58 [INFO] 
+=================================================================
+21:36:58 [INFO]   RESUMEN
+21:36:58 [INFO]   OK     : 1 — IDs [10]
+21:36:58 [INFO]   ERROR  : 5 — IDs [6, 9, 12, 13, 14]
+21:36:58 [INFO] =================================================================
+21:36:58 [INFO] Log completo en: asignar_imagenes_manual.log
+21:38:12 [INFO] rembg listo (GPU/CUDA)
+21:38:12 [INFO] =================================================================
+21:38:12 [INFO]   ASIGNACIÓN MANUAL — Barcode + Open Food Facts + Unsplash
+21:38:12 [INFO]   6 producto(s): [6, 9, 10, 12, 13, 14]
+21:38:12 [INFO] =================================================================
+21:38:13 [INFO] HTTP Request: GET https://dqrhqzdfzhkqpgawgjga.supabase.co/rest/v1/catalogo_productos?select=id%2Cnombre%2Ccategoria&id=in.%286%2C9%2C10%2C12%2C13%2C14%29 "HTTP/2 200 OK"
+21:38:13 [INFO] 
+[1/6] ID 6 — Frijol Negro La Sierra 560g (Abarrotes)
+21:38:13 [INFO]   Barcode: 00750105242043
+21:38:30 [WARNING]   ⏭  Sin imagen en ninguna fuente
+21:38:30 [INFO] 
+[2/6] ID 9 — Jabón Roma 1kg (Limpieza)
+21:38:30 [INFO]   Barcode: 00750102600460
+21:38:47 [INFO]   📷 Fuente: Unsplash ('laundry detergent powder')
+21:38:48 [INFO]   ⬇  Descargada: 178 KB
+21:38:48 [INFO]   🔧 Procesando con rembg...
+21:38:48 [INFO]   ✔  Procesada: 304 KB
+21:38:49 [INFO] HTTP Request: POST https://dqrhqzdfzhkqpgawgjga.supabase.co/storage/v1/object/productos/9_jabon_roma_1kg.png "HTTP/2 200 OK"
+21:38:49 [INFO]   ☁  Storage: 9_jabon_roma_1kg.png
+21:38:49 [INFO] HTTP Request: PATCH https://dqrhqzdfzhkqpgawgjga.supabase.co/rest/v1/catalogo_productos?id=eq.9 "HTTP/2 200 OK"
+21:38:49 [INFO]   ✅ DB actualizada (imagen_url)
+21:38:49 [INFO] 
+[3/6] ID 10 — Papel Higiénico Pétalo 4r (Higiene)
+21:38:49 [INFO]   Barcode: 00750642566283
+21:39:07 [INFO]   📷 Fuente: Unsplash ('Papel Higiénico Pétalo 4r')
+21:39:08 [INFO]   ⬇  Descargada: 66 KB
+21:39:08 [INFO]   🔧 Procesando con rembg...
+21:39:09 [INFO]   ✔  Procesada: 196 KB
+21:39:11 [INFO] HTTP Request: POST https://dqrhqzdfzhkqpgawgjga.supabase.co/storage/v1/object/productos/10_papel_higienico_petalo_4r.png "HTTP/2 200 OK"
+21:39:11 [INFO]   ☁  Storage: 10_papel_higienico_petalo_4r.png
+21:39:12 [INFO] HTTP Request: PATCH https://dqrhqzdfzhkqpgawgjga.supabase.co/rest/v1/catalogo_productos?id=eq.10 "HTTP/2 200 OK"
+21:39:12 [INFO]   ✅ DB actualizada (imagen_url)
+21:39:12 [INFO] 
+[4/6] ID 12 — Azúcar Morena 1kg (Abarrotes)
+21:39:12 [INFO]   Barcode: 00066144000005
+21:39:30 [WARNING]   ⏭  Sin imagen en ninguna fuente
+21:39:30 [INFO] 
+[5/6] ID 13 — Café Nescafé Clásico 120g (Bebidas)
+21:39:30 [INFO]   Barcode: 00750105862415
+21:39:49 [INFO]   📷 Fuente: Unsplash ('instant coffee jar')
+21:39:49 [INFO]   ⬇  Descargada: 37 KB
+21:39:49 [INFO]   🔧 Procesando con rembg...
+21:39:50 [INFO]   ✔  Procesada: 95 KB
+21:39:52 [INFO] HTTP Request: POST https://dqrhqzdfzhkqpgawgjga.supabase.co/storage/v1/object/productos/13_cafe_nescafe_clasico_120g.png "HTTP/2 200 OK"
+21:39:52 [INFO]   ☁  Storage: 13_cafe_nescafe_clasico_120g.png
+21:39:52 [INFO] HTTP Request: PATCH https://dqrhqzdfzhkqpgawgjga.supabase.co/rest/v1/catalogo_productos?id=eq.13 "HTTP/2 200 OK"
+21:39:52 [INFO]   ✅ DB actualizada (imagen_url)
+21:39:52 [INFO] 
+[6/6] ID 14 — Crema Lala 200ml (Lácteos)
+21:39:52 [INFO]   Barcode: 00750102051313
+21:40:10 [INFO]   📷 Fuente: Unsplash ('sour cream dairy')
+21:40:11 [INFO]   ⬇  Descargada: 170 KB
+21:40:11 [INFO]   🔧 Procesando con rembg...
+21:40:12 [INFO]   ✔  Procesada: 583 KB
+21:40:14 [INFO] HTTP Request: POST https://dqrhqzdfzhkqpgawgjga.supabase.co/storage/v1/object/productos/14_crema_lala_200ml.png "HTTP/2 200 OK"
+21:40:14 [INFO]   ☁  Storage: 14_crema_lala_200ml.png
+21:40:14 [INFO] HTTP Request: PATCH https://dqrhqzdfzhkqpgawgjga.supabase.co/rest/v1/catalogo_productos?id=eq.14 "HTTP/2 200 OK"
+21:40:14 [INFO]   ✅ DB actualizada (imagen_url)
+21:40:14 [INFO] 
+=================================================================
+21:40:14 [INFO]   RESUMEN
+21:40:14 [INFO]   OK     : 4 — IDs [9, 10, 13, 14]
+21:40:14 [INFO]   ERROR  : 2 — IDs [6, 12]
+21:40:14 [INFO] =================================================================
+21:40:14 [INFO] Log completo en: asignar_imagenes_manual.log
+21:44:04 [INFO] rembg listo (GPU/CUDA)
+21:44:04 [INFO] =================================================================
+21:44:04 [INFO]   ASIGNACIÓN MANUAL — Barcode + Open Food Facts + Unsplash
+21:44:04 [INFO]   2 producto(s): [6, 12]
+21:44:04 [INFO] =================================================================
+21:44:04 [INFO] HTTP Request: GET https://dqrhqzdfzhkqpgawgjga.supabase.co/rest/v1/catalogo_productos?select=id%2Cnombre%2Ccategoria&id=in.%286%2C12%29 "HTTP/2 200 OK"
+21:44:04 [INFO] 
+[1/2] ID 6 — Frijol Negro La Sierra 560g (Abarrotes)
+21:44:04 [INFO]   Barcode: 00750105242043
+21:44:20 [INFO]   📷 Fuente: Unsplash ('beans legumes food')
+21:44:21 [INFO]   ⬇  Descargada: 252 KB
+21:44:21 [INFO]   🔧 Procesando con rembg...
+21:44:21 [INFO]   ✔  Procesada: 104 KB
+21:44:23 [INFO] HTTP Request: POST https://dqrhqzdfzhkqpgawgjga.supabase.co/storage/v1/object/productos/6_frijol_negro_la_sierra_560g.png "HTTP/2 200 OK"
+21:44:23 [INFO]   ☁  Storage: 6_frijol_negro_la_sierra_560g.png
+21:44:24 [INFO] HTTP Request: PATCH https://dqrhqzdfzhkqpgawgjga.supabase.co/rest/v1/catalogo_productos?id=eq.6 "HTTP/2 200 OK"
+21:44:24 [INFO]   ✅ DB actualizada (imagen_url)
+21:44:24 [INFO] 
+[2/2] ID 12 — Azúcar Morena 1kg (Abarrotes)
+21:44:24 [INFO]   Barcode: 00066144000005
+21:44:41 [INFO]   📷 Fuente: Unsplash ('sugar brown natural')
+21:44:42 [INFO]   ⬇  Descargada: 99 KB
+21:44:42 [INFO]   🔧 Procesando con rembg...
+21:44:42 [INFO]   ✔  Procesada: 124 KB
+21:44:43 [INFO] HTTP Request: POST https://dqrhqzdfzhkqpgawgjga.supabase.co/storage/v1/object/productos/12_azucar_morena_1kg.png "HTTP/2 200 OK"
+21:44:43 [INFO]   ☁  Storage: 12_azucar_morena_1kg.png
+21:44:43 [INFO] HTTP Request: PATCH https://dqrhqzdfzhkqpgawgjga.supabase.co/rest/v1/catalogo_productos?id=eq.12 "HTTP/2 200 OK"
+21:44:43 [INFO]   ✅ DB actualizada (imagen_url)
+21:44:43 [INFO] 
+=================================================================
+21:44:43 [INFO]   RESUMEN
+21:44:43 [INFO]   OK     : 2 — IDs [6, 12]
+21:44:43 [INFO]   ERROR  : 0 — IDs []
+21:44:43 [INFO] =================================================================
+21:44:43 [INFO] Log completo en: asignar_imagenes_manual.log

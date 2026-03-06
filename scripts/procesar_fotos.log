@@ -1,0 +1,151 @@
+09:34:10 [INFO] rembg listo (GPU/CUDA)
+09:34:10 [INFO] =================================================================
+09:34:10 [INFO]   TIENDA INTELIGENTE — Pipeline de Imágenes v2
+09:34:10 [INFO]   Batch: 20 prods | Pausa prod: 2s | Pausa lote: 10s
+09:34:10 [INFO] =================================================================
+09:34:10 [INFO] Conectando a Supabase...
+09:34:10 [INFO] Conexion establecida.
+09:34:10 [INFO] Buscando productos sin imagen...
+09:34:11 [INFO] HTTP Request: GET https://dqrhqzdfzhkqpgawgjga.supabase.co/rest/v1/catalogo_productos?select=id%2Cnombre%2Ccategoria&or=%28imagen_url.is.null%2Cimagen_url.eq.%22%22%29&order=id.asc "HTTP/2 200 OK"
+09:34:11 [INFO] 10 producto(s) sin imagen — 1 lote(s) de hasta 20
+09:34:11 [INFO] IDs pendientes: [5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
+
+09:34:11 [INFO] 
+─────────────────────────────────────────────────────────────────
+09:34:11 [INFO]   LOTE 1/1 — productos 1-10 de 10
+09:34:11 [INFO] ─────────────────────────────────────────────────────────────────
+09:34:11 [INFO] 
+[1/10] Arroz SOS 1kg (ID 5, Abarrotes)
+09:34:23 [INFO]   📷 Fuente: Unsplash
+09:34:24 [INFO]   🔧 Procesada: 661 KB
+09:34:26 [INFO] HTTP Request: POST https://dqrhqzdfzhkqpgawgjga.supabase.co/storage/v1/object/productos/5_arroz_sos_1kg.png "HTTP/2 200 OK"
+09:34:26 [INFO] HTTP Request: PATCH https://dqrhqzdfzhkqpgawgjga.supabase.co/rest/v1/catalogo_productos?id=eq.5 "HTTP/2 200 OK"
+09:34:26 [INFO]   ✅ Listo → https://dqrhqzdfzhkqpgawgjga.supabase.co/storage/v1/object/public/productos/5_ar...
+09:34:28 [INFO] 
+[2/10] Frijol Negro La Sierra 560g (ID 6, Abarrotes)
+09:34:40 [INFO]   ⏭  Sin imagen en ninguna fuente
+09:34:42 [INFO] 
+[3/10] Aceite 1-2-3 1L (ID 7, Abarrotes)
+09:34:53 [INFO]   📷 Fuente: Unsplash
+09:34:54 [INFO]   🔧 Procesada: 113 KB
+09:34:55 [INFO] HTTP Request: POST https://dqrhqzdfzhkqpgawgjga.supabase.co/storage/v1/object/productos/7_aceite_123_1l.png "HTTP/2 200 OK"
+09:34:56 [INFO] HTTP Request: PATCH https://dqrhqzdfzhkqpgawgjga.supabase.co/rest/v1/catalogo_productos?id=eq.7 "HTTP/2 200 OK"
+09:34:56 [INFO]   ✅ Listo → https://dqrhqzdfzhkqpgawgjga.supabase.co/storage/v1/object/public/productos/7_ac...
+09:34:58 [INFO] 
+[4/10] Atún Dolores en agua 140g (ID 8, Enlatados)
+09:35:09 [INFO]   📷 Fuente: Unsplash
+09:35:10 [INFO]   🔧 Procesada: 101 KB
+09:35:10 [INFO] HTTP Request: POST https://dqrhqzdfzhkqpgawgjga.supabase.co/storage/v1/object/productos/8_atun_dolores_en_agua_140g.png "HTTP/2 200 OK"
+09:35:11 [INFO] HTTP Request: PATCH https://dqrhqzdfzhkqpgawgjga.supabase.co/rest/v1/catalogo_productos?id=eq.8 "HTTP/2 200 OK"
+09:35:11 [INFO]   ✅ Listo → https://dqrhqzdfzhkqpgawgjga.supabase.co/storage/v1/object/public/productos/8_at...
+09:35:13 [INFO] 
+[5/10] Jabón Roma 1kg (ID 9, Limpieza)
+09:35:25 [INFO]   ⏭  Sin imagen en ninguna fuente
+09:35:27 [INFO] 
+[6/10] Papel Higiénico Pétalo 4r (ID 10, Higiene)
+09:35:39 [INFO]   ⏭  Sin imagen en ninguna fuente
+09:35:41 [INFO] 
+[7/10] Tortillas de Maíz 1kg (ID 11, Básicos)
+09:35:53 [INFO]   📷 Fuente: Unsplash
+09:35:53 [INFO]   🔧 Procesada: 863 KB
+09:35:55 [INFO] HTTP Request: POST https://dqrhqzdfzhkqpgawgjga.supabase.co/storage/v1/object/productos/11_tortillas_de_maiz_1kg.png "HTTP/2 200 OK"
+09:35:55 [INFO] HTTP Request: PATCH https://dqrhqzdfzhkqpgawgjga.supabase.co/rest/v1/catalogo_productos?id=eq.11 "HTTP/2 200 OK"
+09:35:55 [INFO]   ✅ Listo → https://dqrhqzdfzhkqpgawgjga.supabase.co/storage/v1/object/public/productos/11_t...
+09:35:57 [INFO] 
+[8/10] Azúcar Morena 1kg (ID 12, Abarrotes)
+09:36:09 [INFO]   ⏭  Sin imagen en ninguna fuente
+09:36:11 [INFO] 
+[9/10] Café Nescafé Clásico 120g (ID 13, Bebidas)
+09:36:23 [INFO]   ⏭  Sin imagen en ninguna fuente
+09:36:25 [INFO] 
+[10/10] Crema Lala 200ml (ID 14, Lácteos)
+09:36:37 [INFO]   ⏭  Sin imagen en ninguna fuente
+09:36:37 [INFO] 
+=================================================================
+09:36:37 [INFO]   RESUMEN FINAL
+09:36:37 [INFO]   Procesados correctamente : 4
+09:36:37 [INFO]   Sin fuente de imagen     : 6
+09:36:37 [INFO]   Errores                  : 0
+09:36:37 [INFO]   Total productos          : 10
+09:36:37 [INFO] 
+  Fuentes utilizadas:
+09:36:37 [INFO]     Unsplash             4 imagen(es)
+09:36:37 [INFO] =================================================================
+09:36:37 [INFO] 
+Listo. Log completo en: procesar_fotos.log
+10:01:55 [INFO] rembg listo (GPU/CUDA)
+10:01:55 [INFO] =================================================================
+10:01:55 [INFO]   TIENDA INTELIGENTE — Pipeline de Imágenes v2
+10:01:55 [INFO]   Batch: 20 | Pausa prod: 2s | Pausa lote: 10s | PW timeout: 15000ms
+10:01:55 [INFO] =================================================================
+10:01:55 [INFO] Conectando a Supabase...
+10:01:55 [INFO] Conexion establecida.
+10:01:55 [INFO] Buscando productos sin imagen...
+10:01:57 [INFO] HTTP Request: GET https://dqrhqzdfzhkqpgawgjga.supabase.co/rest/v1/catalogo_productos?select=id%2Cnombre%2Ccategoria&or=%28imagen_url.is.null%2Cimagen_url.eq.%22%22%29&order=id.asc "HTTP/2 200 OK"
+10:01:57 [INFO] 10 producto(s) sin imagen — 1 lote(s) de hasta 20
+10:01:57 [INFO] IDs pendientes: [5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
+
+10:01:57 [INFO] 
+─────────────────────────────────────────────────────────────────
+10:01:57 [INFO]   LOTE 1/1 — productos 1-10 de 10
+10:01:57 [INFO] ─────────────────────────────────────────────────────────────────
+10:01:57 [INFO] 
+[1/10] Arroz SOS 1kg (ID 5, Abarrotes)
+10:02:08 [INFO] Playwright/Chromium iniciado (headless)
+10:02:12 [INFO]   📷 Fuente: Unsplash
+10:02:13 [INFO]   🔧 Procesada: 661 KB
+10:02:15 [INFO] HTTP Request: POST https://dqrhqzdfzhkqpgawgjga.supabase.co/storage/v1/object/productos/5_arroz_sos_1kg.png "HTTP/2 200 OK"
+10:02:15 [INFO] HTTP Request: PATCH https://dqrhqzdfzhkqpgawgjga.supabase.co/rest/v1/catalogo_productos?id=eq.5 "HTTP/2 200 OK"
+10:02:15 [INFO]   ✅ Listo → https://dqrhqzdfzhkqpgawgjga.supabase.co/storage/v1/object/public/productos/5_ar...
+10:02:17 [INFO] 
+[2/10] Frijol Negro La Sierra 560g (ID 6, Abarrotes)
+10:02:31 [INFO]   ⏭  Sin imagen en ninguna fuente
+10:02:33 [INFO] 
+[3/10] Aceite 1-2-3 1L (ID 7, Abarrotes)
+10:02:47 [INFO]   📷 Fuente: Unsplash
+10:02:48 [INFO]   🔧 Procesada: 113 KB
+10:02:50 [INFO] HTTP Request: POST https://dqrhqzdfzhkqpgawgjga.supabase.co/storage/v1/object/productos/7_aceite_123_1l.png "HTTP/2 200 OK"
+10:02:51 [INFO] HTTP Request: PATCH https://dqrhqzdfzhkqpgawgjga.supabase.co/rest/v1/catalogo_productos?id=eq.7 "HTTP/2 200 OK"
+10:02:51 [INFO]   ✅ Listo → https://dqrhqzdfzhkqpgawgjga.supabase.co/storage/v1/object/public/productos/7_ac...
+10:02:53 [INFO] 
+[4/10] Atún Dolores en agua 140g (ID 8, Enlatados)
+10:03:05 [INFO]   📷 Fuente: Unsplash
+10:03:07 [INFO]   🔧 Procesada: 101 KB
+10:03:08 [INFO] HTTP Request: POST https://dqrhqzdfzhkqpgawgjga.supabase.co/storage/v1/object/productos/8_atun_dolores_en_agua_140g.png "HTTP/2 200 OK"
+10:03:08 [INFO] HTTP Request: PATCH https://dqrhqzdfzhkqpgawgjga.supabase.co/rest/v1/catalogo_productos?id=eq.8 "HTTP/2 200 OK"
+10:03:08 [INFO]   ✅ Listo → https://dqrhqzdfzhkqpgawgjga.supabase.co/storage/v1/object/public/productos/8_at...
+10:03:10 [INFO] 
+[5/10] Jabón Roma 1kg (ID 9, Limpieza)
+10:03:23 [INFO]   ⏭  Sin imagen en ninguna fuente
+10:03:25 [INFO] 
+[6/10] Papel Higiénico Pétalo 4r (ID 10, Higiene)
+10:03:38 [INFO]   ⏭  Sin imagen en ninguna fuente
+10:03:40 [INFO] 
+[7/10] Tortillas de Maíz 1kg (ID 11, Básicos)
+10:03:54 [INFO]   📷 Fuente: Unsplash
+10:03:55 [INFO]   🔧 Procesada: 863 KB
+10:03:57 [INFO] HTTP Request: POST https://dqrhqzdfzhkqpgawgjga.supabase.co/storage/v1/object/productos/11_tortillas_de_maiz_1kg.png "HTTP/2 200 OK"
+10:03:57 [INFO] HTTP Request: PATCH https://dqrhqzdfzhkqpgawgjga.supabase.co/rest/v1/catalogo_productos?id=eq.11 "HTTP/2 200 OK"
+10:03:57 [INFO]   ✅ Listo → https://dqrhqzdfzhkqpgawgjga.supabase.co/storage/v1/object/public/productos/11_t...
+10:03:59 [INFO] 
+[8/10] Azúcar Morena 1kg (ID 12, Abarrotes)
+10:04:12 [INFO]   ⏭  Sin imagen en ninguna fuente
+10:04:14 [INFO] 
+[9/10] Café Nescafé Clásico 120g (ID 13, Bebidas)
+10:04:29 [INFO]   ⏭  Sin imagen en ninguna fuente
+10:04:31 [INFO] 
+[10/10] Crema Lala 200ml (ID 14, Lácteos)
+10:04:46 [INFO]   ⏭  Sin imagen en ninguna fuente
+10:04:46 [INFO] 
+=================================================================
+10:04:46 [INFO]   RESUMEN FINAL
+10:04:46 [INFO]   Procesados correctamente : 4
+10:04:46 [INFO]   Sin fuente de imagen     : 6
+10:04:46 [INFO]   Errores                  : 0
+10:04:46 [INFO]   Total productos          : 10
+10:04:46 [INFO] 
+  Fuentes utilizadas:
+10:04:46 [INFO]     Unsplash             4 imagen(es)
+10:04:46 [INFO] =================================================================
+10:04:46 [INFO] 
+Listo. Log completo en: procesar_fotos.log
