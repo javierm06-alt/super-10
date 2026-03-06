@@ -767,7 +767,7 @@
         <input type="text" id="vozTestInput"
           placeholder="ej: 'llegaron seis coca colas'"
           onkeydown="if(event.key==='Enter') probarTexto()">
-        <button class="btn-probar" onclick="probarTexto()">Probar →</button>
+        <button class="btn-probar" onpointerdown="event.preventDefault();probarTexto()">Probar →</button>
       </div>
       <div class="voz-test-hint">Modo texto — para probar sin micrófono</div>
       <button class="btn-ver-inv" onclick="document.getElementById('invSection').scrollIntoView({behavior:'smooth'})">
@@ -1140,7 +1140,14 @@ function toggleVoz() {
 
   vozRecognition.onerror = (event) => {
     setVozEstado('idle');
-    if (event.error !== 'no-speech') showToast('Error de micrófono: ' + event.error);
+    const errores = {
+      'not-allowed': 'Permiso de micrófono denegado. Ve a Configuración del sitio en Chrome.',
+      'no-speech': '',
+      'network': 'Error de red. Verifica tu conexión.',
+      'audio-capture': 'No se detectó micrófono en este dispositivo.'
+    };
+    const msg = errores[event.error] || ('Error de micrófono: ' + event.error);
+    if (msg) showToast(msg);
   };
 
   vozRecognition.onend = () => {
