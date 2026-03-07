@@ -532,6 +532,60 @@
     ::-webkit-scrollbar-track { background: transparent; }
     ::-webkit-scrollbar-thumb { background: var(--borde); border-radius: 3px; }
     select option { background: #fff; }
+
+    /* ══ TAB PEDIDOS ══════════════════════════════════════ */
+    .pedido-card {
+      background: var(--blanco); border-radius: 16px;
+      padding: 16px; margin-bottom: 12px;
+      box-shadow: var(--shadow-card);
+      border-left: 4px solid var(--acento);
+      transition: border-color 200ms;
+    }
+    .pedido-card.visto { border-left-color: var(--borde); opacity: .7; }
+    .pedido-card__top {
+      display: flex; justify-content: space-between; align-items: flex-start;
+      margin-bottom: 10px;
+    }
+    .pedido-cliente { font-weight: 700; font-size: .95rem; color: var(--texto); }
+    .pedido-hora { font-size: .75rem; color: var(--subtexto); margin-top: 2px; }
+    .pedido-badge {
+      font-size: .7rem; font-weight: 700; padding: 3px 10px;
+      border-radius: 20px; background: var(--acento); color: #fff;
+      white-space: nowrap;
+    }
+    .pedido-badge.visto { background: var(--borde); color: var(--subtexto); }
+    .pedido-items { font-size: .83rem; color: var(--subtexto); margin-bottom: 10px; line-height: 1.6; }
+    .pedido-total { font-weight: 700; font-size: 1rem; color: var(--verde); }
+    .pedido-actions { display: flex; gap: 8px; margin-top: 12px; }
+    .btn-visto {
+      flex: 1; padding: 9px; border-radius: 10px;
+      background: var(--verde-light); color: var(--verde);
+      font-weight: 700; font-size: .85rem; cursor: pointer; border: none;
+    }
+    .btn-wsp {
+      flex: 1; padding: 9px; border-radius: 10px;
+      background: #25D366; color: #fff;
+      font-weight: 700; font-size: .85rem; cursor: pointer; border: none;
+    }
+    .pedidos-empty {
+      text-align: center; padding: 60px 24px;
+      color: var(--subtexto); font-size: .9rem;
+    }
+    .pedidos-empty .empty-icon { font-size: 3rem; margin-bottom: 12px; }
+    .pedidos-header {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: 16px;
+    }
+    .pedidos-badge-count {
+      background: var(--acento); color: #fff;
+      font-size: .75rem; font-weight: 700;
+      padding: 2px 8px; border-radius: 20px;
+    }
+    .btn-refresh {
+      background: none; border: 1.5px solid var(--borde);
+      border-radius: 8px; padding: 6px 12px;
+      font-size: .8rem; color: var(--subtexto); cursor: pointer;
+    }
   </style>
 </head>
 <body>
@@ -767,7 +821,7 @@
         <input type="text" id="vozTestInput"
           placeholder="ej: 'llegaron seis coca colas'"
           onkeydown="if(event.key==='Enter') probarTexto()">
-        <button class="btn-probar" onpointerdown="event.preventDefault();probarTexto()">Probar →</button>
+        <button class="btn-probar" onclick="probarTexto()">Probar →</button>
       </div>
       <div class="voz-test-hint">Modo texto — para probar sin micrófono</div>
       <button class="btn-ver-inv" onclick="document.getElementById('invSection').scrollIntoView({behavior:'smooth'})">
@@ -838,11 +892,120 @@
     <span class="nav-tab__icon">🛒</span>
     <span class="nav-tab__label">Surtir</span>
   </button>
+  <button class="nav-tab" data-panel="pedidos" onclick="switchTab(this)">
+    <span class="nav-tab__icon">📋</span>
+    <span class="nav-tab__label">Pedidos</span>
+  </button>
 </nav>
+
+
+  <!-- ══════════════ TAB: PEDIDOS ══════════════ -->
+  <div class="tab-panel" id="panel-pedidos">
+    <div class="pedidos-header">
+      <div>
+        <div class="card-title" style="font-size:1.1rem">📋 Pedidos</div>
+        <div style="font-size:.8rem;color:var(--subtexto);margin-top:2px">Pedidos recibidos en la tienda online</div>
+      </div>
+      <button class="btn-refresh" onclick="cargarPedidos()">↻ Actualizar</button>
+    </div>
+    <div id="pedidosList">
+      <div class="pedidos-empty">
+        <div class="empty-icon">📋</div>
+        <div>Cargando pedidos...</div>
+      </div>
+    </div>
+  </div>
 
 <div class="toast" id="toast"></div>
 
 <script>
+
+// ══════════════════════════════════════════════════════
+// SUPABASE
+// ══════════════════════════════════════════════════════
+const SUPABASE_URL = 'https://dqrhqzdfzhkqpgawgjga.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_kponNfbiTEBSbJaP6tf-Xg_pVOdCApQ';
+const SB_HEADERS = {
+  'apikey': SUPABASE_KEY,
+  'Authorization': `Bearer ${SUPABASE_KEY}`,
+  'Content-Type': 'application/json'
+};
+
+// ══════════════════════════════════════════════════════
+// PEDIDOS
+// ══════════════════════════════════════════════════════
+let pedidosData = [];
+
+async function cargarPedidos() {
+  const list = document.getElementById('pedidosList');
+  list.innerHTML = '<div class="pedidos-empty"><div class="empty-icon">⏳</div><div>Cargando...</div></div>';
+
+  try {
+    const res = await fetch(
+      `${SUPABASE_URL}/rest/v1/pedidos?select=*&order=created_at.desc&limit=50`,
+      { headers: SB_HEADERS }
+    );
+    pedidosData = await res.json();
+    renderPedidos(pedidosData);
+  } catch (e) {
+    list.innerHTML = '<div class="pedidos-empty"><div class="empty-icon">❌</div><div>Error cargando pedidos</div></div>';
+    console.error(e);
+  }
+}
+
+function renderPedidos(pedidos) {
+  const list = document.getElementById('pedidosList');
+  if (!pedidos.length) {
+    list.innerHTML = '<div class="pedidos-empty"><div class="empty-icon">🎉</div><div>Sin pedidos aún.<br>Cuando alguien compre en tu tienda, aparecerá aquí.</div></div>';
+    return;
+  }
+
+  const nuevos = pedidos.filter(p => p.estado === 'nuevo').length;
+
+  list.innerHTML = pedidos.map(p => {
+    const items = (p.items || []).map(i => `${i.qty}x ${i.nombre}`).join(', ');
+    const hora = new Date(p.created_at).toLocaleString('es-MX', {
+      day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit'
+    });
+    const esNuevo = p.estado === 'nuevo';
+    return `
+    <div class="pedido-card ${esNuevo ? '' : 'visto'}" id="pedido-${p.id}">
+      <div class="pedido-card__top">
+        <div>
+          <div class="pedido-cliente">👤 ${p.cliente_nombre || 'Cliente'}</div>
+          <div class="pedido-hora">🕐 ${hora}</div>
+        </div>
+        <span class="pedido-badge ${esNuevo ? '' : 'visto'}">${esNuevo ? '🔔 Nuevo' : '✓ Visto'}</span>
+      </div>
+      <div class="pedido-items">${items}</div>
+      <div class="pedido-total">Total: $${Number(p.total).toFixed(2)}</div>
+      <div class="pedido-actions">
+        ${esNuevo ? `<button class="btn-visto" onclick="marcarVisto('${p.id}')">✓ Marcar visto</button>` : ''}
+        ${p.cliente_whatsapp ? `<button class="btn-wsp" onclick="contactarCliente('${p.cliente_whatsapp}', '${(p.cliente_nombre||'').replace(/'/g,'')}')">💬 WhatsApp</button>` : ''}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+async function marcarVisto(id) {
+  try {
+    await fetch(`${SUPABASE_URL}/rest/v1/pedidos?id=eq.${id}`, {
+      method: 'PATCH',
+      headers: SB_HEADERS,
+      body: JSON.stringify({ estado: 'visto' })
+    });
+    // Actualizar localmente sin recargar
+    pedidosData = pedidosData.map(p => p.id === id ? { ...p, estado: 'visto' } : p);
+    renderPedidos(pedidosData);
+    showToast('✓ Pedido marcado como visto');
+  } catch (e) { console.error(e); }
+}
+
+function contactarCliente(whatsapp, nombre) {
+  const msg = `Hola ${nombre}, tu pedido en ${CONFIG.nombreTienda} está siendo preparado. 🛒`;
+  window.open(`https://wa.me/52${whatsapp}?text=${encodeURIComponent(msg)}`, '_blank');
+}
+
 // ══════════════════════════════════════════════════════
 // CONFIG
 // ══════════════════════════════════════════════════════
@@ -915,8 +1078,9 @@ function switchTab(btn) {
   document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
   btn.classList.add('active');
   document.getElementById('panel-' + btn.dataset.panel).classList.add('active');
-  if (btn.dataset.panel === 'salud')  renderSalud();
-  if (btn.dataset.panel === 'surtir') renderSurtir();
+  if (btn.dataset.panel === 'salud')   renderSalud();
+  if (btn.dataset.panel === 'surtir')  renderSurtir();
+  if (btn.dataset.panel === 'pedidos') cargarPedidos();
 }
 
 // ══════════════════════════════════════════════════════
@@ -1140,14 +1304,7 @@ function toggleVoz() {
 
   vozRecognition.onerror = (event) => {
     setVozEstado('idle');
-    const errores = {
-      'not-allowed': 'Permiso de micrófono denegado. Ve a Configuración del sitio en Chrome.',
-      'no-speech': '',
-      'network': 'Error de red. Verifica tu conexión.',
-      'audio-capture': 'No se detectó micrófono en este dispositivo.'
-    };
-    const msg = errores[event.error] || ('Error de micrófono: ' + event.error);
-    if (msg) showToast(msg);
+    if (event.error !== 'no-speech') showToast('Error de micrófono: ' + event.error);
   };
 
   vozRecognition.onend = () => {
