@@ -636,50 +636,62 @@
       }
     }
 
+
     /* ═══════════════════════════════════════════════════════════
-       DESKTOP RESPONSIVE — 600px+
+       MODAL REGISTRO CLIENTE
     ═══════════════════════════════════════════════════════════ */
-    @media (min-width: 600px) {
-      /* Centra y limita el ancho máximo del contenido */
-      .header { padding: 12px 24px 10px; }
-      .header__top, .cat-bar { max-width: 960px; margin-left: auto; margin-right: auto; }
-
-      .greeting { max-width: 960px; margin-left: auto; margin-right: auto; }
-      .section__head { max-width: 960px; margin-left: auto; margin-right: auto; padding: 0 24px; }
-
-      /* Favoritos: grid en lugar de scroll horizontal */
-      .fav-scroll {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-        overflow-x: visible;
-        padding: 4px 24px 8px;
-        max-width: 960px;
-        margin: 0 auto;
-        gap: 16px;
-      }
-      .fav-scroll .product-card {
-        flex: unset;
-        width: auto;
-      }
-
-      /* Explorar: más columnas en desktop */
-      .explorar-grid {
-        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-        justify-content: unset;
-        max-width: 960px;
-        margin: 0 auto;
-        padding: 4px 24px 120px;
-        gap: 16px;
-      }
-
-      /* Cart drawer más ancho en desktop */
-      .cart-drawer { max-width: 480px; margin: 0 auto; }
+    .registro-overlay {
+      display: none; position: fixed; inset: 0; z-index: 999;
+      background: rgba(0,0,0,.55); backdrop-filter: blur(4px);
+      align-items: center; justify-content: center; padding: 24px;
     }
-
-    @media (min-width: 960px) {
-      .fav-scroll, .explorar-grid { padding-left: 0; padding-right: 0; }
+    .registro-overlay.open { display: flex; }
+    .registro-card {
+      background: var(--blanco); border-radius: 24px;
+      padding: 32px 24px 28px; width: 100%; max-width: 360px;
+      box-shadow: 0 24px 60px rgba(0,0,0,.18);
+      animation: fade-up .3s var(--ease) both;
     }
-
+    .registro-logo {
+      width: 56px; height: 56px; border-radius: 16px;
+      background: var(--verde); display: flex; align-items: center;
+      justify-content: center; margin: 0 auto 16px;
+    }
+    .registro-logo svg { width: 28px; height: 28px; }
+    .registro-card h2 {
+      font-family: var(--font-head); font-size: 1.2rem;
+      color: var(--texto); text-align: center; margin-bottom: 6px;
+    }
+    .registro-card p {
+      font-size: .85rem; color: var(--subtexto);
+      text-align: center; margin-bottom: 24px;
+    }
+    .registro-field { margin-bottom: 14px; }
+    .registro-field label {
+      display: block; font-size: .8rem; font-weight: 700;
+      color: var(--subtexto); margin-bottom: 6px; text-transform: uppercase; letter-spacing: .04em;
+    }
+    .registro-field input {
+      width: 100%; padding: 12px 14px; border-radius: 12px;
+      border: 1.5px solid var(--borde); font-family: var(--font-body);
+      font-size: .95rem; color: var(--texto); background: var(--crema);
+      outline: none; transition: border-color 150ms;
+    }
+    .registro-field input:focus { border-color: var(--verde); }
+    .btn-registro {
+      width: 100%; padding: 14px; border-radius: 12px;
+      background: var(--verde); color: #fff;
+      font-family: var(--font-head); font-size: 1rem;
+      font-weight: 700; cursor: pointer; border: none;
+      margin-top: 6px; transition: background 150ms;
+    }
+    .btn-registro:hover { background: var(--verde-dark); }
+    .btn-registro:disabled { opacity: .6; cursor: not-allowed; }
+    /* Saludo en header */
+    .header__saludo {
+      font-size: .75rem; color: var(--subtexto);
+      margin-top: 1px;
+    }
   </style>
 </head>
 <body>
@@ -697,7 +709,10 @@
           <path d="M16 10a4 4 0 0 1-8 0"/>
         </svg>
       </div>
+      <div>
       <h1 class="header__title"><span class="store-name" id="storeName"></span></h1>
+      <div class="header__saludo" id="headerSaludo"></div>
+    </div>
     </div>
 
     <button class="cart-btn" id="cartOpenBtn" aria-label="Abrir carrito">
@@ -871,6 +886,34 @@
   </div>
 </div>
 
+
+<!-- ═══════════ MODAL REGISTRO ═══════════ -->
+<div class="registro-overlay" id="registroOverlay">
+  <div class="registro-card">
+    <div class="registro-logo">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+           stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+        <line x1="3" y1="6" x2="21" y2="6"/>
+        <path d="M16 10a4 4 0 0 1-8 0"/>
+      </svg>
+    </div>
+    <h2>¡Bienvenido a Super 10!</h2>
+    <p>Dinos tu nombre para personalizar tu experiencia de compra</p>
+    <div class="registro-field">
+      <label>Tu nombre</label>
+      <input type="text" id="regNombre" placeholder="Ej. María García" autocomplete="given-name">
+    </div>
+    <div class="registro-field">
+      <label>Tu WhatsApp</label>
+      <input type="tel" id="regWhatsapp" placeholder="Ej. 5512345678" autocomplete="tel">
+    </div>
+    <button class="btn-registro" id="btnRegistro" onclick="registrarCliente()">
+      Entrar a la tienda →
+    </button>
+  </div>
+</div>
+
 <script>
 /* ═══════════════════════════════════════════════════════════
    CONFIG
@@ -918,6 +961,129 @@ let allProducts = [];
 let activeData  = null;   // vista actual (puede ser filtrada)
 let catalogData = null;   // catálogo completo original (nunca se sobreescribe con filtros)
 
+
+/* ═══════════════════════════════════════════════════════════
+   CLIENTE — Registro e identificación
+═══════════════════════════════════════════════════════════ */
+let clienteActual = null;
+
+function getClienteLocal() {
+  try {
+    const c = localStorage.getItem('super10_cliente');
+    return c ? JSON.parse(c) : null;
+  } catch { return null; }
+}
+
+function setClienteLocal(cliente) {
+  try { localStorage.setItem('super10_cliente', JSON.stringify(cliente)); } catch {}
+}
+
+function mostrarRegistro() {
+  document.getElementById('registroOverlay').classList.add('open');
+  setTimeout(() => document.getElementById('regNombre').focus(), 100);
+}
+
+function ocultarRegistro() {
+  document.getElementById('registroOverlay').classList.remove('open');
+}
+
+async function registrarCliente() {
+  const nombre = document.getElementById('regNombre').value.trim();
+  const whatsapp = document.getElementById('regWhatsapp').value.trim().replace(/\D/g, '');
+
+  if (!nombre) { document.getElementById('regNombre').focus(); return; }
+  if (!whatsapp || whatsapp.length < 10) { document.getElementById('regWhatsapp').focus(); return; }
+
+  const btn = document.getElementById('btnRegistro');
+  btn.disabled = true;
+  btn.textContent = 'Guardando...';
+
+  // Guardar/actualizar en Supabase
+  try {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/clientes`, {
+      method: 'POST',
+      headers: {
+        'apikey': SUPABASE_KEY,
+        'Authorization': `Bearer ${SUPABASE_KEY}`,
+        'Content-Type': 'application/json',
+        'Prefer': 'resolution=merge-duplicates,return=representation'
+      },
+      body: JSON.stringify({ nombre, whatsapp })
+    });
+    const data = await res.json();
+    const cliente = Array.isArray(data) ? data[0] : data;
+    clienteActual = { id: cliente.id, nombre, whatsapp };
+  } catch (e) {
+    // Si falla Supabase igual guardamos local
+    clienteActual = { nombre, whatsapp };
+    console.warn('Supabase cliente error:', e);
+  }
+
+  setClienteLocal(clienteActual);
+  aplicarCliente(clienteActual);
+  ocultarRegistro();
+
+  btn.disabled = false;
+  btn.textContent = 'Entrar a la tienda →';
+}
+
+function aplicarCliente(cliente) {
+  clienteActual = cliente;
+  const primerNombre = cliente.nombre.split(' ')[0];
+  document.getElementById('headerSaludo').textContent = `Hola, ${primerNombre} 👋`;
+}
+
+function initCliente() {
+  const local = getClienteLocal();
+  if (local) {
+    aplicarCliente(local);
+  } else {
+    mostrarRegistro();
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   PEDIDOS — Guardar en Supabase
+═══════════════════════════════════════════════════════════ */
+async function guardarPedido() {
+  if (!cart.length) return;
+
+  const items = cart.map(i => ({
+    id: i.id,
+    nombre: i.nombre,
+    qty: i.qty,
+    precio: i.precio,
+    subtotal: +(i.qty * i.precio).toFixed(2)
+  }));
+  const total = +cart.reduce((s, i) => s + i.qty * i.precio, 0).toFixed(2);
+
+  const pedido = {
+    items,
+    total,
+    estado: 'nuevo',
+    tipo_entrega: 'recoger',
+    cliente_nombre: clienteActual?.nombre || 'Anónimo',
+    cliente_whatsapp: clienteActual?.whatsapp || '',
+    cliente_id: clienteActual?.id || null
+  };
+
+  try {
+    await fetch(`${SUPABASE_URL}/rest/v1/pedidos`, {
+      method: 'POST',
+      headers: {
+        'apikey': SUPABASE_KEY,
+        'Authorization': `Bearer ${SUPABASE_KEY}`,
+        'Content-Type': 'application/json',
+        'Prefer': 'return=minimal'
+      },
+      body: JSON.stringify(pedido)
+    });
+    console.log('Pedido guardado en Supabase');
+  } catch (e) {
+    console.warn('Error guardando pedido:', e);
+  }
+}
+
 /* ═══════════════════════════════════════════════════════════
    INIT
 ═══════════════════════════════════════════════════════════ */
@@ -928,6 +1094,7 @@ document.addEventListener('DOMContentLoaded', () => {
   setupCartEvents();
   setupSearch();
   fetchCatalog();
+  initCliente();
 });
 
 /* ═══════════════════════════════════════════════════════════
@@ -1266,23 +1433,28 @@ function loadCart() {
 /* ═══════════════════════════════════════════════════════════
    WHATSAPP
 ═══════════════════════════════════════════════════════════ */
-function sendWhatsApp() {
+async function sendWhatsApp() {
   if (!cart.length) return;
 
+  // Guardar pedido en Supabase primero
+  await guardarPedido();
+
+  const nombre = clienteActual?.nombre || '';
   const lineas = cart.map(i =>
     `- ${i.qty}x ${i.nombre} → $${(i.qty * i.precio).toFixed(2)}`
   ).join('\n');
   const total = cart.reduce((s, i) => s + i.qty * i.precio, 0);
 
   const msg = [
-    `🛒 *Pedido para ${CONFIG.nombreTienda}*`,
+    `🛒 *Nuevo pedido — ${CONFIG.nombreTienda}*`,
+    nombre ? `👤 Cliente: ${nombre}` : '',
     '',
     lineas,
     '',
     `*Total: $${total.toFixed(2)}*`,
     '',
-    '_Enviado desde Mi Tienda_'
-  ].join('\n');
+    '_Enviado desde la tienda online_'
+  ].filter(l => l !== null && l !== undefined && !(l === '' && msg)).join('\n');
 
   const url = `https://wa.me/${CONFIG.whatsappNumero}?text=${encodeURIComponent(msg)}`;
   window.open(url, '_blank');
