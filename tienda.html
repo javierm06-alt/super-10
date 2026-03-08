@@ -380,6 +380,34 @@
     }
 
     /* ═══════════════════════════════════════════════════════════
+       SUBCATEGORY BAR
+    ═══════════════════════════════════════════════════════════ */
+    .subcat-bar {
+      display: none;
+      gap: 8px;
+      padding: 8px 16px 4px;
+      overflow-x: auto;
+      background: var(--blanco);
+      border-bottom: 1px solid var(--borde);
+    }
+    .subcat-bar.visible { display: flex; }
+    .subcat-pill {
+      flex-shrink: 0;
+      padding: 5px 14px;
+      border-radius: 20px;
+      border: 1.5px solid var(--borde);
+      background: var(--blanco);
+      font-family: var(--font-body);
+      font-size: .8rem; font-weight: 600;
+      color: var(--subtexto);
+      cursor: pointer;
+      transition: all 150ms var(--ease);
+      white-space: nowrap;
+    }
+    .subcat-pill:hover  { border-color: var(--verde); color: var(--verde); }
+    .subcat-pill.active { background: var(--verde); border-color: var(--verde); color: #fff; }
+
+    /* ═══════════════════════════════════════════════════════════
        SKELETON LOADING
     ═══════════════════════════════════════════════════════════ */
     @keyframes shimmer {
@@ -773,6 +801,9 @@
   <button class="cat-pill" data-cat="Higiene"          onclick="filterByCat('Higiene')">🧻 Higiene</button>
 </div>
 
+<!-- ═══════════ SUBCATEGORY BAR ═══════════ -->
+<div class="subcat-bar no-scrollbar" id="subcatBar"></div>
+
 <!-- ═══════════ GREETING CHIP ═══════════ -->
 <div class="greeting" id="greetingChip">
   <div class="greeting__avatar" aria-hidden="true">🤖</div>
@@ -1103,7 +1134,7 @@ document.addEventListener('DOMContentLoaded', () => {
 async function fetchCatalogDirecto() {
   console.log('Intentando Supabase directo...');
   const res = await fetch(
-    `${SUPABASE_URL}/rest/v1/catalogo_productos?select=id,nombre,categoria,precio,unidad,descripcion,imagen_url&order=id.asc`,
+    `${SUPABASE_URL}/rest/v1/catalogo_productos?select=id,nombre,categoria,subcategoria,precio,unidad,descripcion,imagen_url&order=id.asc`,
     { headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` } }
   );
   console.log('Response status:', res.status);
@@ -1553,13 +1584,22 @@ function selectSuggestion(nombre) {
 }
 
 function filterByCat(cat) {
-  console.log('filterByCat:', cat, '| catalogData:', !!catalogData);
+  console.log('filterByCat:', cat);
 
   document.querySelectorAll('.cat-pill').forEach(p => {
     p.classList.toggle('active',
       cat === null ? p.dataset.cat === '' : p.dataset.cat === cat
     );
   });
+
+  // Mostrar/ocultar subcategory bar
+  const subcatBar = document.getElementById('subcatBar');
+  if (cat === 'Bebidas' && catalogData) {
+    renderSubcatBar(cat);
+  } else {
+    subcatBar.classList.remove('visible');
+    subcatBar.innerHTML = '';
+  }
 
   if (!catalogData) return;
 
@@ -1570,10 +1610,8 @@ function filterByCat(cat) {
     return;
   }
 
-  const favsFiltrados = (catalogData.favoritos || [])
-    .filter(p => p.categoria === cat);
-  const explFiltrados = (catalogData.explorar || [])
-    .filter(p => p.categoria === cat);
+  const favsFiltrados = (catalogData.favoritos || []).filter(p => p.categoria === cat);
+  const explFiltrados = (catalogData.explorar  || []).filter(p => p.categoria === cat);
 
   renderCatalog({
     saludo:          catalogData.saludo,
@@ -1581,6 +1619,62 @@ function filterByCat(cat) {
     explorar:        explFiltrados,
     total_favoritos: favsFiltrados.length,
     total_explorar:  explFiltrados.length
+  });
+
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+/* Subcategorías — solo Bebidas por ahora */
+const SUBCAT_EMOJIS = {
+  'Refrescos':        '🥤',
+  'Jugos':            '🧃',
+  'Aguas':            '💧',
+  'Hidratantes':      '⚡',
+  'Bebidas en polvo': '🫙',
+  'Otras bebidas':    '🍶',
+};
+
+function renderSubcatBar(cat) {
+  const subcatBar = document.getElementById('subcatBar');
+  const todos = [...(catalogData.favoritos || []), ...(catalogData.explorar || [])]
+    .filter(p => p.categoria === cat);
+
+  // Obtener subcategorías únicas en orden definido
+  const orden = ['Refrescos','Jugos','Aguas','Hidratantes','Bebidas en polvo','Otras bebidas'];
+  const subcats = orden.filter(s => todos.some(p => p.subcategoria === s));
+
+  if (!subcats.length) { subcatBar.classList.remove('visible'); return; }
+
+  subcatBar.innerHTML = `
+    <button class="subcat-pill active" data-subcat="" onclick="filterBySubcat(null, '${cat}')">
+      Todas
+    </button>
+    ${subcats.map(s => `
+      <button class="subcat-pill" data-subcat="${esc(s)}" onclick="filterBySubcat('${esc(s)}', '${cat}')">
+        ${SUBCAT_EMOJIS[s] || ''} ${esc(s)}
+      </button>
+    `).join('')}
+  `;
+  subcatBar.classList.add('visible');
+}
+
+function filterBySubcat(subcat, cat) {
+  // Actualizar pill activa
+  document.querySelectorAll('.subcat-pill').forEach(p => {
+    p.classList.toggle('active',
+      subcat === null ? p.dataset.subcat === '' : p.dataset.subcat === subcat
+    );
+  });
+
+  const favsFiltrados = (catalogData.favoritos || [])
+    .filter(p => p.categoria === cat && (subcat === null || p.subcategoria === subcat));
+  const explFiltrados = (catalogData.explorar  || [])
+    .filter(p => p.categoria === cat && (subcat === null || p.subcategoria === subcat));
+
+  renderCatalog({
+    saludo:    catalogData.saludo,
+    favoritos: favsFiltrados,
+    explorar:  explFiltrados,
   });
 
   window.scrollTo({ top: 0, behavior: 'smooth' });
