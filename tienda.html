@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8">
@@ -11,18 +11,18 @@
   <link rel="manifest" href="manifest.json">
   <title>Mi Tienda</title>
 
-  <!-- Varela Round (headings) + Nunito Sans (body) â€” UI Pro Max: Soft Rounded pairing -->
+  <!-- Varela Round (headings) + Nunito Sans (body) — UI Pro Max: Soft Rounded pairing -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;500;600;700&family=Varela+Round&display=swap" rel="stylesheet">
 
   <style>
-    /* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
-       DESIGN TOKENS â€” Mercado Mexicano
+    /* ═══════════════════════════════════════════════════════════
+       DESIGN TOKENS — Mercado Mexicano
        Style:      Vibrant & Block-based (UI Pro Max grocery/retail)
        Typography: Varela Round + Nunito Sans (Soft Rounded pairing)
-       Palette:    Verde mercado + Naranja + Crema cÃ¡lida
-    â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+       Palette:    Verde mercado + Naranja + Crema cálida
+    ═══════════════════════════════════════════════════════════ */
     :root {
       --verde:          #1B4F8A;
       --verde-dark:     #132F52;
@@ -46,7 +46,7 @@
       --ease:           cubic-bezier(.4,0,.2,1);
     }
 
-    /* â”€â”€ Reset â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+    /* ── Reset ──────────────────────────────────────────────── */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html { font-size: 16px; -webkit-tap-highlight-color: transparent; }
     body {
@@ -61,9 +61,9 @@
     .no-scrollbar { scrollbar-width: none; -ms-overflow-style: none; }
     .no-scrollbar::-webkit-scrollbar { display: none; }
 
-    /* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+    /* ═══════════════════════════════════════════════════════════
        HEADER
-    â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+    ═══════════════════════════════════════════════════════════ */
     .header {
       position: sticky; top: 0; z-index: 100;
       background: var(--blanco);
@@ -90,7 +90,7 @@
     }
     .header__title span { color: var(--verde); }
 
-    /* Cart button â€” min 44Ã—44px (UX Pro Max touch rule) */
+    /* Cart button — min 44×44px (UX Pro Max touch rule) */
     .cart-btn {
       position: relative;
       min-width: 44px; min-height: 44px;
@@ -189,9 +189,9 @@
     }
     .sugg-thumb img { width: 100%; height: 100%; object-fit: contain; }
 
-    /* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+    /* ═══════════════════════════════════════════════════════════
        GREETING CHIP
-    â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+    ═══════════════════════════════════════════════════════════ */
     .greeting {
       margin: 14px 16px 0;
       padding: 12px 14px;
@@ -212,9 +212,9 @@
     }
     .greeting__text strong { font-weight: 700; }
 
-    /* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+    /* ═══════════════════════════════════════════════════════════
        SECTION HEADERS
-    â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+    ═══════════════════════════════════════════════════════════ */
     .section { margin-top: 24px; }
     .section__head {
       display: flex; align-items: center;
@@ -234,9 +234,9 @@
       padding: 2px 9px; border-radius: 20px;
     }
 
-    /* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
-       FAVORITOS â€” horizontal scroll with snap
-    â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+    /* ═══════════════════════════════════════════════════════════
+       FAVORITOS — horizontal scroll with snap
+    ═══════════════════════════════════════════════════════════ */
     .fav-scroll {
       display: flex; gap: 12px;
       padding: 4px 16px 8px;
@@ -254,12 +254,12 @@
       height: 140px;
     }
 
-    /* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
-       EXPLORAR â€” 2-column grid
-    â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+    /* ═══════════════════════════════════════════════════════════
+       EXPLORAR — 2-column grid
+    ═══════════════════════════════════════════════════════════ */
     .explorar-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(155px, 1fr));
+      grid-template-columns: repeat(2, 160px);
       justify-content: center;
       gap: 12px;
       padding: 4px 16px 120px; /* bottom padding clears cart CTA */
@@ -271,9 +271,9 @@
       height: 140px;
     }
 
-    /* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+    /* ═══════════════════════════════════════════════════════════
        PRODUCT CARD
-    â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+    ═══════════════════════════════════════════════════════════ */
     .product-card {
       background: var(--blanco);
       border-radius: var(--r-card);
@@ -341,7 +341,7 @@
 
     .card__controls { margin-top: auto; padding-top: 8px; }
 
-    /* Add button â€” min 44px height (UX rule) */
+    /* Add button — min 44px height (UX rule) */
     .btn-add {
       width: 100%; min-height: 44px;
       background: var(--acento); color: #fff;
@@ -361,7 +361,7 @@
       background: var(--verde-light); border-radius: var(--r-btn);
       padding: 4px; min-height: 44px;
     }
-    /* min 44Ã—44px on qty buttons (UX touch rule) */
+    /* min 44×44px on qty buttons (UX touch rule) */
     .qty-ctrl__btn {
       min-width: 36px; min-height: 36px;
       display: flex; align-items: center; justify-content: center;
@@ -379,9 +379,9 @@
       color: var(--verde-dark); min-width: 24px; text-align: center;
     }
 
-    /* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+    /* ═══════════════════════════════════════════════════════════
        SUBCATEGORY BAR
-    â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+    ═══════════════════════════════════════════════════════════ */
     .subcat-bar {
       display: none;
       gap: 8px;
@@ -407,9 +407,9 @@
     .subcat-pill:hover  { border-color: var(--verde); color: var(--verde); }
     .subcat-pill.active { background: var(--verde); border-color: var(--verde); color: #fff; }
 
-    /* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+    /* ═══════════════════════════════════════════════════════════
        SKELETON LOADING
-    â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+    ═══════════════════════════════════════════════════════════ */
     @keyframes shimmer {
       0%   { background-position: -200% 0; }
       100% { background-position:  200% 0; }
@@ -432,9 +432,9 @@
     .skel-card .sk-line { height: 10px; }
     .skel-card .sk-btn  { height: 40px; border-radius: var(--r-btn); margin-top: 2px; }
 
-    /* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+    /* ═══════════════════════════════════════════════════════════
        EMPTY STATE
-    â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+    ═══════════════════════════════════════════════════════════ */
     .empty-state {
       grid-column: span 2;
       display: flex; flex-direction: column;
@@ -445,9 +445,9 @@
     .empty-state svg { width: 52px; height: 52px; opacity: .3; }
     .empty-state p { font-size: .9rem; line-height: 1.4; }
 
-    /* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+    /* ═══════════════════════════════════════════════════════════
        CART OVERLAY + BOTTOM SHEET
-    â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+    ═══════════════════════════════════════════════════════════ */
     .overlay {
       position: fixed; inset: 0; z-index: 200;
       background: rgba(28,25,23,.5);
@@ -612,18 +612,18 @@
     }
     .btn-vaciar:hover { color: #e53935; }
 
-    /* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+    /* ═══════════════════════════════════════════════════════════
        FOOTER
-    â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+    ═══════════════════════════════════════════════════════════ */
     .footer {
       padding: 24px 16px 40px;
       text-align: center;
       font-size: .78rem; color: var(--subtexto);
     }
 
-    /* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+    /* ═══════════════════════════════════════════════════════════
        CATEGORY BAR
-    â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+    ═══════════════════════════════════════════════════════════ */
     .cat-bar {
       display: flex; gap: 8px;
       overflow-x: auto; padding: 8px 16px;
@@ -647,9 +647,9 @@
       border-color: var(--verde); color: var(--verde);
     }
 
-    /* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+    /* ═══════════════════════════════════════════════════════════
        FADE-UP ANIMATION
-    â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+    ═══════════════════════════════════════════════════════════ */
     @keyframes fade-up {
       from { opacity: 0; transform: translateY(14px); }
       to   { opacity: 1; transform: translateY(0); }
@@ -665,9 +665,9 @@
     }
 
 
-    /* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+    /* ═══════════════════════════════════════════════════════════
        MODAL REGISTRO CLIENTE
-    â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+    ═══════════════════════════════════════════════════════════ */
     .registro-overlay {
       display: none; position: fixed; inset: 0; z-index: 999;
       background: rgba(0,0,0,.55); backdrop-filter: blur(4px);
@@ -724,7 +724,7 @@
 </head>
 <body>
 
-<!-- â•â•â•â•â•â•â•â•â•â•â• HEADER â•â•â•â•â•â•â•â•â•â•â• -->
+<!-- ═══════════ HEADER ═══════════ -->
 <header class="header">
   <div class="header__top">
     <div class="header__brand">
@@ -755,8 +755,8 @@
   </div>
 
   <div class="search-wrap">
-    <!-- BotÃ³n volver (visible solo con texto) -->
-    <button class="search-back" id="searchBack" aria-label="Volver al catÃ¡logo">
+    <!-- Botón volver (visible solo con texto) -->
+    <button class="search-back" id="searchBack" aria-label="Volver al catálogo">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
            stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"
            aria-hidden="true">
@@ -773,11 +773,11 @@
       type="search"
       class="search-input"
       id="searchInput"
-      placeholder="Buscar productosâ€¦"
+      placeholder="Buscar productos…"
       aria-label="Buscar productos"
       autocomplete="off"
     >
-    <button class="search-clear" id="searchClear" aria-label="Limpiar bÃºsqueda">
+    <button class="search-clear" id="searchClear" aria-label="Limpiar búsqueda">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
            stroke="currentColor" stroke-width="2.8" stroke-linecap="round" aria-hidden="true">
         <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
@@ -787,31 +787,31 @@
   </div>
 </header>
 
-<!-- â•â•â•â•â•â•â•â•â•â•â• CATEGORY BAR â•â•â•â•â•â•â•â•â•â•â• -->
+<!-- ═══════════ CATEGORY BAR ═══════════ -->
 <div class="cat-bar no-scrollbar" id="catBar">
-  <button class="cat-pill active" data-cat=""          onclick="filterByCat(null)">ðŸ  Inicio</button>
-  <button class="cat-pill" data-cat="Bebidas"          onclick="filterByCat('Bebidas')">ðŸ¥¤ Bebidas</button>
-  <button class="cat-pill" data-cat="Botanas"          onclick="filterByCat('Botanas')">ðŸŒ® Botanas</button>
-  <button class="cat-pill" data-cat="LÃ¡cteos"          onclick="filterByCat('LÃ¡cteos')">ðŸ¥› LÃ¡cteos</button>
-  <button class="cat-pill" data-cat="BÃ¡sicos"          onclick="filterByCat('BÃ¡sicos')">ðŸŒ½ BÃ¡sicos</button>
-  <button class="cat-pill" data-cat="Frutas"           onclick="filterByCat('Frutas')">ðŸ¥‘ Frutas</button>
-  <button class="cat-pill" data-cat="PanaderÃ­a"        onclick="filterByCat('PanaderÃ­a')">ðŸž PanaderÃ­a</button>
-  <button class="cat-pill" data-cat="Enlatados"        onclick="filterByCat('Enlatados')">ðŸ¥« Enlatados</button>
-  <button class="cat-pill" data-cat="Abarrotes"        onclick="filterByCat('Abarrotes')">ðŸ›’ Abarrotes</button>
-  <button class="cat-pill" data-cat="Limpieza"         onclick="filterByCat('Limpieza')">ðŸ§¹ Limpieza</button>
-  <button class="cat-pill" data-cat="Higiene"          onclick="filterByCat('Higiene')">ðŸ§» Higiene</button>
+  <button class="cat-pill active" data-cat=""          onclick="filterByCat(null)">🏠 Inicio</button>
+  <button class="cat-pill" data-cat="Bebidas"          onclick="filterByCat('Bebidas')">🥤 Bebidas</button>
+  <button class="cat-pill" data-cat="Botanas"          onclick="filterByCat('Botanas')">🌮 Botanas</button>
+  <button class="cat-pill" data-cat="Lácteos"          onclick="filterByCat('Lácteos')">🥛 Lácteos</button>
+  <button class="cat-pill" data-cat="Básicos"          onclick="filterByCat('Básicos')">🌽 Básicos</button>
+  <button class="cat-pill" data-cat="Frutas"           onclick="filterByCat('Frutas')">🥑 Frutas</button>
+  <button class="cat-pill" data-cat="Panadería"        onclick="filterByCat('Panadería')">🍞 Panadería</button>
+  <button class="cat-pill" data-cat="Enlatados"        onclick="filterByCat('Enlatados')">🥫 Enlatados</button>
+  <button class="cat-pill" data-cat="Abarrotes"        onclick="filterByCat('Abarrotes')">🛒 Abarrotes</button>
+  <button class="cat-pill" data-cat="Limpieza"         onclick="filterByCat('Limpieza')">🧹 Limpieza</button>
+  <button class="cat-pill" data-cat="Higiene"          onclick="filterByCat('Higiene')">🧻 Higiene</button>
 </div>
 
-<!-- â•â•â•â•â•â•â•â•â•â•â• SUBCATEGORY BAR â•â•â•â•â•â•â•â•â•â•â• -->
+<!-- ═══════════ SUBCATEGORY BAR ═══════════ -->
 <div class="subcat-bar no-scrollbar" id="subcatBar"></div>
 
-<!-- â•â•â•â•â•â•â•â•â•â•â• GREETING CHIP â•â•â•â•â•â•â•â•â•â•â• -->
+<!-- ═══════════ GREETING CHIP ═══════════ -->
 <div class="greeting" id="greetingChip">
-  <div class="greeting__avatar" aria-hidden="true">ðŸ¤–</div>
-  <p class="greeting__text" id="greetingText">Cargando tu catÃ¡logo personalizadoâ€¦</p>
+  <div class="greeting__avatar" aria-hidden="true">🤖</div>
+  <p class="greeting__text" id="greetingText">Cargando tu catálogo personalizado…</p>
 </div>
 
-<!-- â•â•â•â•â•â•â•â•â•â•â• SKELETON (while loading) â•â•â•â•â•â•â•â•â•â•â• -->
+<!-- ═══════════ SKELETON (while loading) ═══════════ -->
 <section class="section" id="skeletonSection" aria-hidden="true">
   <div class="section__head">
     <div class="skeleton" style="width:130px;height:22px;border-radius:6px;"></div>
@@ -823,7 +823,7 @@
   </div>
 </section>
 
-<!-- â•â•â•â•â•â•â•â•â•â•â• FAVORITOS â€” horizontal scroll â•â•â•â•â•â•â•â•â•â•â• -->
+<!-- ═══════════ FAVORITOS — horizontal scroll ═══════════ -->
 <section class="section" id="favSection" style="display:none;" aria-label="Tus productos favoritos">
   <div class="section__head">
     <h2 class="section__title">
@@ -838,8 +838,8 @@
   <div class="fav-scroll no-scrollbar" id="favScroll"></div>
 </section>
 
-<!-- â•â•â•â•â•â•â•â•â•â•â• EXPLORAR â€” 2-column grid â•â•â•â•â•â•â•â•â•â•â• -->
-<section class="section" id="explSection" style="display:none;" aria-label="Explorar mÃ¡s productos">
+<!-- ═══════════ EXPLORAR — 2-column grid ═══════════ -->
+<section class="section" id="explSection" style="display:none;" aria-label="Explorar más productos">
   <div class="section__head">
     <h2 class="section__title">
       <!-- Compass / search icon -->
@@ -847,22 +847,22 @@
            stroke="#2B7A3C" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
         <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
       </svg>
-      Explorar mÃ¡s
+      Explorar más
     </h2>
     <span class="section__badge" id="explCount">0</span>
   </div>
   <div class="explorar-grid" id="explGrid"></div>
 </section>
 
-<!-- â•â•â•â•â•â•â•â•â•â•â• FOOTER â•â•â•â•â•â•â•â•â•â•â• -->
+<!-- ═══════════ FOOTER ═══════════ -->
 <footer class="footer">
-  <p>Mi Tienda Inteligente Â· n8n + Supabase</p>
+  <p>Mi Tienda Inteligente · n8n + Supabase</p>
 </footer>
 
-<!-- â•â•â•â•â•â•â•â•â•â•â• OVERLAY â•â•â•â•â•â•â•â•â•â•â• -->
+<!-- ═══════════ OVERLAY ═══════════ -->
 <div class="overlay" id="overlay"></div>
 
-<!-- â•â•â•â•â•â•â•â•â•â•â• CART BOTTOM SHEET â•â•â•â•â•â•â•â•â•â•â• -->
+<!-- ═══════════ CART BOTTOM SHEET ═══════════ -->
 <div class="cart-sheet" id="cartSheet"
      role="dialog" aria-modal="true" aria-label="Carrito de compras">
   <div class="sheet-handle" aria-hidden="true"></div>
@@ -883,18 +883,18 @@
         <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
         <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
       </svg>
-      <p>Tu carrito estÃ¡ vacÃ­o</p>
+      <p>Tu carrito está vacío</p>
     </div>
   </div>
   <div class="sheet-footer">
     <div class="delivery-options">
-      <p class="delivery-title">Â¿CÃ³mo recibes tu pedido?</p>
+      <p class="delivery-title">¿Cómo recibes tu pedido?</p>
       <div class="delivery-grid">
         <button class="delivery-btn active" id="btnPickup" onclick="selectDelivery('pickup')">
-          ðŸª <span>Recoger<br>en tienda</span>
+          🏪 <span>Recoger<br>en tienda</span>
         </button>
         <button class="delivery-btn disabled" id="btnEnvio" disabled>
-          ðŸšš <span>EnvÃ­o a<br>domicilio<br><small>PrÃ³ximamente</small></span>
+          🚚 <span>Envío a<br>domicilio<br><small>Próximamente</small></span>
         </button>
       </div>
     </div>
@@ -910,16 +910,16 @@
       Enviar por WhatsApp
     </button>
     <button class="btn-stripe" disabled>
-      ðŸ’³ Pagar en lÃ­nea â€” PrÃ³ximamente
+      💳 Pagar en línea — Próximamente
     </button>
     <button onclick="clearCart()" class="btn-vaciar">
-      ðŸ—‘ï¸ Vaciar carrito
+      🗑️ Vaciar carrito
     </button>
   </div>
 </div>
 
 
-<!-- â•â•â•â•â•â•â•â•â•â•â• MODAL REGISTRO â•â•â•â•â•â•â•â•â•â•â• -->
+<!-- ═══════════ MODAL REGISTRO ═══════════ -->
 <div class="registro-overlay" id="registroOverlay">
   <div class="registro-card">
     <div class="registro-logo">
@@ -930,26 +930,26 @@
         <path d="M16 10a4 4 0 0 1-8 0"/>
       </svg>
     </div>
-    <h2>Â¡Bienvenido a Super 10!</h2>
+    <h2>¡Bienvenido a Super 10!</h2>
     <p>Dinos tu nombre para personalizar tu experiencia de compra</p>
     <div class="registro-field">
       <label>Tu nombre</label>
-      <input type="text" id="regNombre" placeholder="Ej. MarÃ­a GarcÃ­a" autocomplete="given-name">
+      <input type="text" id="regNombre" placeholder="Ej. María García" autocomplete="given-name">
     </div>
     <div class="registro-field">
       <label>Tu WhatsApp</label>
       <input type="tel" id="regWhatsapp" placeholder="Ej. 5512345678" autocomplete="tel">
     </div>
     <button class="btn-registro" id="btnRegistro" onclick="registrarCliente()">
-      Entrar a la tienda â†’
+      Entrar a la tienda →
     </button>
   </div>
 </div>
 
 <script>
-/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+/* ═══════════════════════════════════════════════════════════
    CONFIG
-â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+═══════════════════════════════════════════════════════════ */
 const CONFIG = {
   webhookUrl:     'http://localhost:5678/webhook/tienda-catalogo',
   userId:         'demo_user_01',
@@ -958,45 +958,45 @@ const CONFIG = {
   eslogan:        'Tu tienda de confianza'
 };
 
-/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+/* ═══════════════════════════════════════════════════════════
    PRODUCT EMOJI MAP (same as app.js)
-â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+═══════════════════════════════════════════════════════════ */
 const PRODUCT_EMOJIS = {
-  'Leche Santa Clara 1L':'ðŸ¥›','Huevos San Juan 12 pzas':'ðŸ¥š',
-  'Pan Bimbo Blanco 680g':'ðŸž','Coca-Cola 2L':'ðŸ¥¤',
-  'Arroz SOS 1kg':'ðŸš','Frijol Negro La Sierra 560g':'ðŸ«˜',
-  'Aceite 1-2-3 1L':'ðŸ«’','AtÃºn Dolores en agua 140g':'ðŸŸ',
-  'JabÃ³n Roma 1kg':'ðŸ§¼','Papel HigiÃ©nico PÃ©talo 4r':'ðŸ§»',
-  'Tortillas de MaÃ­z 1kg':'ðŸ«“','AzÃºcar Morena 1kg':'ðŸ¯',
-  'CafÃ© NescafÃ© ClÃ¡sico 120g':'â˜•','Crema Lala 200ml':'ðŸ¶',
-  'Aguacate Hass (c/u)':'ðŸ¥‘'
+  'Leche Santa Clara 1L':'🥛','Huevos San Juan 12 pzas':'🥚',
+  'Pan Bimbo Blanco 680g':'🍞','Coca-Cola 2L':'🥤',
+  'Arroz SOS 1kg':'🍚','Frijol Negro La Sierra 560g':'🫘',
+  'Aceite 1-2-3 1L':'🫒','Atún Dolores en agua 140g':'🐟',
+  'Jabón Roma 1kg':'🧼','Papel Higiénico Pétalo 4r':'🧻',
+  'Tortillas de Maíz 1kg':'🫓','Azúcar Morena 1kg':'🍯',
+  'Café Nescafé Clásico 120g':'☕','Crema Lala 200ml':'🍶',
+  'Aguacate Hass (c/u)':'🥑'
 };
 const EMOJI_MAP = {
-  'LÃ¡cteos':'ðŸ¥›','BÃ¡sicos':'ðŸ¥š','PanaderÃ­a':'ðŸž','Bebidas':'ðŸ¥¤',
-  'Abarrotes':'ðŸ«˜','Enlatados':'ðŸ¥«','Limpieza':'ðŸ§¹','Higiene':'ðŸ§»',
-  'Frutas':'ðŸ¥‘','default':'ðŸ›ï¸'
+  'Lácteos':'🥛','Básicos':'🥚','Panadería':'🍞','Bebidas':'🥤',
+  'Abarrotes':'🫘','Enlatados':'🥫','Limpieza':'🧹','Higiene':'🧻',
+  'Frutas':'🥑','default':'🛍️'
 };
 
-/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+/* ═══════════════════════════════════════════════════════════
    SUPABASE (fallback directo si n8n no responde)
-â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+═══════════════════════════════════════════════════════════ */
 const SUPABASE_URL = 'https://dqrhqzdfzhkqpgawgjga.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_kponNfbiTEBSbJaP6tf-Xg_pVOdCApQ';
 // IDs de productos favoritos de demo_user_01
 const FAV_IDS = [1, 2, 4, 11, 13];
 
-/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+/* ═══════════════════════════════════════════════════════════
    STATE
-â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+═══════════════════════════════════════════════════════════ */
 let cart        = [];
 let allProducts = [];
 let activeData  = null;   // vista actual (puede ser filtrada)
-let catalogData = null;   // catÃ¡logo completo original (nunca se sobreescribe con filtros)
+let catalogData = null;   // catálogo completo original (nunca se sobreescribe con filtros)
 
 
-/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
-   CLIENTE â€” Registro e identificaciÃ³n
-â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+/* ═══════════════════════════════════════════════════════════
+   CLIENTE — Registro e identificación
+═══════════════════════════════════════════════════════════ */
 let clienteActual = null;
 
 function getClienteLocal() {
@@ -1056,13 +1056,13 @@ async function registrarCliente() {
   ocultarRegistro();
 
   btn.disabled = false;
-  btn.textContent = 'Entrar a la tienda â†’';
+  btn.textContent = 'Entrar a la tienda →';
 }
 
 function aplicarCliente(cliente) {
   clienteActual = cliente;
   const primerNombre = cliente.nombre.split(' ')[0];
-  document.getElementById('headerSaludo').textContent = `Hola, ${primerNombre} ðŸ‘‹`;
+  document.getElementById('headerSaludo').textContent = `Hola, ${primerNombre} 👋`;
 }
 
 function initCliente() {
@@ -1074,9 +1074,9 @@ function initCliente() {
   }
 }
 
-/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
-   PEDIDOS â€” Guardar en Supabase
-â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+/* ═══════════════════════════════════════════════════════════
+   PEDIDOS — Guardar en Supabase
+═══════════════════════════════════════════════════════════ */
 async function guardarPedido() {
   if (!cart.length) return;
 
@@ -1094,7 +1094,7 @@ async function guardarPedido() {
     total,
     estado: 'nuevo',
     tipo_entrega: 'recoger',
-    cliente_nombre: clienteActual?.nombre || 'AnÃ³nimo',
+    cliente_nombre: clienteActual?.nombre || 'Anónimo',
     cliente_whatsapp: clienteActual?.whatsapp || '',
     cliente_id: clienteActual?.id || null
   };
@@ -1116,9 +1116,9 @@ async function guardarPedido() {
   }
 }
 
-/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+/* ═══════════════════════════════════════════════════════════
    INIT
-â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+═══════════════════════════════════════════════════════════ */
 document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('storeName').textContent = CONFIG.nombreTienda;
   document.title = CONFIG.nombreTienda;
@@ -1129,9 +1129,9 @@ document.addEventListener('DOMContentLoaded', () => {
   initCliente();
 });
 
-/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
-   FETCH â€” Supabase directo (fallback cuando n8n no responde)
-â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+/* ═══════════════════════════════════════════════════════════
+   FETCH — Supabase directo (fallback cuando n8n no responde)
+═══════════════════════════════════════════════════════════ */
 async function fetchCatalogDirecto() {
   console.log('Intentando Supabase directo...');
   const res = await fetch(
@@ -1143,25 +1143,25 @@ async function fetchCatalogDirecto() {
   const productos = await res.json();
   console.log('Productos raw:', JSON.stringify(productos.slice(0, 2)));
 
-  // DiagnÃ³stico â€” verificar que imagen_url llega
-  console.group('[Tienda] Supabase â†’ catalogo_productos');
+  // Diagnóstico — verificar que imagen_url llega
+  console.group('[Tienda] Supabase → catalogo_productos');
   console.log('Total productos:', productos.length);
   productos.forEach(p => console.log(
-    `  ID ${p.id} | imagen_url: ${p.imagen_url ? 'âœ… ' + p.imagen_url.slice(0,60) + 'â€¦' : 'âŒ null/vacÃ­o'}`
+    `  ID ${p.id} | imagen_url: ${p.imagen_url ? '✅ ' + p.imagen_url.slice(0,60) + '…' : '❌ null/vacío'}`
   ));
   console.groupEnd();
 
   const favSet = new Set(FAV_IDS);
   return {
-    saludo: 'Â¡Hola! AquÃ­ tienes tu catÃ¡logo actualizado.',
+    saludo: '¡Hola! Aquí tienes tu catálogo actualizado.',
     favoritos: productos.filter(p => favSet.has(p.id)).map(p => ({ ...p, es_favorito: true })),
     explorar:  productos.filter(p => !favSet.has(p.id)).map(p => ({ ...p, es_favorito: false }))
   };
 }
 
-/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+/* ═══════════════════════════════════════════════════════════
    FETCH
-â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+═══════════════════════════════════════════════════════════ */
 async function fetchCatalog() {
   // 1. Intentar n8n webhook
   try {
@@ -1188,18 +1188,18 @@ async function fetchCatalog() {
     catalogData = data;
     renderCatalog(data);
   } catch (e) {
-    // 3. Error total â€” mostrar mensaje
+    // 3. Error total — mostrar mensaje
     document.getElementById('skeletonSection').style.display = 'none';
-    document.getElementById('greetingText').textContent = 'Error cargando el catÃ¡logo. Verifica tu conexiÃ³n.';
+    document.getElementById('greetingText').textContent = 'Error cargando el catálogo. Verifica tu conexión.';
     console.error('Supabase fallback error:', e);
     console.error('Error message:', e.message);
     console.error('Error stack:', e.stack);
   }
 }
 
-/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+/* ═══════════════════════════════════════════════════════════
    RENDER
-â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+═══════════════════════════════════════════════════════════ */
 function renderCatalog(data) {
   activeData  = data;
   allProducts = [...(data.favoritos || []), ...(data.explorar || [])];
@@ -1209,7 +1209,7 @@ function renderCatalog(data) {
 
   // Greeting
   document.getElementById('greetingText').innerHTML =
-    esc(data.saludo || '').replace(/(surtir\s+)([^,?Â¿]+)/i, '$1<strong>$2</strong>');
+    esc(data.saludo || '').replace(/(surtir\s+)([^,?¿]+)/i, '$1<strong>$2</strong>');
 
   // Favoritos
   const favSection = document.getElementById('favSection');
@@ -1237,9 +1237,9 @@ function renderCatalog(data) {
   cart.forEach(item => renderQtyCtrl(item.id, item.qty));
 }
 
-/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+/* ═══════════════════════════════════════════════════════════
    CARD TEMPLATE
-â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+═══════════════════════════════════════════════════════════ */
 function getEmoji(p) {
   return PRODUCT_EMOJIS[p.nombre] || EMOJI_MAP[p.categoria] || EMOJI_MAP.default;
 }
@@ -1252,7 +1252,7 @@ function productCard(p, delay) {
     : `<span aria-hidden="true" style="font-size:3rem;line-height:1">${getEmoji(p)}</span>`;
 
   const badge = p.es_favorito
-    ? `<div class="card__usual" aria-label="Producto usual">â˜… Usual</div>` : '';
+    ? `<div class="card__usual" aria-label="Producto usual">★ Usual</div>` : '';
 
   return `
     <article class="product-card fade-up"
@@ -1284,9 +1284,9 @@ function productCard(p, delay) {
     </article>`;
 }
 
-/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+/* ═══════════════════════════════════════════════════════════
    CART ACTIONS
-â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+═══════════════════════════════════════════════════════════ */
 function addToCart(id) {
   const p = allProducts.find(x => x.id === id);
   if (!p) return;
@@ -1335,7 +1335,7 @@ function selectDelivery(tipo) {
   document.getElementById('btnPickup').classList.toggle('active', tipo === 'pickup');
 }
 
-/* â”€â”€â”€ Control renderers â”€â”€â”€ */
+/* ─── Control renderers ─── */
 function renderQtyCtrl(id, qty) {
   const ctrl = document.getElementById('ctrl-' + id);
   if (!ctrl) return;
@@ -1372,9 +1372,9 @@ function renderAddBtn(id) {
     </button>`;
 }
 
-/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+/* ═══════════════════════════════════════════════════════════
    BADGE
-â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+═══════════════════════════════════════════════════════════ */
 function syncBadge() {
   const total = cart.reduce((s, i) => s + i.qty, 0);
   const badge = document.getElementById('cartBadge');
@@ -1389,9 +1389,9 @@ function syncBadge() {
   }
 }
 
-/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+/* ═══════════════════════════════════════════════════════════
    CART SHEET
-â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+═══════════════════════════════════════════════════════════ */
 function renderCartItems() {
   const container = document.getElementById('cartItems');
   const totalEl   = document.getElementById('cartTotal');
@@ -1404,7 +1404,7 @@ function renderCartItems() {
           <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
           <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
         </svg>
-        <p>Tu carrito estÃ¡ vacÃ­o</p>
+        <p>Tu carrito está vacío</p>
       </div>`;
     totalEl.textContent = '$0.00';
     return;
@@ -1422,13 +1422,13 @@ function renderCartItems() {
           <span class="cart-item__price">$${item.precio.toFixed(2)} / pza</span>
         </div>
         <div class="cart-item__qty">
-          <button onclick="changeQty(${item.id}, -1)" aria-label="Quitar uno">âˆ’</button>
+          <button onclick="changeQty(${item.id}, -1)" aria-label="Quitar uno">−</button>
           <span>${item.qty}</span>
           <button onclick="changeQty(${item.id}, +1)" aria-label="Agregar uno">+</button>
         </div>
         <div class="cart-item__subtotal">$${(item.qty * item.precio).toFixed(2)}</div>
         <button class="cart-item__remove" onclick="removeFromCart(${item.id})"
-          aria-label="Eliminar ${esc(item.nombre)}">Ã—</button>
+          aria-label="Eliminar ${esc(item.nombre)}">×</button>
       </div>`;
   }).join('');
 
@@ -1448,9 +1448,9 @@ function toggleCart(open) {
   document.body.style.overflow = open ? 'hidden' : '';
 }
 
-/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
-   PERSISTENCIA â€” localStorage
-â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+/* ═══════════════════════════════════════════════════════════
+   PERSISTENCIA — localStorage
+═══════════════════════════════════════════════════════════ */
 function saveCart() {
   try { localStorage.setItem('tienda_cart', JSON.stringify(cart)); } catch {}
 }
@@ -1462,9 +1462,9 @@ function loadCart() {
   } catch { cart = []; }
 }
 
-/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+/* ═══════════════════════════════════════════════════════════
    WHATSAPP
-â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+═══════════════════════════════════════════════════════════ */
 async function sendWhatsApp() {
   if (!cart.length) return;
 
@@ -1473,13 +1473,13 @@ async function sendWhatsApp() {
 
   const nombre = clienteActual?.nombre || '';
   const lineas = cart.map(i =>
-    `- ${i.qty}x ${i.nombre} â†’ $${(i.qty * i.precio).toFixed(2)}`
+    `- ${i.qty}x ${i.nombre} → $${(i.qty * i.precio).toFixed(2)}`
   ).join('\n');
   const total = cart.reduce((s, i) => s + i.qty * i.precio, 0);
 
   const msg = [
-    `ðŸ›’ *Nuevo pedido â€” ${CONFIG.nombreTienda}*`,
-    nombre ? `ðŸ‘¤ Cliente: ${nombre}` : '',
+    `🛒 *Nuevo pedido — ${CONFIG.nombreTienda}*`,
+    nombre ? `👤 Cliente: ${nombre}` : '',
     '',
     lineas,
     '',
@@ -1492,12 +1492,12 @@ async function sendWhatsApp() {
   window.open(url, '_blank');
 }
 
-/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+/* ═══════════════════════════════════════════════════════════
    SEARCH / FILTER
-â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
-/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+═══════════════════════════════════════════════════════════ */
+/* ═══════════════════════════════════════════════════════════
    SEARCH / FILTER
-â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+═══════════════════════════════════════════════════════════ */
 function normalize(str) {
   return String(str).toLowerCase()
     .normalize('NFD').replace(/[\u0300-\u036f]/g, '').trim();
@@ -1534,7 +1534,7 @@ function setupSearch() {
   clearBtn.addEventListener('click', clearSearch);
   backBtn.addEventListener('click',  clearSearch);
 
-  // Blur: solo cerrar dropdown, NO limpiar bÃºsqueda
+  // Blur: solo cerrar dropdown, NO limpiar búsqueda
   input.addEventListener('blur', () => {
     setTimeout(closeDropdown, 150); // delay para que el click en sugerencia dispare antes
   });
@@ -1625,14 +1625,14 @@ function filterByCat(cat) {
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-/* SubcategorÃ­as â€” solo Bebidas por ahora */
+/* Subcategorías — solo Bebidas por ahora */
 const SUBCAT_EMOJIS = {
-  'Refrescos':        'ðŸ¥¤',
-  'Jugos':            'ðŸ§ƒ',
-  'Aguas':            'ðŸ’§',
-  'Hidratantes':      'âš¡',
-  'Bebidas en polvo': 'ðŸ«™',
-  'Otras bebidas':    'ðŸ¶',
+  'Refrescos':        '🥤',
+  'Jugos':            '🧃',
+  'Aguas':            '💧',
+  'Hidratantes':      '⚡',
+  'Bebidas en polvo': '🫙',
+  'Otras bebidas':    '🍶',
 };
 
 function renderSubcatBar(cat) {
@@ -1640,7 +1640,7 @@ function renderSubcatBar(cat) {
   const todos = [...(catalogData.favoritos || []), ...(catalogData.explorar || [])]
     .filter(p => p.categoria === cat);
 
-  // Obtener subcategorÃ­as Ãºnicas en orden definido
+  // Obtener subcategorías únicas en orden definido
   const orden = ['Refrescos','Jugos','Aguas','Hidratantes','Bebidas en polvo','Otras bebidas'];
   const subcats = orden.filter(s => todos.some(p => p.subcategoria === s));
 
@@ -1712,9 +1712,9 @@ function filterCatalog(q) {
   }
 }
 
-/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+/* ═══════════════════════════════════════════════════════════
    UTILS
-â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+═══════════════════════════════════════════════════════════ */
 function esc(str) {
   return String(str)
     .replace(/&/g,'&amp;').replace(/</g,'&lt;')
@@ -1724,4 +1724,3 @@ function esc(str) {
 </script>
 </body>
 </html>
-
