@@ -1,79 +1,79 @@
-/* ═══════════════════════════════════════════════════════
-   TIENDA INTELIGENTE — App Logic
+﻿/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+   TIENDA INTELIGENTE â€” App Logic
    Fetches from n8n webhook, renders personalized catalog
-   ═══════════════════════════════════════════════════════ */
+   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 
-// ── Config ──────────────────────────────────────────────
+// â”€â”€ Config â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const CONFIG = {
-    // n8n webhook — cambia a tu URL de producción si aplica
-    webhookUrl: "http://localhost:5678/webhook/tienda-catalogo",
+    // n8n webhook â€” cambia a tu URL de producciÃ³n si aplica
+    webhookUrl: "",
     userId: "demo_user_01"
 };
 
-// ── Emoji map for product categories (fallback images) ──
+// â”€â”€ Emoji map for product categories (fallback images) â”€â”€
 const EMOJI_MAP = {
-    "Lácteos": "🥛",
-    "Básicos": "🥚",
-    "Panadería": "🍞",
-    "Bebidas": "🥤",
-    "Abarrotes": "🫘",
-    "Enlatados": "🥫",
-    "Limpieza": "🧹",
-    "Higiene": "🧻",
-    "Frutas": "🥑",
-    "default": "🛍️"
+    "LÃ¡cteos": "ðŸ¥›",
+    "BÃ¡sicos": "ðŸ¥š",
+    "PanaderÃ­a": "ðŸž",
+    "Bebidas": "ðŸ¥¤",
+    "Abarrotes": "ðŸ«˜",
+    "Enlatados": "ðŸ¥«",
+    "Limpieza": "ðŸ§¹",
+    "Higiene": "ðŸ§»",
+    "Frutas": "ðŸ¥‘",
+    "default": "ðŸ›ï¸"
 };
 
 const PRODUCT_EMOJIS = {
-    "Leche Santa Clara 1L": "🥛",
-    "Huevos San Juan 12 pzas": "🥚",
-    "Pan Bimbo Blanco 680g": "🍞",
-    "Coca-Cola 2L": "🥤",
-    "Arroz SOS 1kg": "🍚",
-    "Frijol Negro La Sierra 560g": "🫘",
-    "Aceite 1-2-3 1L": "🫒",
-    "Atún Dolores en agua 140g": "🐟",
-    "Jabón Roma 1kg": "🧼",
-    "Papel Higiénico Pétalo 4r": "🧻",
-    "Tortillas de Maíz 1kg": "🫓",
-    "Azúcar Morena 1kg": "🍯",
-    "Café Nescafé Clásico 120g": "☕",
-    "Crema Lala 200ml": "🍶",
-    "Aguacate Hass (c/u)": "🥑"
+    "Leche Santa Clara 1L": "ðŸ¥›",
+    "Huevos San Juan 12 pzas": "ðŸ¥š",
+    "Pan Bimbo Blanco 680g": "ðŸž",
+    "Coca-Cola 2L": "ðŸ¥¤",
+    "Arroz SOS 1kg": "ðŸš",
+    "Frijol Negro La Sierra 560g": "ðŸ«˜",
+    "Aceite 1-2-3 1L": "ðŸ«’",
+    "AtÃºn Dolores en agua 140g": "ðŸŸ",
+    "JabÃ³n Roma 1kg": "ðŸ§¼",
+    "Papel HigiÃ©nico PÃ©talo 4r": "ðŸ§»",
+    "Tortillas de MaÃ­z 1kg": "ðŸ«“",
+    "AzÃºcar Morena 1kg": "ðŸ¯",
+    "CafÃ© NescafÃ© ClÃ¡sico 120g": "â˜•",
+    "Crema Lala 200ml": "ðŸ¶",
+    "Aguacate Hass (c/u)": "ðŸ¥‘"
 };
 
-// ── State ───────────────────────────────────────────────
+// â”€â”€ State â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 let cart = [];
 let productDataMap = {}; // product_id -> { name, price, imageUrl } para referencia
 
-// ── Mock data (used if webhook is unreachable) ──────────
+// â”€â”€ Mock data (used if webhook is unreachable) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const MOCK_DATA = {
-    saludo: "¡Hola! Veo que te toca surtir Leche Santa Clara 1L, ¿la agregamos de una vez? 🛒",
+    saludo: "Â¡Hola! Veo que te toca surtir Leche Santa Clara 1L, Â¿la agregamos de una vez? ðŸ›’",
     favoritos: [
-        { id: 1, nombre: "Leche Santa Clara 1L", categoria: "Lácteos", precio: 28.50, unidad: "lt", descripcion: "Leche entera pasteurizada", es_favorito: true, ultima_compra: "2026-02-10" },
-        { id: 2, nombre: "Huevos San Juan 12 pzas", categoria: "Básicos", precio: 52.90, unidad: "doc", descripcion: "Huevo blanco fresco", es_favorito: true, ultima_compra: "2026-02-10" },
+        { id: 1, nombre: "Leche Santa Clara 1L", categoria: "LÃ¡cteos", precio: 28.50, unidad: "lt", descripcion: "Leche entera pasteurizada", es_favorito: true, ultima_compra: "2026-02-10" },
+        { id: 2, nombre: "Huevos San Juan 12 pzas", categoria: "BÃ¡sicos", precio: 52.90, unidad: "doc", descripcion: "Huevo blanco fresco", es_favorito: true, ultima_compra: "2026-02-10" },
         { id: 4, nombre: "Coca-Cola 2L", categoria: "Bebidas", precio: 32.00, unidad: "lt", descripcion: "Refresco de cola", es_favorito: true, ultima_compra: "2026-02-08" },
-        { id: 11, nombre: "Tortillas de Maíz 1kg", categoria: "Básicos", precio: 22.00, unidad: "kg", descripcion: "Tortillas frescas del día", es_favorito: true, ultima_compra: "2026-02-12" },
-        { id: 13, nombre: "Café Nescafé Clásico 120g", categoria: "Bebidas", precio: 89.90, unidad: "pza", descripcion: "Café soluble", es_favorito: true, ultima_compra: "2026-02-05" }
+        { id: 11, nombre: "Tortillas de MaÃ­z 1kg", categoria: "BÃ¡sicos", precio: 22.00, unidad: "kg", descripcion: "Tortillas frescas del dÃ­a", es_favorito: true, ultima_compra: "2026-02-12" },
+        { id: 13, nombre: "CafÃ© NescafÃ© ClÃ¡sico 120g", categoria: "Bebidas", precio: 89.90, unidad: "pza", descripcion: "CafÃ© soluble", es_favorito: true, ultima_compra: "2026-02-05" }
     ],
     explorar: [
-        { id: 3, nombre: "Pan Bimbo Blanco 680g", categoria: "Panadería", precio: 62.00, unidad: "pza", descripcion: "Pan de caja blanco", es_favorito: false },
+        { id: 3, nombre: "Pan Bimbo Blanco 680g", categoria: "PanaderÃ­a", precio: 62.00, unidad: "pza", descripcion: "Pan de caja blanco", es_favorito: false },
         { id: 5, nombre: "Arroz SOS 1kg", categoria: "Abarrotes", precio: 29.90, unidad: "kg", descripcion: "Arroz grano largo", es_favorito: false },
         { id: 6, nombre: "Frijol Negro La Sierra 560g", categoria: "Abarrotes", precio: 33.50, unidad: "pza", descripcion: "Frijoles refritos listos", es_favorito: false },
         { id: 7, nombre: "Aceite 1-2-3 1L", categoria: "Abarrotes", precio: 38.90, unidad: "lt", descripcion: "Aceite vegetal comestible", es_favorito: false },
-        { id: 8, nombre: "Atún Dolores en agua 140g", categoria: "Enlatados", precio: 22.50, unidad: "pza", descripcion: "Atún en trozos", es_favorito: false },
-        { id: 9, nombre: "Jabón Roma 1kg", categoria: "Limpieza", precio: 35.00, unidad: "kg", descripcion: "Jabón en polvo para ropa", es_favorito: false },
-        { id: 10, nombre: "Papel Higiénico Pétalo 4r", categoria: "Higiene", precio: 42.00, unidad: "paq", descripcion: "Papel higiénico suave", es_favorito: false },
-        { id: 12, nombre: "Azúcar Morena 1kg", categoria: "Abarrotes", precio: 32.00, unidad: "kg", descripcion: "Azúcar estándar morena", es_favorito: false },
-        { id: 14, nombre: "Crema Lala 200ml", categoria: "Lácteos", precio: 18.50, unidad: "pza", descripcion: "Crema ácida", es_favorito: false },
+        { id: 8, nombre: "AtÃºn Dolores en agua 140g", categoria: "Enlatados", precio: 22.50, unidad: "pza", descripcion: "AtÃºn en trozos", es_favorito: false },
+        { id: 9, nombre: "JabÃ³n Roma 1kg", categoria: "Limpieza", precio: 35.00, unidad: "kg", descripcion: "JabÃ³n en polvo para ropa", es_favorito: false },
+        { id: 10, nombre: "Papel HigiÃ©nico PÃ©talo 4r", categoria: "Higiene", precio: 42.00, unidad: "paq", descripcion: "Papel higiÃ©nico suave", es_favorito: false },
+        { id: 12, nombre: "AzÃºcar Morena 1kg", categoria: "Abarrotes", precio: 32.00, unidad: "kg", descripcion: "AzÃºcar estÃ¡ndar morena", es_favorito: false },
+        { id: 14, nombre: "Crema Lala 200ml", categoria: "LÃ¡cteos", precio: 18.50, unidad: "pza", descripcion: "Crema Ã¡cida", es_favorito: false },
         { id: 15, nombre: "Aguacate Hass (c/u)", categoria: "Frutas", precio: 15.00, unidad: "pza", descripcion: "Aguacate mexicano", es_favorito: false }
     ]
 };
 
 
-// ═══════════════════════════════════════════════════════
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 // INIT
-// ═══════════════════════════════════════════════════════
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
 document.addEventListener("DOMContentLoaded", () => {
     setupCart();
@@ -82,35 +82,29 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 
-// ── Fetch catalog from n8n webhook ─────────────────────
+// â”€â”€ Fetch catalog from n8n webhook â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 async function fetchCatalog() {
     try {
-        const res = await fetch(CONFIG.webhookUrl, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ user_id: CONFIG.userId })
+        const res = await fetch(`https://dqrhqzdfzhkqpgawgjga.supabase.co/rest/v1/catalogo_productos?select=id,nombre,categoria,subcategoria,precio,unidad,descripcion,imagen_url&order=subcategoria.asc,nombre.asc`, {
+            headers: { "apikey": "sb_publishable_kponNfbiTEBSbJaP6tf-Xg_pVOdCApQ", "Authorization": "Bearer sb_publishable_kponNfbiTEBSbJaP6tf-Xg_pVOdCApQ" }
         });
-
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        const data = await res.json();
-
-        // Validate response shape
-        if (data.favoritos && data.explorar) {
-            renderCatalog(data);
-        } else {
-            console.warn("Invalid response shape, using mock data");
-            renderCatalog(MOCK_DATA);
-        }
+        const productos = await res.json();
+        const data = {
+            saludo: "¡Hola! Aquí tienes tu catálogo actualizado.",
+            favoritos: productos.slice(0, 5).map(p => ({ ...p, es_favorito: true })),
+            explorar: productos.slice(5).map(p => ({ ...p, es_favorito: false }))
+        };
+        renderCatalog(data);
     } catch (err) {
-        console.warn("Webhook unreachable, using mock data:", err.message);
+        console.error("Error cargando catálogo:", err.message);
         renderCatalog(MOCK_DATA);
     }
 }
 
 
-// ═══════════════════════════════════════════════════════
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 // RENDER
-// ═══════════════════════════════════════════════════════
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
 function renderCatalog(data) {
     // Greeting
@@ -166,18 +160,18 @@ function renderProductImage(product) {
     return getProductEmoji(product);
 }
 
-// Thumbnail para el carrito (mini versión) — misma lógica que renderProductImage
+// Thumbnail para el carrito (mini versiÃ³n) â€” misma lÃ³gica que renderProductImage
 function getCartThumbFromUrl(imageUrl, name) {
     if (imageUrl && imageUrl.trim() !== '') {
         return `<img src="${imageUrl}" alt="${name}" style="width:40px;height:40px;object-fit:cover;border-radius:8px;">`;
     }
-    return PRODUCT_EMOJIS[name] || '🛍️';
+    return PRODUCT_EMOJIS[name] || 'ðŸ›ï¸';
 }
 
 function createProductCard(product, isFavorito) {
     const priceFormatted = `$${Number(product.precio).toFixed(2)}`;
     const badge = isFavorito
-        ? `<span class="product-card__badge">⭐ Favorito</span>`
+        ? `<span class="product-card__badge">â­ Favorito</span>`
         : "";
     const imageContent = renderProductImage(product);
 
@@ -202,9 +196,9 @@ function createProductCard(product, isFavorito) {
 }
 
 
-// ═══════════════════════════════════════════════════════
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 // QUANTITY CONTROLS (integrados con carrito)
-// ═══════════════════════════════════════════════════════
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
 // Muestra el control de cantidad en la tarjeta
 function showQtyControl(productId, qty) {
@@ -212,14 +206,14 @@ function showQtyControl(productId, qty) {
     if (!container) return;
     container.innerHTML = `
       <div class="qty-control qty-control--expanded">
-        <button class="qty-control__btn" onclick="changeQty(${productId}, -1)" aria-label="Reducir">−</button>
+        <button class="qty-control__btn" onclick="changeQty(${productId}, -1)" aria-label="Reducir">âˆ’</button>
         <span class="qty-control__value" id="qty-${productId}">${qty}</span>
         <button class="qty-control__btn" onclick="changeQty(${productId}, 1)" aria-label="Aumentar">+</button>
       </div>
     `;
 }
 
-// Muestra el botón "Agregar" original en la tarjeta
+// Muestra el botÃ³n "Agregar" original en la tarjeta
 function showAddButton(productId) {
     const container = document.getElementById(`controls-${productId}`);
     if (!container) return;
@@ -241,7 +235,7 @@ function changeQty(productId, delta) {
         cart = cart.filter(i => i.id !== productId);
         showAddButton(productId);
     } else {
-        // Actualizar el número visible
+        // Actualizar el nÃºmero visible
         const el = document.getElementById(`qty-${productId}`);
         if (el) {
             el.textContent = item.qty;
@@ -255,9 +249,9 @@ function changeQty(productId, delta) {
 }
 
 
-// ═══════════════════════════════════════════════════════
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 // CART
-// ═══════════════════════════════════════════════════════
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
 function setupCart() {
     const cartBtn = document.getElementById("cartBtn");
@@ -300,7 +294,7 @@ function addToCart(productId) {
         cart.push({ id: productId, name: data.name, price: data.price, imageUrl: data.imageUrl, qty: 1 });
     }
 
-    // Swap botón → control de cantidad
+    // Swap botÃ³n â†’ control de cantidad
     const currentQty = (existing ? existing.qty : 1);
     showQtyControl(productId, currentQty);
 
@@ -320,7 +314,7 @@ function updateCartUI() {
     const totalEl = document.getElementById("cartTotal");
 
     if (cart.length === 0) {
-        container.innerHTML = '<p class="cart-panel__empty">Tu carrito está vacío</p>';
+        container.innerHTML = '<p class="cart-panel__empty">Tu carrito estÃ¡ vacÃ­o</p>';
         totalEl.textContent = "$0.00";
         return;
     }
@@ -332,10 +326,10 @@ function updateCartUI() {
         <span class="cart-item__emoji">${thumb}</span>
         <div class="cart-item__info">
           <div class="cart-item__name">${item.name}</div>
-          <div class="cart-item__meta">${item.qty} × $${item.price.toFixed(2)}</div>
+          <div class="cart-item__meta">${item.qty} Ã— $${item.price.toFixed(2)}</div>
         </div>
         <span class="cart-item__price">$${(item.qty * item.price).toFixed(2)}</span>
-        <button class="cart-item__remove" onclick="removeFromCart(${item.id})" aria-label="Eliminar">✕</button>
+        <button class="cart-item__remove" onclick="removeFromCart(${item.id})" aria-label="Eliminar">âœ•</button>
       </div>`;
     }).join("");
 
@@ -344,7 +338,7 @@ function updateCartUI() {
 }
 
 
-// ── CSS animation (injected) ────────────────────────────
+// â”€â”€ CSS animation (injected) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const style = document.createElement("style");
 style.textContent = `
   @keyframes fadeInUp {
@@ -353,3 +347,5 @@ style.textContent = `
   }
 `;
 document.head.appendChild(style);
+
+
