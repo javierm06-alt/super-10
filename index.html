@@ -1476,7 +1476,7 @@ async function sendWhatsApp() {
     `*Total: $${total.toFixed(2)}*`,
     '',
     '_Enviado desde la tienda online_'
-  ]].filter(l => l !== null && l !== undefined && l !== '').join('\n');;
+  ]].filter(l => l !== null && l !== undefined && l !== '').join('\n');
 
   const url = `https://wa.me/${CONFIG.whatsappNumero}?text=${encodeURIComponent(msg)}`;
   window.open(url, '_blank');
