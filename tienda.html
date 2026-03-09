@@ -259,10 +259,19 @@
     ═══════════════════════════════════════════════════════════ */
     .explorar-grid {
       display: grid;
-      grid-template-columns: repeat(2, 160px);
-      justify-content: center;
+      grid-template-columns: repeat(auto-fill, minmax(155px, 1fr));
       gap: 12px;
-      padding: 4px 16px 120px; /* bottom padding clears cart CTA */
+      padding: 4px 16px 120px;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    @media (min-width: 600px) {
+      .explorar-grid {
+        grid-template-columns: repeat(auto-fill, minmax(175px, 210px));
+        justify-content: center;
+        padding: 4px 24px 120px;
+      }
     }
     .explorar-grid .product-card {
       min-height: 300px;
@@ -1163,26 +1172,7 @@ async function fetchCatalogDirecto() {
    FETCH
 ═══════════════════════════════════════════════════════════ */
 async function fetchCatalog() {
-  // 1. Intentar n8n webhook
-  try {
-    const res = await fetch(CONFIG.webhookUrl, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ user_id: CONFIG.userId })
-    });
-    if (!res.ok) throw new Error('HTTP ' + res.status);
-    const data = await res.json();
-    console.log('n8n response keys:', Object.keys(data));
-    console.log('Primer favorito:', JSON.stringify(data.favoritos?.[0]));
-    console.log('Primer explorar:', JSON.stringify(data.explorar?.[0]));
-    if (data.favoritos && data.explorar) {
-      catalogData = data;
-      renderCatalog(data);
-      return;
-    }
-  } catch (eN8n) { console.warn('n8n no disponible:', eN8n.message); }
-
-  // 2. Fallback: Supabase directo
+  // Supabase directo (n8n es local, no disponible en producción)
   try {
     const data = await fetchCatalogDirecto();
     catalogData = data;
