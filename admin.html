@@ -1023,7 +1023,7 @@ function renderPedidos(pedidos) {
       <div class="pedido-card__top">
         <div>
           <div class="pedido-cliente">👤 ${p.cliente_nombre || 'Cliente'}</div>
-          <div class="pedido-hora">🕐 ${hora}</div>
+          <div class="pedido-hora">📅 ${hora}${p.hora_pickup ? ` · Recoge a las <strong>${p.hora_pickup}</strong>` : ''}</div>
         </div>
         <span class="pedido-badge ${esNuevo ? '' : 'visto'}">${esNuevo ? '🔔 Nuevo' : '✓ Visto'}</span>
       </div>
@@ -1658,17 +1658,28 @@ function renderSurtir() {
 
   let html = `
     <div style="background:#fff;border:1.5px solid var(--borde);border-radius:14px;padding:16px;margin-bottom:16px">
-      <div style="font-size:.8rem;font-weight:700;color:var(--subtexto);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">🕐 Horario de pick up</div>
-      <div id="horario-display" style="font-size:.95rem;color:var(--texto);font-weight:600;margin-bottom:10px">${horarioGuardado}</div>
+      <div style="font-size:.8rem;font-weight:700;color:var(--subtexto);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px">🕐 Horario de pick up</div>
+      <div id="horario-display">
+        <div style="font-size:.95rem;color:var(--texto);font-weight:600;margin-bottom:4px" id="horario-texto">${horarioGuardado}</div>
+        <div style="font-size:.78rem;color:var(--subtexto);margin-bottom:10px">Los clientes verán slots disponibles cada hora</div>
+        <button onclick="editarHorario()" style="font-size:.8rem;color:var(--verde);background:none;border:none;cursor:pointer;font-weight:600;padding:0">✏️ Editar horario</button>
+      </div>
       <div id="horario-edit" style="display:none">
-        <input id="horario-input" type="text" value="${horarioGuardado}"
-          style="width:100%;padding:9px 12px;border:1.5px solid var(--borde);border-radius:10px;font-size:.9rem;font-family:inherit;box-sizing:border-box;margin-bottom:8px">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
+          <div>
+            <div style="font-size:.75rem;color:var(--subtexto);margin-bottom:4px">Hora apertura</div>
+            <select id="horario-inicio" style="width:100%;padding:9px;border:1.5px solid var(--borde);border-radius:10px;font-size:.9rem;font-family:inherit"></select>
+          </div>
+          <div>
+            <div style="font-size:.75rem;color:var(--subtexto);margin-bottom:4px">Hora cierre</div>
+            <select id="horario-fin" style="width:100%;padding:9px;border:1.5px solid var(--borde);border-radius:10px;font-size:.9rem;font-family:inherit"></select>
+          </div>
+        </div>
         <div style="display:flex;gap:8px">
           <button onclick="guardarHorario()" style="flex:1;padding:9px;background:var(--verde);color:#fff;border:none;border-radius:10px;font-weight:700;font-size:.85rem;cursor:pointer">✓ Guardar</button>
           <button onclick="cancelarHorario()" style="flex:1;padding:9px;background:var(--fondo);color:var(--subtexto);border:1.5px solid var(--borde);border-radius:10px;font-size:.85rem;cursor:pointer">Cancelar</button>
         </div>
       </div>
-      <button onclick="editarHorario()" id="btn-editar-horario" style="font-size:.8rem;color:var(--verde);background:none;border:none;cursor:pointer;font-weight:600;padding:0">✏️ Editar horario</button>
     </div>
     <h2 style="font-family:var(--font-head);font-size:1.1rem;margin-bottom:4px;color:var(--texto)">
       ¿Qué necesitas comprar?
@@ -1902,37 +1913,57 @@ function stopTitleFlash() {
 }
 
 // ── HORARIO DE PICK UP ──────────────────────────────
+const HORAS_LABEL = ['12am','1am','2am','3am','4am','5am','6am','7am','8am','9am','10am','11am',
+  '12pm','1pm','2pm','3pm','4pm','5pm','6pm','7pm','8pm','9pm','10pm','11pm'];
+
+function poblarSelectsHorario() {
+  const inicio = document.getElementById('horario-inicio');
+  const fin    = document.getElementById('horario-fin');
+  if (!inicio || !fin) return;
+  inicio.innerHTML = HORAS_LABEL.map((h,i) => `<option value="${i}">${h}</option>`).join('');
+  fin.innerHTML    = HORAS_LABEL.map((h,i) => `<option value="${i}">${h}</option>`).join('');
+  // Cargar valores guardados
+  const saved = JSON.parse(localStorage.getItem('super10_horario_config') || '{"inicio":9,"fin":20}');
+  inicio.value = saved.inicio;
+  fin.value    = saved.fin;
+}
+
 function editarHorario() {
+  poblarSelectsHorario();
   document.getElementById('horario-display').style.display = 'none';
-  document.getElementById('btn-editar-horario').style.display = 'none';
   document.getElementById('horario-edit').style.display = 'block';
-  document.getElementById('horario-input').focus();
 }
 function cancelarHorario() {
   document.getElementById('horario-display').style.display = 'block';
-  document.getElementById('btn-editar-horario').style.display = 'inline';
   document.getElementById('horario-edit').style.display = 'none';
 }
 function guardarHorario() {
-  const val = document.getElementById('horario-input').value.trim();
-  if (!val) return;
-  localStorage.setItem('super10_horario', val);
-  // Guardar también en Supabase para que tienda.html lo lea
+  const inicio = parseInt(document.getElementById('horario-inicio').value);
+  const fin    = parseInt(document.getElementById('horario-fin').value);
+  if (fin <= inicio) { showToast('⚠️ El cierre debe ser después de la apertura'); return; }
+
+  const config = { inicio, fin };
+  localStorage.setItem('super10_horario_config', JSON.stringify(config));
+
+  const texto = `${HORAS_LABEL[inicio]} – ${HORAS_LABEL[fin]}`;
+  localStorage.setItem('super10_horario', texto);
+
+  // Guardar en Supabase (inicio, fin como JSON)
+  const payload = { valor: JSON.stringify(config) };
   fetch(`${SUPABASE_URL}/rest/v1/config_tienda?clave=eq.horario_pickup`, {
-    method: 'PATCH',
-    headers: { ...SB_HEADERS, 'Prefer': 'return=minimal' },
-    body: JSON.stringify({ valor: val })
+    method: 'PATCH', headers: { ...SB_HEADERS, 'Prefer': 'return=minimal' },
+    body: JSON.stringify(payload)
   }).catch(() => {
-    // Si no existe, insertar
     fetch(`${SUPABASE_URL}/rest/v1/config_tienda`, {
       method: 'POST',
       headers: { ...SB_HEADERS, 'Prefer': 'resolution=merge-duplicates,return=minimal' },
-      body: JSON.stringify({ clave: 'horario_pickup', valor: val })
+      body: JSON.stringify({ clave: 'horario_pickup', valor: JSON.stringify(config) })
     }).catch(() => {});
   });
-  document.getElementById('horario-display').textContent = val;
+
+  document.getElementById('horario-texto').textContent = texto;
   cancelarHorario();
-  showToast('✓ Horario actualizado');
+  showToast('✓ Horario actualizado — slots: ' + texto);
 }
 
 // Iniciar Realtime al cargar
