@@ -926,7 +926,7 @@
     <span class="nav-tab__label">Surtir</span>
   </button>
   <button class="nav-tab" data-panel="pedidos" onclick="switchTab(this)">
-    <span class="nav-tab__icon">📋</span>
+    <span class="nav-tab__icon" style="position:relative">📋<span id="pedidos-nav-badge" style="display:none;position:absolute;top:-4px;right:-8px;background:#EF4444;color:#fff;font-size:.6rem;font-weight:700;padding:1px 5px;border-radius:10px;line-height:1.4">0</span></span>
     <span class="nav-tab__label">Pedidos</span>
   </button>
 </nav>
@@ -937,7 +937,7 @@
     <div class="pedidos-header">
       <div>
         <div class="card-title" style="font-size:1.1rem">📋 Pedidos</div>
-        <div style="font-size:.8rem;color:var(--subtexto);margin-top:2px">Pedidos recibidos en la tienda online &nbsp;<span id="rt-indicator" style="font-size:.75rem">⏳ Conectando...</span></div>
+        <div style="font-size:.8rem;color:var(--subtexto);margin-top:2px">Pedidos recibidos en la tienda online</div>
       </div>
       <button class="btn-refresh" onclick="cargarPedidos()">↻ Actualizar</button>
     </div>
@@ -988,7 +988,20 @@ async function cargarPedidos() {
   }
 }
 
+function actualizarBadgePedidos(pedidos) {
+  const nuevos = pedidos.filter(p => p.estado === 'nuevo' || !p.estado).length;
+  const badge = document.getElementById('pedidos-nav-badge');
+  if (!badge) return;
+  if (nuevos > 0) {
+    badge.textContent = nuevos;
+    badge.style.display = 'inline-block';
+  } else {
+    badge.style.display = 'none';
+  }
+}
+
 function renderPedidos(pedidos) {
+  actualizarBadgePedidos(pedidos);
   const list = document.getElementById('pedidosList');
   if (!pedidos.length) {
     list.innerHTML = '<div class="pedidos-empty"><div class="empty-icon">🎉</div><div>Sin pedidos aún.<br>Cuando alguien compre en tu tienda, aparecerá aquí.</div></div>';
@@ -1019,9 +1032,8 @@ function renderPedidos(pedidos) {
       <div class="pedido-actions">
         ${esNuevo
           ? `<button class="btn-visto" onclick="marcarVisto('${p.id}')">✓ Marcar visto</button>`
-          : ``
+          : `<button class="btn-eliminar" onclick="eliminarPedido('${p.id}')">🗑️ Eliminar</button>`
         }
-        ${!esNuevo ? `<button class="btn-eliminar" onclick="eliminarPedido('${p.id}')">🗑️ Eliminar</button>` : ''}
         ${p.cliente_whatsapp ? `<button class="btn-wsp" onclick="contactarCliente('${p.cliente_whatsapp}', '${(p.cliente_nombre||'').replace(/'/g,'')}')">💬 WhatsApp</button>` : ''}
       </div>
     </div>`;
@@ -1748,18 +1760,12 @@ function initRealtime() {
       console.log(`📡 [RT] subscribe status: "${status}"`, err || '');
       if (status === 'SUBSCRIBED') {
         console.log('✅ [RT] ¡Canal conectado! Escuchando INSERTs en tabla pedidos...');
-        // Mostrar indicador visual de Realtime activo
-        const indicator = document.getElementById('rt-indicator');
-        if (indicator) { indicator.textContent = '🟢 Tiempo real activo'; indicator.style.color = 'var(--verde)'; }
       } else if (status === 'TIMED_OUT') {
-        console.error('❌ [RT] TIMED_OUT — Ve a Supabase Dashboard → Database → Replication y activa la tabla "pedidos"');
-        const indicator = document.getElementById('rt-indicator');
-        if (indicator) { indicator.textContent = '🔴 Tiempo real inactivo'; indicator.style.color = '#DC2626'; }
+        console.error('❌ [RT] Conexión expiró. ¿Realtime habilitado en Supabase?');
       } else if (status === 'CLOSED') {
         console.warn('⚠️ [RT] Canal cerrado');
       } else if (status === 'CHANNEL_ERROR') {
         console.error('❌ [RT] Error de canal:', err);
-        console.error('❌ [RT] Posible causa: tabla "pedidos" no está en Supabase Replication');
       }
     });
 
