@@ -648,6 +648,42 @@
       border: none; border-radius: 8px; padding: 5px 12px;
       font-size: .78rem; font-weight: 700; cursor: pointer;
     }
+    /* ── TAB BAR ─────────────────────── */
+    .tab-bar {
+      position: fixed; bottom: 0; left: 0; right: 0; z-index: 150;
+      background: #fff; border-top: 1px solid var(--borde);
+      display: grid; grid-template-columns: repeat(4, 1fr);
+      padding-bottom: env(safe-area-inset-bottom);
+    }
+    .tab-item {
+      display: flex; flex-direction: column; align-items: center;
+      justify-content: center; padding: 8px 4px 6px;
+      background: none; border: none; cursor: pointer;
+      color: var(--subtexto); font-size: .68rem; font-weight: 600;
+      gap: 3px; transition: color 150ms ease; position: relative;
+    }
+    .tab-item svg { width: 22px; height: 22px; stroke: currentColor; }
+    .tab-item.active { color: var(--verde); }
+    .tab-item .tab-badge {
+      position: absolute; top: 4px; right: calc(50% - 18px);
+      background: #EF4444; color: #fff; font-size: .6rem; font-weight: 700;
+      padding: 1px 5px; border-radius: 10px; display: none;
+    }
+    /* Vista de pedidos (oculta por defecto) */
+    .vista-pedidos {
+      display: none; position: fixed; inset: 0; z-index: 140;
+      background: var(--fondo); overflow-y: auto;
+      padding: 70px 16px 80px;
+    }
+    .vista-pedidos.open { display: block; }
+    .vista-pedidos__header {
+      font-family: var(--font-head); font-size: 1.2rem;
+      color: var(--texto); margin-bottom: 16px;
+    }
+    body.pedidos-open main { display: none; }
+    body.pedidos-open .cat-bar { display: none; }
+    body.pedidos-open .subcat-bar { display: none; }
+    body.pedidos-open .greeting { display: none; }
     .footer {
       padding: 24px 16px 40px;
       text-align: center;
@@ -901,6 +937,52 @@
   <p id="horarioPickup" style="font-size:.8rem;color:var(--text-muted)"></p>
   <p>Super 10 · Tu tienda de confianza</p>
 </footer>
+
+<!-- ═══════════ VISTA PEDIDOS ═══════════ -->
+<div class="vista-pedidos" id="vistaPedidos">
+  <div class="vista-pedidos__header">🕐 Mis pedidos</div>
+  <div id="historialListTab"></div>
+  <div id="historialEmptyTab" style="display:none;text-align:center;padding:40px 0;color:var(--subtexto)">
+    <div style="font-size:2.5rem;margin-bottom:12px">🛒</div>
+    <div style="font-weight:600;margin-bottom:6px">Aún no tienes pedidos</div>
+    <div style="font-size:.85rem">Cuando hagas tu primer pedido, aparecerá aquí</div>
+  </div>
+</div>
+
+<!-- ═══════════ TAB BAR ═══════════ -->
+<nav class="tab-bar" role="navigation" aria-label="Navegación principal">
+  <button class="tab-item active" id="tab-inicio" onclick="switchTabTienda('inicio')">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+      <polyline points="9 22 9 12 15 12 15 22"/>
+    </svg>
+    Inicio
+  </button>
+  <button class="tab-item" id="tab-pedidos" onclick="switchTabTienda('pedidos')">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+      <polyline points="14 2 14 8 20 8"/>
+      <line x1="16" y1="13" x2="8" y2="13"/>
+      <line x1="16" y1="17" x2="8" y2="17"/>
+    </svg>
+    Mis Pedidos
+  </button>
+  <button class="tab-item" id="tab-carrito" onclick="openCart()">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
+      <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+    </svg>
+    <span class="tab-badge" id="tabCartBadge">0</span>
+    Carrito
+  </button>
+  <button class="tab-item" id="tab-perfil" onclick="switchTabTienda('perfil')">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+      <circle cx="12" cy="7" r="4"/>
+    </svg>
+    Perfil
+  </button>
+</nav>
 
 <!-- ═══════════ OVERLAY ═══════════ -->
 <div class="overlay" id="overlay"></div>
@@ -1488,6 +1570,12 @@ function syncBadge() {
   } else {
     badge.classList.remove('visible', 'pop');
   }
+  // Sincronizar badge en tab bar
+  const tabBadge = document.getElementById('tabCartBadge');
+  if (tabBadge) {
+    tabBadge.textContent = total;
+    tabBadge.style.display = total > 0 ? 'inline-block' : 'none';
+  }
 }
 
 /* ═══════════════════════════════════════════════════════════
@@ -1812,6 +1900,66 @@ function filterCatalog(q) {
         <p>Sin resultados para<br><strong>"${esc(q)}"</strong></p>
       </div>`;
   }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   TAB BAR NAVEGACIÓN
+═══════════════════════════════════════════════════════════ */
+function switchTabTienda(tab) {
+  // Reset todos los tabs
+  document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active'));
+
+  if (tab === 'pedidos') {
+    document.getElementById('tab-pedidos').classList.add('active');
+    document.getElementById('vistaPedidos').classList.add('open');
+    document.body.classList.add('pedidos-open');
+    renderHistorialTab();
+  } else if (tab === 'perfil') {
+    document.getElementById('tab-perfil').classList.add('active');
+    document.getElementById('vistaPedidos').classList.remove('open');
+    document.body.classList.remove('pedidos-open');
+    mostrarRegistro();
+    document.getElementById('tab-inicio').classList.add('active');
+  } else {
+    // inicio
+    document.getElementById('tab-inicio').classList.add('active');
+    document.getElementById('vistaPedidos').classList.remove('open');
+    document.body.classList.remove('pedidos-open');
+  }
+}
+
+function renderHistorialTab() {
+  const list = document.getElementById('historialListTab');
+  const empty = document.getElementById('historialEmptyTab');
+  const pedidos = window._historialCliente || [];
+
+  if (!pedidos.length) {
+    list.innerHTML = '';
+    empty.style.display = 'block';
+    return;
+  }
+  empty.style.display = 'none';
+  list.innerHTML = pedidos.map(p => {
+    const items = (p.items || []).map(i => `${i.qty}x ${i.nombre}`).join(', ');
+    const fecha = new Date(p.created_at).toLocaleDateString('es-MX', {
+      day: '2-digit', month: 'short', year: 'numeric'
+    });
+    const itemsData = encodeURIComponent(JSON.stringify(p.items || []));
+    return `
+    <div class="historial-card">
+      <div class="historial-fecha">📅 ${fecha}</div>
+      <div class="historial-items">${items}</div>
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <span class="historial-total">$${Number(p.total).toFixed(2)}</span>
+        <button class="historial-repetir" onclick="repetirPedidoDesdeTab('${itemsData}')">🔁 Repetir pedido</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function repetirPedidoDesdeTab(itemsEncoded) {
+  repetirPedido(itemsEncoded);
+  switchTabTienda('inicio');
 }
 
 /* ═══════════════════════════════════════════════════════════
