@@ -1653,7 +1653,23 @@ function renderSurtir() {
   const semana   = items.filter(p => p.urgencia === 'yellow');
   const bien     = items.filter(p => p.urgencia === 'green');
 
+  // Cargar horario guardado
+  const horarioGuardado = localStorage.getItem('super10_horario') || 'Lun-Sáb 9am–8pm · Dom 10am–6pm';
+
   let html = `
+    <div style="background:#fff;border:1.5px solid var(--borde);border-radius:14px;padding:16px;margin-bottom:16px">
+      <div style="font-size:.8rem;font-weight:700;color:var(--subtexto);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">🕐 Horario de pick up</div>
+      <div id="horario-display" style="font-size:.95rem;color:var(--texto);font-weight:600;margin-bottom:10px">${horarioGuardado}</div>
+      <div id="horario-edit" style="display:none">
+        <input id="horario-input" type="text" value="${horarioGuardado}"
+          style="width:100%;padding:9px 12px;border:1.5px solid var(--borde);border-radius:10px;font-size:.9rem;font-family:inherit;box-sizing:border-box;margin-bottom:8px">
+        <div style="display:flex;gap:8px">
+          <button onclick="guardarHorario()" style="flex:1;padding:9px;background:var(--verde);color:#fff;border:none;border-radius:10px;font-weight:700;font-size:.85rem;cursor:pointer">✓ Guardar</button>
+          <button onclick="cancelarHorario()" style="flex:1;padding:9px;background:var(--fondo);color:var(--subtexto);border:1.5px solid var(--borde);border-radius:10px;font-size:.85rem;cursor:pointer">Cancelar</button>
+        </div>
+      </div>
+      <button onclick="editarHorario()" id="btn-editar-horario" style="font-size:.8rem;color:var(--verde);background:none;border:none;cursor:pointer;font-weight:600;padding:0">✏️ Editar horario</button>
+    </div>
     <h2 style="font-family:var(--font-head);font-size:1.1rem;margin-bottom:4px;color:var(--texto)">
       ¿Qué necesitas comprar?
     </h2>
@@ -1883,6 +1899,40 @@ function stopTitleFlash() {
     titleFlashInterval = null;
   }
   document.title = tituloOriginal;
+}
+
+// ── HORARIO DE PICK UP ──────────────────────────────
+function editarHorario() {
+  document.getElementById('horario-display').style.display = 'none';
+  document.getElementById('btn-editar-horario').style.display = 'none';
+  document.getElementById('horario-edit').style.display = 'block';
+  document.getElementById('horario-input').focus();
+}
+function cancelarHorario() {
+  document.getElementById('horario-display').style.display = 'block';
+  document.getElementById('btn-editar-horario').style.display = 'inline';
+  document.getElementById('horario-edit').style.display = 'none';
+}
+function guardarHorario() {
+  const val = document.getElementById('horario-input').value.trim();
+  if (!val) return;
+  localStorage.setItem('super10_horario', val);
+  // Guardar también en Supabase para que tienda.html lo lea
+  fetch(`${SUPABASE_URL}/rest/v1/config_tienda?clave=eq.horario_pickup`, {
+    method: 'PATCH',
+    headers: { ...SB_HEADERS, 'Prefer': 'return=minimal' },
+    body: JSON.stringify({ valor: val })
+  }).catch(() => {
+    // Si no existe, insertar
+    fetch(`${SUPABASE_URL}/rest/v1/config_tienda`, {
+      method: 'POST',
+      headers: { ...SB_HEADERS, 'Prefer': 'resolution=merge-duplicates,return=minimal' },
+      body: JSON.stringify({ clave: 'horario_pickup', valor: val })
+    }).catch(() => {});
+  });
+  document.getElementById('horario-display').textContent = val;
+  cancelarHorario();
+  showToast('✓ Horario actualizado');
 }
 
 // Iniciar Realtime al cargar
