@@ -688,52 +688,68 @@
     .vista-perfil {
       display: none; position: fixed; inset: 0; z-index: 140;
       background: var(--fondo); overflow-y: auto;
-      padding: 110px 16px 30px;
     }
     .vista-perfil.open { display: block; }
-    .vista-perfil__header {
-      font-family: var(--font-head); font-size: 1.2rem;
-      color: var(--texto); margin-bottom: 16px;
-    }
     body.perfil-open main { display: none; }
     body.perfil-open .cat-bar { display: none; }
     body.perfil-open .subcat-bar { display: none; }
     body.perfil-open .greeting { display: none; }
-    .perfil-card {
-      background: #fff; border-radius: 16px; padding: 20px;
-      text-align: center; margin-bottom: 16px;
-      border: 1.5px solid var(--borde);
+    /* Header navy del perfil */
+    .perfil-hero {
+      background: var(--verde-dark); padding: 80px 24px 28px;
+      text-align: center; position: relative;
     }
-    .perfil-avatar { font-size: 2.5rem; margin-bottom: 8px; }
-    .perfil-btn-editar {
-      margin-top: 12px; background: none; border: 1.5px solid var(--verde);
-      color: var(--verde); border-radius: 20px; padding: 6px 16px;
-      font-size: .82rem; font-weight: 700; cursor: pointer;
+    .perfil-hero__inicial {
+      width: 64px; height: 64px; border-radius: 50%;
+      background: rgba(255,255,255,.18); color: #fff;
+      font-family: var(--font-head); font-size: 1.6rem;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 12px;
     }
-    .perfil-opciones {
+    .perfil-hero__nombre {
+      font-family: var(--font-head); font-size: 1.3rem;
+      color: #fff; margin-bottom: 4px;
+    }
+    .perfil-hero__wsp { font-size: .85rem; color: rgba(255,255,255,.7); }
+    /* Secciones de tarjetas */
+    .perfil-body { padding: 16px; }
+    .perfil-seccion {
       background: #fff; border-radius: 16px; overflow: hidden;
-      border: 1.5px solid var(--borde); margin-bottom: 16px;
+      border: 1.5px solid var(--borde); margin-bottom: 12px;
     }
-    .perfil-opcion {
-      width: 100%; display: flex; align-items: center; gap: 12px;
+    .perfil-seccion__titulo {
+      font-size: .72rem; font-weight: 700; color: var(--subtexto);
+      text-transform: uppercase; letter-spacing: .5px;
+      padding: 12px 16px 4px;
+    }
+    .perfil-row {
+      width: 100%; display: flex; align-items: center; gap: 14px;
       padding: 14px 16px; background: none; border: none;
-      border-bottom: 1px solid var(--borde); cursor: pointer;
-      text-align: left;
+      border-top: 1px solid var(--borde); cursor: pointer; text-align: left;
     }
-    .perfil-opcion:last-child { border-bottom: none; }
-    .perfil-opcion__icon { font-size: 1.1rem; flex-shrink: 0; }
-    .perfil-opcion__label { flex: 1; font-size: .9rem; font-weight: 600; color: var(--texto); }
-    .perfil-opcion__arrow { color: var(--subtexto); font-size: 1.2rem; }
-    .perfil-opcion__badge {
+    .perfil-seccion > .perfil-row:first-of-type { border-top: none; }
+    .perfil-row__icon {
+      width: 36px; height: 36px; border-radius: 10px;
+      background: var(--verde-light); display: flex;
+      align-items: center; justify-content: center; font-size: 1rem; flex-shrink: 0;
+    }
+    .perfil-row__info { flex: 1; }
+    .perfil-row__label { font-size: .9rem; font-weight: 600; color: var(--texto); }
+    .perfil-row__sub { font-size: .76rem; color: var(--subtexto); margin-top: 1px; }
+    .perfil-row__arrow { color: var(--borde); font-size: 1.3rem; }
+    .perfil-row__badge {
       font-size: .7rem; background: var(--borde); color: var(--subtexto);
       padding: 2px 8px; border-radius: 10px; font-weight: 600;
     }
-    .perfil-opcion--pronto { opacity: .6; cursor: default; }
-    .perfil-opcion--danger .perfil-opcion__label { color: #DC2626; }
-    .perfil-horario {
-      background: #fff; border-radius: 16px; padding: 16px;
-      border: 1.5px solid var(--borde);
+    .perfil-row--danger .perfil-row__label { color: #DC2626; }
+    .perfil-row--danger .perfil-row__icon { background: #FEE2E2; }
+    .perfil-row--pronto { opacity: .55; cursor: default; }
+    /* Horario expandible */
+    .perfil-horario-detalle {
+      padding: 0 16px 14px; font-size: .88rem; color: var(--subtexto);
+      border-top: 1px solid var(--borde); display: none;
     }
+    .perfil-horario-detalle.open { display: block; }
     .footer {
       padding: 24px 16px 40px;
       text-align: center;
@@ -1021,49 +1037,73 @@
 
 <!-- ═══════════ VISTA PERFIL ═══════════ -->
 <div class="vista-perfil" id="vistaPerfil">
-  <div class="vista-perfil__header">Mi Perfil</div>
 
-  <!-- Info del cliente -->
-  <div class="perfil-card" id="perfilInfo">
-    <div class="perfil-avatar">👤</div>
-    <div id="perfilNombre" style="font-weight:700;font-size:1rem;color:var(--texto)">—</div>
-    <div id="perfilWsp" style="font-size:.85rem;color:var(--subtexto);margin-top:2px">—</div>
-    <button onclick="editarDatosPerfil()" class="perfil-btn-editar">✏️ Editar datos</button>
+  <!-- Hero navy con iniciales -->
+  <div class="perfil-hero">
+    <div class="perfil-hero__inicial" id="perfilInicial">J</div>
+    <div class="perfil-hero__nombre" id="perfilNombre">—</div>
+    <div class="perfil-hero__wsp" id="perfilWsp">—</div>
   </div>
 
-  <!-- Opciones -->
-  <div class="perfil-opciones">
-    <button class="perfil-opcion" onclick="editarDatosPerfil()">
-      <span class="perfil-opcion__icon">👤</span>
-      <span class="perfil-opcion__label">Nombre y WhatsApp</span>
-      <span class="perfil-opcion__arrow">›</span>
-    </button>
-    <button class="perfil-opcion" onclick="verHorarioPerfil()">
-      <span class="perfil-opcion__icon">🕐</span>
-      <span class="perfil-opcion__label">Horario de la tienda</span>
-      <span class="perfil-opcion__arrow">›</span>
-    </button>
-    <button class="perfil-opcion" onclick="contactarTienda()">
-      <span class="perfil-opcion__icon">💬</span>
-      <span class="perfil-opcion__label">Contactar a la tienda</span>
-      <span class="perfil-opcion__arrow">›</span>
-    </button>
-    <button class="perfil-opcion perfil-opcion--pronto">
-      <span class="perfil-opcion__icon">💳</span>
-      <span class="perfil-opcion__label">Métodos de pago</span>
-      <span class="perfil-opcion__badge">Próximamente</span>
-    </button>
-    <button class="perfil-opcion perfil-opcion--danger" onclick="cerrarSesion()">
-      <span class="perfil-opcion__icon">🚪</span>
-      <span class="perfil-opcion__label">Cerrar sesión</span>
-      <span class="perfil-opcion__arrow">›</span>
-    </button>
-  </div>
+  <div class="perfil-body">
 
-  <!-- Horario (colapsable) -->
-  <div class="perfil-horario" id="perfilHorario" style="display:none">
-    <div style="font-weight:700;margin-bottom:6px;font-size:.9rem">🕐 Horario de pick up</div>
-    <div id="perfilHorarioTexto" style="color:var(--subtexto);font-size:.88rem">Cargando...</div>
+    <!-- Sección Mi cuenta -->
+    <div class="perfil-seccion">
+      <div class="perfil-seccion__titulo">Mi cuenta</div>
+      <button class="perfil-row" onclick="editarDatosPerfil()">
+        <div class="perfil-row__icon">👤</div>
+        <div class="perfil-row__info">
+          <div class="perfil-row__label">Información personal</div>
+          <div class="perfil-row__sub">Nombre y número de WhatsApp</div>
+        </div>
+        <span class="perfil-row__arrow">›</span>
+      </button>
+      <button class="perfil-row perfil-row--pronto" disabled>
+        <div class="perfil-row__icon">💳</div>
+        <div class="perfil-row__info">
+          <div class="perfil-row__label">Métodos de pago</div>
+          <div class="perfil-row__sub">Tarjeta de crédito o débito</div>
+        </div>
+        <span class="perfil-row__badge">Próximamente</span>
+      </button>
+    </div>
+
+    <!-- Sección La tienda -->
+    <div class="perfil-seccion">
+      <div class="perfil-seccion__titulo">La tienda</div>
+      <button class="perfil-row" onclick="verHorarioPerfil()">
+        <div class="perfil-row__icon">🕐</div>
+        <div class="perfil-row__info">
+          <div class="perfil-row__label">Horario de pick up</div>
+          <div class="perfil-row__sub" id="perfilHorarioSub">Ver horario disponible</div>
+        </div>
+        <span class="perfil-row__arrow" id="perfil-horario-arrow">›</span>
+      </button>
+      <div class="perfil-horario-detalle" id="perfilHorario">
+        <span id="perfilHorarioTexto">Cargando...</span>
+      </div>
+      <button class="perfil-row" onclick="contactarTienda()">
+        <div class="perfil-row__icon">💬</div>
+        <div class="perfil-row__info">
+          <div class="perfil-row__label">Contactar a la tienda</div>
+          <div class="perfil-row__sub">Enviar mensaje por WhatsApp</div>
+        </div>
+        <span class="perfil-row__arrow">›</span>
+      </button>
+    </div>
+
+    <!-- Sección Sesión -->
+    <div class="perfil-seccion">
+      <button class="perfil-row perfil-row--danger" onclick="cerrarSesion()">
+        <div class="perfil-row__icon">🚪</div>
+        <div class="perfil-row__info">
+          <div class="perfil-row__label">Cerrar sesión</div>
+          <div class="perfil-row__sub">Cambiar de cuenta</div>
+        </div>
+        <span class="perfil-row__arrow">›</span>
+      </button>
+    </div>
+
   </div>
 </div>
 
@@ -2013,8 +2053,18 @@ function switchTabTienda(tab) {
 function renderPerfil() {
   const c = clienteActual;
   if (c) {
-    document.getElementById('perfilNombre').textContent = c.nombre || '—';
+    const nombre = c.nombre || '—';
+    document.getElementById('perfilNombre').textContent = nombre;
     document.getElementById('perfilWsp').textContent = c.whatsapp ? '+' + c.whatsapp : '—';
+    // Inicial del nombre
+    const inicial = document.getElementById('perfilInicial');
+    if (inicial) inicial.textContent = nombre.charAt(0).toUpperCase();
+    // Horario en subtítulo
+    const horarioEl = document.getElementById('horarioPickup');
+    const horarioSub = document.getElementById('perfilHorarioSub');
+    if (horarioEl && horarioSub && horarioEl.textContent) {
+      horarioSub.textContent = horarioEl.textContent.replace('🕐 Horario: ', '');
+    }
   }
 }
 
@@ -2026,9 +2076,11 @@ function editarDatosPerfil() {
 function verHorarioPerfil() {
   const el = document.getElementById('perfilHorario');
   const txt = document.getElementById('perfilHorarioTexto');
+  const arrow = document.getElementById('perfil-horario-arrow');
   const horario = document.getElementById('horarioPickup')?.textContent || '';
-  txt.textContent = horario || 'Sin horario configurado';
-  el.style.display = el.style.display === 'none' ? 'block' : 'none';
+  txt.textContent = horario ? horario.replace('🕐 Horario: ', '') : 'Sin horario configurado aún';
+  const isOpen = el.classList.toggle('open');
+  if (arrow) arrow.textContent = isOpen ? '∨' : '›';
 }
 
 function contactarTienda() {
