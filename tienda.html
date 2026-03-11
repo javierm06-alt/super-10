@@ -1175,22 +1175,45 @@ document.addEventListener('DOMContentLoaded', () => {
   loadCart();
   setupCartEvents();
   setupSearch();
-  fetchCatalog();
-  initCliente();
+  initCliente();   // primero asigna clienteActual
+  fetchCatalog();  // luego carga catálogo con cliente ya disponible
 });
 
 /* ═══════════════════════════════════════════════════════════
    FETCH — Supabase directo (fallback cuando n8n no responde)
 ═══════════════════════════════════════════════════════════ */
+async function cargarMasVendidos() {
+  // Fallback: productos más frecuentes en todos los pedidos recientes
+  try {
+    const res = await fetch(
+      `${SUPABASE_URL}/rest/v1/pedidos?select=items&order=created_at.desc&limit=50`,
+      { headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` } }
+    );
+    if (!res.ok) return [];
+    const pedidos = await res.json();
+    const freq = {};
+    pedidos.forEach(p => {
+      (p.items || []).forEach(item => {
+        freq[item.id] = (freq[item.id] || 0) + item.qty;
+      });
+    });
+    return Object.entries(freq)
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 6)
+      .map(([id]) => Number(id));
+  } catch { return []; }
+}
+
 async function cargarFavoritosCliente(clienteId) {
-  if (!clienteId) return [];
+  if (!clienteId) return cargarMasVendidos();
   try {
     const res = await fetch(
       `${SUPABASE_URL}/rest/v1/pedidos?cliente_id=eq.${clienteId}&select=items,created_at&order=created_at.desc&limit=20`,
       { headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` } }
     );
-    if (!res.ok) return [];
+    if (!res.ok) return cargarMasVendidos();
     const pedidos = await res.json();
+    if (!pedidos.length) return cargarMasVendidos();
     // Contar frecuencia de cada producto
     const freq = {};
     pedidos.forEach(p => {
@@ -1203,7 +1226,7 @@ async function cargarFavoritosCliente(clienteId) {
       .sort((a, b) => b[1] - a[1])
       .slice(0, 6)
       .map(([id]) => Number(id));
-  } catch { return []; }
+  } catch { return cargarMasVendidos(); }
 }
 
 async function cargarHistorialCliente(clienteId) {
@@ -1236,9 +1259,12 @@ async function fetchCatalogDirecto() {
 
   const favSet = new Set(favIds.length ? favIds : FAV_IDS);
   const nombre = clienteActual?.nombre?.split(' ')[0] || '';
-  const saludo = favSet.size > 0 && clienteActual?.id
+  const tieneHistorial = favIds.length > 0 && clienteActual?.id;
+  const saludo = tieneHistorial
     ? `¡Hola${nombre ? ', ' + nombre : ''}! Aquí están tus productos más comprados 🛒`
-    : '¡Hola! Aquí tienes el catálogo completo.';
+    : favIds.length > 0
+      ? `¡Hola${nombre ? ', ' + nombre : ''}! Los más populares de la tienda 🔥`
+      : '¡Hola! Aquí tienes el catálogo completo.';
 
   return {
     saludo,
