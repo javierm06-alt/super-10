@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Super 10 — Panel del Tendero</title>
   <link href="https://fonts.googleapis.com/css2?family=Varela+Round&family=Nunito+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -562,6 +563,13 @@
       background: var(--verde-light); color: var(--verde);
       font-weight: 700; font-size: .85rem; cursor: pointer; border: none;
     }
+    .btn-eliminar {
+      flex: 1; padding: 9px; border-radius: 10px;
+      background: #FEE2E2; color: #DC2626;
+      font-weight: 700; font-size: .85rem; cursor: pointer; border: none;
+      transition: background 150ms ease;
+    }
+    .btn-eliminar:hover { background: #FECACA; }
     .btn-wsp {
       flex: 1; padding: 9px; border-radius: 10px;
       background: #25D366; color: #fff;
@@ -586,6 +594,31 @@
       border-radius: 8px; padding: 6px 12px;
       font-size: .8rem; color: var(--subtexto); cursor: pointer;
     }
+
+    /* ══ NOTIFICACIÓN REALTIME ══════════════════════════════ */
+    .notif-banner {
+      position: fixed; top: 68px; left: 12px; right: 12px; z-index: 300;
+      background: linear-gradient(135deg, #1B4F8A 0%, #132F52 100%);
+      color: #fff; border-radius: 14px;
+      padding: 14px 16px; display: flex; align-items: center; gap: 12px;
+      box-shadow: 0 8px 32px rgba(27,79,138,.35);
+      transform: translateY(-120%); opacity: 0;
+      transition: transform .4s cubic-bezier(.4,0,.2,1), opacity .4s ease;
+      cursor: pointer;
+    }
+    .notif-banner.show { transform: translateY(0); opacity: 1; }
+    .notif-icon { font-size: 1.6rem; flex-shrink: 0; animation: notif-bounce .6s ease infinite alternate; }
+    @keyframes notif-bounce { from { transform: scale(1); } to { transform: scale(1.15); } }
+    .notif-body { flex: 1; min-width: 0; }
+    .notif-title { font-family: var(--font-head); font-size: .95rem; margin-bottom: 2px; }
+    .notif-sub { font-size: .78rem; opacity: .8; }
+    .notif-close {
+      background: rgba(255,255,255,.15); border: none; color: #fff;
+      width: 28px; height: 28px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: .9rem; cursor: pointer; flex-shrink: 0;
+    }
+    .notif-close:hover { background: rgba(255,255,255,.3); }
   </style>
 </head>
 <body>
@@ -904,7 +937,7 @@
     <div class="pedidos-header">
       <div>
         <div class="card-title" style="font-size:1.1rem">📋 Pedidos</div>
-        <div style="font-size:.8rem;color:var(--subtexto);margin-top:2px">Pedidos recibidos en la tienda online</div>
+        <div style="font-size:.8rem;color:var(--subtexto);margin-top:2px">Pedidos recibidos en la tienda online &nbsp;<span id="rt-indicator" style="font-size:.75rem">⏳ Conectando...</span></div>
       </div>
       <button class="btn-refresh" onclick="cargarPedidos()">↻ Actualizar</button>
     </div>
@@ -942,11 +975,13 @@ async function cargarPedidos() {
 
   try {
     const res = await fetch(
-      `${SUPABASE_URL}/rest/v1/pedidos?select=*&order=created_at.desc&limit=50`,
+      `${SUPABASE_URL}/rest/v1/pedidos?select=*&order=created_at.desc&limit=100`,
       { headers: SB_HEADERS }
     );
     pedidosData = await res.json();
     renderPedidos(pedidosData);
+    // Limpieza automática: si hay más de 100, eliminar los vistos más antiguos
+    limpiarPedidosAntiguos(pedidosData);
   } catch (e) {
     list.innerHTML = '<div class="pedidos-empty"><div class="empty-icon">❌</div><div>Error cargando pedidos</div></div>';
     console.error(e);
@@ -960,14 +995,16 @@ function renderPedidos(pedidos) {
     return;
   }
 
-  const nuevos = pedidos.filter(p => p.estado === 'nuevo').length;
+  const nuevos = pedidos.filter(p => p.estado === 'nuevo' || !p.estado).length;
 
-  list.innerHTML = pedidos.map(p => {
+  list.innerHTML = (nuevos > 0
+    ? `<div style="margin-bottom:12px;font-size:.85rem;color:var(--subtexto)">📬 <strong>${nuevos}</strong> pedido${nuevos !== 1 ? 's' : ''} nuevo${nuevos !== 1 ? 's' : ''}</div>`
+    : '') + pedidos.map(p => {
     const items = (p.items || []).map(i => `${i.qty}x ${i.nombre}`).join(', ');
     const hora = new Date(p.created_at).toLocaleString('es-MX', {
       day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit'
     });
-    const esNuevo = p.estado === 'nuevo';
+    const esNuevo = p.estado === 'nuevo' || !p.estado;
     return `
     <div class="pedido-card ${esNuevo ? '' : 'visto'}" id="pedido-${p.id}">
       <div class="pedido-card__top">
@@ -980,7 +1017,11 @@ function renderPedidos(pedidos) {
       <div class="pedido-items">${items}</div>
       <div class="pedido-total">Total: $${Number(p.total).toFixed(2)}</div>
       <div class="pedido-actions">
-        ${esNuevo ? `<button class="btn-visto" onclick="marcarVisto('${p.id}')">✓ Marcar visto</button>` : ''}
+        ${esNuevo
+          ? `<button class="btn-visto" onclick="marcarVisto('${p.id}')">✓ Marcar visto</button>`
+          : ``
+        }
+        ${!esNuevo ? `<button class="btn-eliminar" onclick="eliminarPedido('${p.id}')">🗑️ Eliminar</button>` : ''}
         ${p.cliente_whatsapp ? `<button class="btn-wsp" onclick="contactarCliente('${p.cliente_whatsapp}', '${(p.cliente_nombre||'').replace(/'/g,'')}')">💬 WhatsApp</button>` : ''}
       </div>
     </div>`;
@@ -988,17 +1029,63 @@ function renderPedidos(pedidos) {
 }
 
 async function marcarVisto(id) {
+  // Deshabilitar botón para evitar doble-click
+  const btn = document.querySelector(`#pedido-${id} .btn-visto`);
+  if (btn) { btn.disabled = true; btn.textContent = '⏳ Guardando...'; }
+
   try {
-    await fetch(`${SUPABASE_URL}/rest/v1/pedidos?id=eq.${id}`, {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/pedidos?id=eq.${id}`, {
       method: 'PATCH',
-      headers: SB_HEADERS,
+      headers: { ...SB_HEADERS, 'Prefer': 'return=minimal' },
       body: JSON.stringify({ estado: 'visto' })
     });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+
     // Actualizar localmente sin recargar
     pedidosData = pedidosData.map(p => p.id === id ? { ...p, estado: 'visto' } : p);
     renderPedidos(pedidosData);
     showToast('✓ Pedido marcado como visto');
-  } catch (e) { console.error(e); }
+  } catch (e) {
+    console.error('Error marcando visto:', e);
+    showToast('❌ Error al marcar visto — intenta de nuevo');
+    // Restaurar botón
+    if (btn) { btn.disabled = false; btn.textContent = '✓ Marcar visto'; }
+  }
+}
+
+async function eliminarPedido(id) {
+  if (!confirm('¿Eliminar este pedido?')) return;
+  try {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/pedidos?id=eq.${id}`, {
+      method: 'DELETE',
+      headers: { ...SB_HEADERS, 'Prefer': 'return=minimal' }
+    });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    pedidosData = pedidosData.filter(p => p.id !== id);
+    renderPedidos(pedidosData);
+    showToast('🗑️ Pedido eliminado');
+  } catch (e) {
+    console.error('Error eliminando pedido:', e);
+    showToast('❌ Error al eliminar — intenta de nuevo');
+  }
+}
+
+async function limpiarPedidosAntiguos(pedidos) {
+  if (pedidos.length <= 100) return;
+  // Obtener los vistos más antiguos que sobran
+  const vistos = pedidos.filter(p => p.estado === 'visto');
+  const sobran = pedidos.length - 100;
+  if (sobran <= 0 || !vistos.length) return;
+  // Los vistos ya vienen ordenados desc, tomar los últimos (más antiguos)
+  const aEliminar = vistos.slice(-Math.min(sobran, vistos.length));
+  const ids = aEliminar.map(p => p.id);
+  try {
+    await fetch(`${SUPABASE_URL}/rest/v1/pedidos?id=in.(${ids.join(',')})`, {
+      method: 'DELETE',
+      headers: { ...SB_HEADERS, 'Prefer': 'return=minimal' }
+    });
+    console.log(`Limpieza: ${ids.length} pedidos antiguos eliminados`);
+  } catch (e) { console.warn('Error en limpieza automática:', e); }
 }
 
 function contactarCliente(whatsapp, nombre) {
@@ -1633,6 +1720,167 @@ function enviarListaProveedor() {
   ].join('\n');
   window.open(`https://wa.me/${CONFIG.whatsappProveedor}?text=${encodeURIComponent(msg)}`, '_blank');
 }
+
+// ══════════════════════════════════════════════════════
+// SUPABASE REALTIME — Notificaciones de pedidos nuevos
+// ══════════════════════════════════════════════════════
+const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+console.log('✅ [RT] Supabase client creado:', SUPABASE_URL);
+let tituloOriginal = document.title;
+let titleFlashInterval = null;
+
+function initRealtime() {
+  console.log('🚀 [RT] initRealtime() llamado — creando canal...');
+  const channel = supabaseClient
+    .channel('pedidos-nuevos')
+    .on('postgres_changes',
+      { event: 'INSERT', schema: 'public', table: 'pedidos' },
+      (payload) => {
+        console.log('🔔 [RT] ¡¡¡ INSERT recibido !!!', payload);
+        console.log('🔔 [RT] payload.new:', JSON.stringify(payload.new));
+        onNuevoPedido(payload.new);
+      }
+    )
+    .on('system', {}, (payload) => {
+      console.log('⚙️ [RT] System event:', payload);
+    })
+    .subscribe((status, err) => {
+      console.log(`📡 [RT] subscribe status: "${status}"`, err || '');
+      if (status === 'SUBSCRIBED') {
+        console.log('✅ [RT] ¡Canal conectado! Escuchando INSERTs en tabla pedidos...');
+        // Mostrar indicador visual de Realtime activo
+        const indicator = document.getElementById('rt-indicator');
+        if (indicator) { indicator.textContent = '🟢 Tiempo real activo'; indicator.style.color = 'var(--verde)'; }
+      } else if (status === 'TIMED_OUT') {
+        console.error('❌ [RT] TIMED_OUT — Ve a Supabase Dashboard → Database → Replication y activa la tabla "pedidos"');
+        const indicator = document.getElementById('rt-indicator');
+        if (indicator) { indicator.textContent = '🔴 Tiempo real inactivo'; indicator.style.color = '#DC2626'; }
+      } else if (status === 'CLOSED') {
+        console.warn('⚠️ [RT] Canal cerrado');
+      } else if (status === 'CHANNEL_ERROR') {
+        console.error('❌ [RT] Error de canal:', err);
+        console.error('❌ [RT] Posible causa: tabla "pedidos" no está en Supabase Replication');
+      }
+    });
+
+  console.log('📡 [RT] Canal creado, esperando conexión WebSocket...');
+}
+
+function onNuevoPedido(pedido) {
+  console.log('🎯 [RT] onNuevoPedido() ejecutándose con:', pedido);
+
+  // 1. Agregar al array local y re-renderizar
+  console.log('📋 [RT] Paso 1: Agregando a pedidosData (actual:', pedidosData.length, 'items)');
+  pedidosData.unshift(pedido);
+  renderPedidos(pedidosData);
+
+  // 2. Sonido de notificación (Web Audio API)
+  console.log('🔊 [RT] Paso 2: Reproduciendo sonido...');
+  playNotifSound();
+
+  // 3. Vibración (móviles)
+  console.log('📳 [RT] Paso 3: Vibración disponible:', !!navigator.vibrate);
+  if (navigator.vibrate) navigator.vibrate([200, 100, 200]);
+
+  // 4. Banner de notificación
+  const nombre = pedido.cliente_nombre || 'Cliente';
+  const total = pedido.total ? `$${Number(pedido.total).toFixed(2)}` : '';
+  const items = (pedido.items || []).map(i => `${i.qty}x ${i.nombre}`).join(', ');
+  console.log('🏷️ [RT] Paso 4: Mostrando banner para:', nombre, total, items);
+  showNotifBanner(nombre, total, items);
+
+  // 5. Flashear título de pestaña
+  console.log('⚡ [RT] Paso 5: Flasheando título de pestaña');
+  startTitleFlash(`🔔 ¡Nuevo pedido de ${nombre}!`);
+}
+
+function playNotifSound() {
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    // Beep 1
+    const osc1 = ctx.createOscillator();
+    const gain1 = ctx.createGain();
+    osc1.type = 'sine';
+    osc1.frequency.value = 880;
+    gain1.gain.value = 0.3;
+    osc1.connect(gain1).connect(ctx.destination);
+    osc1.start(ctx.currentTime);
+    osc1.stop(ctx.currentTime + 0.15);
+    // Beep 2 (más alto)
+    const osc2 = ctx.createOscillator();
+    const gain2 = ctx.createGain();
+    osc2.type = 'sine';
+    osc2.frequency.value = 1100;
+    gain2.gain.value = 0.3;
+    osc2.connect(gain2).connect(ctx.destination);
+    osc2.start(ctx.currentTime + 0.2);
+    osc2.stop(ctx.currentTime + 0.35);
+    // Cleanup
+    setTimeout(() => ctx.close(), 1000);
+  } catch (e) { console.warn('Audio no disponible:', e); }
+}
+
+function showNotifBanner(nombre, total, items) {
+  // Remover banner anterior si existe
+  const old = document.getElementById('notifBanner');
+  if (old) old.remove();
+
+  const banner = document.createElement('div');
+  banner.className = 'notif-banner';
+  banner.id = 'notifBanner';
+  banner.innerHTML = `
+    <span class="notif-icon">🛒</span>
+    <div class="notif-body">
+      <div class="notif-title">¡Nuevo pedido de ${nombre}!</div>
+      <div class="notif-sub">${items ? items + ' — ' : ''}${total}</div>
+    </div>
+    <button class="notif-close" onclick="event.stopPropagation(); dismissNotif();">✕</button>
+  `;
+  banner.addEventListener('click', () => {
+    dismissNotif();
+    // Cambiar a la pestaña de pedidos
+    const pedidosTab = document.querySelector('[data-panel="pedidos"]');
+    if (pedidosTab) switchTab(pedidosTab);
+  });
+  document.body.appendChild(banner);
+  // Trigger animation
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => banner.classList.add('show'));
+  });
+  // Auto-dismiss después de 15s
+  setTimeout(() => dismissNotif(), 15000);
+}
+
+function dismissNotif() {
+  const banner = document.getElementById('notifBanner');
+  if (banner) {
+    banner.classList.remove('show');
+    setTimeout(() => banner.remove(), 400);
+  }
+  stopTitleFlash();
+}
+
+function startTitleFlash(msg) {
+  stopTitleFlash();
+  let toggle = false;
+  titleFlashInterval = setInterval(() => {
+    document.title = toggle ? tituloOriginal : msg;
+    toggle = !toggle;
+  }, 1000);
+  // Restaurar al hacer focus
+  window.addEventListener('focus', stopTitleFlash, { once: true });
+}
+
+function stopTitleFlash() {
+  if (titleFlashInterval) {
+    clearInterval(titleFlashInterval);
+    titleFlashInterval = null;
+  }
+  document.title = tituloOriginal;
+}
+
+// Iniciar Realtime al cargar
+document.addEventListener('DOMContentLoaded', initRealtime);
 </script>
 
 </body>
