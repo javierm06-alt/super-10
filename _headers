@@ -1,9 +1,4 @@
-notepad _headers
-```
-
-Reemplaza todo el contenido con esto:
-```
-/tienda.html
+﻿/tienda.html
   Cache-Control: no-cache, no-store, must-revalidate
   Content-Type: text/html; charset=utf-8
 
