@@ -711,7 +711,7 @@
 <div class="overlay" id="recModal">
     <div class="modal">
         <div class="receipt" id="recBody"></div>
-        <div class="modal-btns">
+        <div class="modal-btns" id="recBtns">
             <button class="m-btn sec" onclick="cerrarRecibo()">Cerrar</button>
             <button class="m-btn pri" onclick="imprimirRecibo()">🖨️ Imprimir</button>
             <button class="m-btn pri" onclick="nuevaVenta()">✅ Nueva venta</button>
@@ -1053,14 +1053,16 @@ function updCharge() {
 // ══════════════════════════════════════════════════
 // CHECKOUT
 // ══════════════════════════════════════════════════
-async function cobrar() {
+let ventaPendiente = null; // venta en preview, aún no confirmada
+
+function cobrar() {
     const carrito = getCarrito();
     if (!carrito.length) return;
     const total = getTotal();
     const paga = metodo === 'efectivo' ? (parseFloat(document.getElementById('cashIn').value) || total) : total;
     const cambio = paga - total;
 
-    const venta = {
+    ventaPendiente = {
         fecha: new Date().toISOString(),
         caja: cajaActiva + 1,
         items: carrito.map(i => ({
@@ -1070,6 +1072,15 @@ async function cobrar() {
         total, metodo_pago: metodo,
         pago_recibido: paga, cambio
     };
+
+    // Mostrar preview del recibo SIN registrar la venta
+    mostrarRecibo(ventaPendiente, true);
+}
+
+async function confirmarVenta() {
+    if (!ventaPendiente) return;
+    const venta = ventaPendiente;
+    ventaPendiente = null;
 
     try {
         const r = await fetch(`${SUPABASE_URL}/rest/v1/ventas_pos`, {
@@ -1086,9 +1097,15 @@ async function cobrar() {
     } catch (e) { console.warn('Error Supabase:', e); }
 
     ventasHoy.push(venta);
-    mostrarRecibo(venta);
+    mostrarRecibo(venta, false);
     if (impresora) await imprimirESCPOS(venta);
-    toast(`✅ Venta Caja ${cajaActiva + 1} completada`, 'ok');
+    toast(`✅ Venta Caja ${venta.caja} completada`, 'ok');
+}
+
+function cancelarVenta() {
+    ventaPendiente = null;
+    cerrarRecibo();
+    toast('❌ Venta cancelada', 'warn');
 }
 
 function nuevaVenta() {
@@ -1106,12 +1123,18 @@ function nuevaVenta() {
 // ══════════════════════════════════════════════════
 // RECEIPT
 // ══════════════════════════════════════════════════
-function mostrarRecibo(v) {
+function mostrarRecibo(v, esPreview) {
     const f = new Date(v.fecha);
-    const folio = ventasHoy.length.toString().padStart(4, '0');
-    let h = `<div class="r-center">
+    const folio = (ventasHoy.length + (esPreview ? 1 : 0)).toString().padStart(4, '0');
+    let h = '';
+    if (esPreview) {
+        h += `<div style="background:#fff3cd;color:#856404;padding:8px 12px;border-radius:8px;text-align:center;font-weight:600;margin-bottom:8px">
+            ⚠️ Vista previa — La venta NO se ha registrado aún
+        </div>`;
+    }
+    h += `<div class="r-center">
         <div class="r-title">🏪 Super 10</div>
-        <div style="font-size:.68rem;color:#777">Ticket de venta — Caja ${v.caja}</div>
+        <div style="font-size:.68rem;color:#777">${esPreview ? 'Confirma los datos de la venta' : 'Ticket de venta'} — Caja ${v.caja}</div>
         <div style="font-size:.68rem;margin-top:3px">
             ${f.toLocaleDateString('es-MX')} ${f.toLocaleTimeString('es-MX', {hour:'2-digit', minute:'2-digit'})}
             &nbsp;|&nbsp; Folio: #${folio}
@@ -1127,8 +1150,25 @@ function mostrarRecibo(v) {
     } else {
         h += `<div class="r-line"><span>Pago: ${v.metodo_pago}</span><span>$${v.total.toFixed(2)}</span></div>`;
     }
-    h += `<div class="dashed"></div><div class="r-center" style="font-size:.72rem;color:#777;margin-top:6px">¡Gracias por su compra!<br>Vuelva pronto</div>`;
+    if (!esPreview) {
+        h += `<div class="dashed"></div><div class="r-center" style="font-size:.72rem;color:#777;margin-top:6px">¡Gracias por su compra!<br>Vuelva pronto</div>`;
+    }
     document.getElementById('recBody').innerHTML = h;
+
+    // Botones según modo
+    const btns = document.getElementById('recBtns');
+    if (esPreview) {
+        btns.innerHTML = `
+            <button class="m-btn sec" onclick="cancelarVenta()" style="background:#ffebee;color:#c62828">❌ Cancelar</button>
+            <button class="m-btn pri" onclick="confirmarVenta()" style="background:#2e7d32;font-size:1rem">✅ Confirmar Venta</button>
+        `;
+    } else {
+        btns.innerHTML = `
+            <button class="m-btn sec" onclick="cerrarRecibo()">Cerrar</button>
+            <button class="m-btn pri" onclick="imprimirRecibo()">🖨️ Imprimir</button>
+            <button class="m-btn pri" onclick="nuevaVenta()">✅ Nueva venta</button>
+        `;
+    }
     document.getElementById('recModal').classList.add('on');
 }
 
@@ -1867,7 +1907,10 @@ function initTeclas() {
         if (e.key === 'F4') { e.preventDefault(); toggleView('corte'); }
         if (e.key === 'F5') { e.preventDefault(); volverInicio(); }
         if (e.key === 'Escape') {
-            if (document.getElementById('recModal').classList.contains('on')) nuevaVenta();
+            if (document.getElementById('recModal').classList.contains('on')) {
+                if (ventaPendiente) cancelarVenta();  // preview mode: cancelar sin registrar
+                else nuevaVenta();                     // post-venta: limpiar carrito
+            }
             else if (currentView !== 'pos') toggleView(currentView);
         }
 
