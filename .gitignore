@@ -1,0 +1,40 @@
+# === Videos y multimedia pesada ===
+*.mp4
+*.mp3
+*.avi
+*.mov
+
+# === Fotos originales (procesadas van en Supabase Storage) ===
+FOTOS - PRODUCTOS/
+*.jpeg
+*.jpg
+*.png
+!favicon.png
+
+# === Scripts de desarrollo / one-time ===
+create_workflow.js
+buscar_imagenes.py
+descargar_enlatados.py
+scripts/upload_botanas.html
+scripts/procesar_fotos.log
+scripts/asignar_imagenes_manual.log
+scripts/match_csv.log
+scripts/match_resultados_*.csv
+
+# === Archivos de trabajo ===
+INVENTARIO SUPER 10.xlsx
+CLAUDE.md
+config_tienda.json
+Markdown_Modulo_Tienda_Abarrotes/
+
+# === Imágenes de escenas/comerciales ===
+imagen escena*
+escena*
+
+# === Sistema ===
+__pycache__/
+*.pyc
+.DS_Store
+Thumbs.db
+node_modules/
+.env
