@@ -618,6 +618,7 @@
         <button class="header-btn" id="btnVoz" onclick="toggleView('voz')">🎤 Voz</button>
         <button class="header-btn" id="btnSalud" onclick="toggleView('salud')">💰 Salud</button>
         <button class="header-btn" id="btnSurtir" onclick="toggleView('surtir')">🛒 Surtir</button>
+        <button class="header-btn" id="btnServicios" onclick="toggleView('servicios')" style="background:#FFF3E0;color:#E65100">⚡ Servicios</button>
 
         <span id="clock"></span>
     </div>
@@ -982,6 +983,95 @@
 <div class="side-view" id="surtirView">
     <div id="surtirContent" style="padding:4px 0">
         <div style="text-align:center;padding:30px;color:var(--subtexto)">Analizando inventario...</div>
+    </div>
+</div>
+
+<!-- === PAGO DE SERVICIOS === -->
+<div class="side-view" id="serviciosView">
+    <div class="side-card">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+            <h3 style="margin:0">⚡ Pago de Servicios</h3>
+            <span style="font-size:.7rem;padding:3px 10px;border-radius:20px;background:#FFF3E0;color:#E65100;font-weight:700">DEMO</span>
+        </div>
+
+        <!-- Service selector cards -->
+        <div id="svcSelector" style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:18px">
+            <div class="svc-card" onclick="svcSeleccionar('cfe')" id="svcCardCfe" style="border:2px solid var(--borde);border-radius:12px;padding:14px;text-align:center;cursor:pointer;transition:all 150ms;background:#fff">
+                <div style="font-size:2rem;margin-bottom:4px">⚡</div>
+                <div style="font-weight:700;font-size:.82rem">CFE</div>
+                <div style="font-size:.65rem;color:var(--subtexto)">Luz</div>
+            </div>
+            <div class="svc-card" onclick="svcSeleccionar('cea')" id="svcCardCea" style="border:2px solid var(--borde);border-radius:12px;padding:14px;text-align:center;cursor:pointer;transition:all 150ms;background:#fff">
+                <div style="font-size:2rem;margin-bottom:4px">💧</div>
+                <div style="font-weight:700;font-size:.82rem">CEA</div>
+                <div style="font-size:.65rem;color:var(--subtexto)">Agua · Querétaro</div>
+            </div>
+            <div class="svc-card" onclick="svcSeleccionar('qrobus')" id="svcCardQrobus" style="border:2px solid var(--borde);border-radius:12px;padding:14px;text-align:center;cursor:pointer;transition:all 150ms;background:#fff">
+                <div style="font-size:2rem;margin-bottom:4px">🚌</div>
+                <div style="font-weight:700;font-size:.82rem">QroBús</div>
+                <div style="font-size:.65rem;color:var(--subtexto)">Recarga tarjeta</div>
+            </div>
+        </div>
+
+        <!-- Payment form (hidden until service selected) -->
+        <div id="svcForm" style="display:none;border:1.5px solid var(--borde);border-radius:12px;padding:16px;background:var(--crema)">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px">
+                <span id="svcFormIcon" style="font-size:1.5rem">⚡</span>
+                <span id="svcFormTitle" style="font-weight:700;font-size:.95rem">CFE — Luz</span>
+            </div>
+
+            <div style="display:flex;flex-direction:column;gap:12px">
+                <div>
+                    <label style="font-size:.72rem;font-weight:700;color:var(--subtexto);text-transform:uppercase;letter-spacing:.5px;display:block;margin-bottom:4px" id="svcRefLabel">No. de servicio / medidor</label>
+                    <input type="text" id="svcReferencia" placeholder="Ej: 1234 5678 9012" style="width:100%;padding:10px;border:1.5px solid var(--borde);border-radius:8px;font-size:.95rem;font-family:monospace;letter-spacing:1px">
+                </div>
+                <div>
+                    <label style="font-size:.72rem;font-weight:700;color:var(--subtexto);text-transform:uppercase;letter-spacing:.5px;display:block;margin-bottom:4px">Nombre del cliente (opcional)</label>
+                    <input type="text" id="svcCliente" placeholder="Nombre de quien paga" style="width:100%;padding:10px;border:1.5px solid var(--borde);border-radius:8px;font-size:.9rem">
+                </div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+                    <div>
+                        <label style="font-size:.72rem;font-weight:700;color:var(--subtexto);text-transform:uppercase;letter-spacing:.5px;display:block;margin-bottom:4px">Monto del recibo *</label>
+                        <div style="position:relative">
+                            <span style="position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--subtexto);font-weight:600">$</span>
+                            <input type="number" id="svcMonto" placeholder="0.00" step="1" min="0" style="width:100%;padding:10px 10px 10px 24px;border:1.5px solid var(--borde);border-radius:8px;font-size:1rem;font-weight:600" oninput="svcCalcComision()">
+                        </div>
+                    </div>
+                    <div>
+                        <label style="font-size:.72rem;font-weight:700;color:var(--subtexto);text-transform:uppercase;letter-spacing:.5px;display:block;margin-bottom:4px">Comisión cobrada</label>
+                        <div style="position:relative">
+                            <span style="position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--subtexto);font-weight:600">$</span>
+                            <input type="number" id="svcComision" placeholder="10.00" step="1" min="0" style="width:100%;padding:10px 10px 10px 24px;border:1.5px solid var(--borde);border-radius:8px;font-size:1rem">
+                        </div>
+                    </div>
+                </div>
+                <div id="svcTotalBox" style="display:none;background:#E8F5E9;border-radius:8px;padding:10px 14px;text-align:center">
+                    <span style="font-size:.75rem;color:#2e7d32;font-weight:600">Total cobrado al cliente: </span>
+                    <span id="svcTotalVal" style="font-size:1.1rem;font-weight:700;color:#2e7d32">$0.00</span>
+                </div>
+                <div style="display:flex;gap:8px">
+                    <select id="svcMetodo" style="flex:1;padding:10px;border:1.5px solid var(--borde);border-radius:8px;font-size:.85rem;background:#fff">
+                        <option value="efectivo">💵 Efectivo</option>
+                        <option value="tarjeta">💳 Tarjeta</option>
+                        <option value="transferencia">🏦 Transferencia</option>
+                    </select>
+                </div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+                    <button onclick="svcCancelar()" style="padding:12px;border:1.5px solid var(--borde);border-radius:8px;background:#fff;cursor:pointer;font-size:.85rem;font-family:var(--font-body)">Cancelar</button>
+                    <button onclick="svcRegistrar()" style="padding:12px;border:none;border-radius:8px;background:var(--verde);color:#fff;font-weight:700;cursor:pointer;font-size:.85rem;font-family:var(--font-body)">✅ Registrar pago</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Historial de pagos -->
+    <div class="side-card" style="margin-top:10px">
+        <h3 style="margin-bottom:10px">📋 Pagos registrados hoy</h3>
+        <div id="svcResumen" style="display:none;display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px">
+        </div>
+        <div id="svcHistorial">
+            <div style="text-align:center;padding:20px;color:var(--subtexto);font-size:.85rem">Ningún pago registrado aún</div>
+        </div>
     </div>
 </div>
 
@@ -1980,7 +2070,7 @@ function appendInvPage() {
 // VIEW SWITCHING
 // ══════════════════════════════════════════════════
 function toggleView(view) {
-    const views = ['inventario', 'pedidos', 'corte', 'historial', 'devoluciones', 'nuevoProducto', 'voz', 'salud', 'surtir'];
+    const views = ['inventario', 'pedidos', 'corte', 'historial', 'devoluciones', 'nuevoProducto', 'voz', 'salud', 'surtir', 'servicios'];
     const posMain = document.getElementById('posMain');
 
     // If clicking the same view, close it
@@ -2017,12 +2107,13 @@ function toggleView(view) {
     if (view === 'voz') vozRenderInv();
     if (view === 'salud') renderSalud();
     if (view === 'surtir') renderSurtir();
+    if (view === 'servicios') svcRenderHistorial();
 }
 
 function cap(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
 
 function volverInicio() {
-    const views = ['inventario', 'pedidos', 'corte', 'historial', 'devoluciones', 'nuevoProducto', 'voz', 'salud', 'surtir'];
+    const views = ['inventario', 'pedidos', 'corte', 'historial', 'devoluciones', 'nuevoProducto', 'voz', 'salud', 'surtir', 'servicios'];
     views.forEach(v => {
         const el = document.getElementById(v + 'View');
         if (el) el.classList.remove('on');
@@ -2970,6 +3061,169 @@ function surtirEnviarWA() {
     const lineas = urgentes.slice(0, 20).map(p => `- ${p.nombre}: ${p.stock || 0} pz → pedir ~20`).join('\n');
     const msg = `📦 Lista de compras Super 10\n\n${lineas}\n\n_Generado desde POS Super 10_`;
     window.open(`https://wa.me/${SURTIR_WA}?text=${encodeURIComponent(msg)}`, '_blank');
+}
+
+// ══════════════════════════════════════════════════
+// PAGO DE SERVICIOS (DEMO)
+// ══════════════════════════════════════════════════
+const SVC_CONFIG = {
+    cfe:    { icon: '⚡', nombre: 'CFE — Luz', refLabel: 'No. de servicio / medidor', refPlaceholder: 'Ej: 1234 5678 9012', comisionDefault: 10 },
+    cea:    { icon: '💧', nombre: 'CEA — Agua', refLabel: 'No. de cuenta CEA', refPlaceholder: 'Ej: QRO-00123456', comisionDefault: 8 },
+    qrobus: { icon: '🚌', nombre: 'QroBús — Recarga', refLabel: 'No. de tarjeta QroBús', refPlaceholder: 'Ej: 0412 3456 7890', comisionDefault: 5 }
+};
+let svcTipo = null;
+let svcPagosHoy = JSON.parse(localStorage.getItem('svc_pagos_hoy') || '[]');
+
+// Limpiar pagos de días anteriores
+(function() {
+    const hoy = new Date().toISOString().slice(0, 10);
+    if (svcPagosHoy.length && svcPagosHoy[0].fecha && !svcPagosHoy[0].fecha.startsWith(hoy)) {
+        svcPagosHoy = [];
+        localStorage.setItem('svc_pagos_hoy', '[]');
+    }
+})();
+
+function svcSeleccionar(tipo) {
+    svcTipo = tipo;
+    const cfg = SVC_CONFIG[tipo];
+
+    // Highlight selected card
+    document.querySelectorAll('.svc-card').forEach(c => {
+        c.style.borderColor = 'var(--borde)';
+        c.style.background = '#fff';
+    });
+    const card = document.getElementById('svcCard' + tipo.charAt(0).toUpperCase() + tipo.slice(1));
+    if (card) {
+        card.style.borderColor = 'var(--verde)';
+        card.style.background = '#f0fdf4';
+    }
+
+    // Setup form
+    document.getElementById('svcFormIcon').textContent = cfg.icon;
+    document.getElementById('svcFormTitle').textContent = cfg.nombre;
+    document.getElementById('svcRefLabel').textContent = cfg.refLabel;
+    document.getElementById('svcReferencia').placeholder = cfg.refPlaceholder;
+    document.getElementById('svcComision').value = cfg.comisionDefault;
+    document.getElementById('svcMonto').value = '';
+    document.getElementById('svcCliente').value = '';
+    document.getElementById('svcTotalBox').style.display = 'none';
+    document.getElementById('svcForm').style.display = 'block';
+    document.getElementById('svcReferencia').focus();
+}
+
+function svcCalcComision() {
+    const monto = parseFloat(document.getElementById('svcMonto').value) || 0;
+    const comision = parseFloat(document.getElementById('svcComision').value) || 0;
+    const box = document.getElementById('svcTotalBox');
+    if (monto > 0) {
+        box.style.display = 'block';
+        document.getElementById('svcTotalVal').textContent = '$' + (monto + comision).toFixed(2);
+    } else {
+        box.style.display = 'none';
+    }
+}
+document.getElementById('svcComision')?.addEventListener('input', svcCalcComision);
+
+function svcCancelar() {
+    svcTipo = null;
+    document.getElementById('svcForm').style.display = 'none';
+    document.querySelectorAll('.svc-card').forEach(c => {
+        c.style.borderColor = 'var(--borde)';
+        c.style.background = '#fff';
+    });
+}
+
+function svcRegistrar() {
+    if (!svcTipo) { toast('Selecciona un servicio primero', 'err'); return; }
+    const referencia = document.getElementById('svcReferencia').value.trim();
+    const monto = parseFloat(document.getElementById('svcMonto').value) || 0;
+    const comision = parseFloat(document.getElementById('svcComision').value) || 0;
+    const cliente = document.getElementById('svcCliente').value.trim();
+    const metodo = document.getElementById('svcMetodo').value;
+
+    if (!referencia) { toast('⚠️ Ingresa el número de referencia', 'err'); return; }
+    if (monto <= 0) { toast('⚠️ El monto debe ser mayor a 0', 'err'); return; }
+
+    const cfg = SVC_CONFIG[svcTipo];
+    const pago = {
+        id: Date.now(),
+        tipo: svcTipo,
+        servicio: cfg.nombre,
+        icon: cfg.icon,
+        referencia,
+        cliente: cliente || 'Cliente',
+        monto,
+        comision,
+        total: monto + comision,
+        metodo,
+        fecha: new Date().toISOString(),
+        hora: new Date().toLocaleTimeString('es-MX', { hour: '2-digit', minute: '2-digit' })
+    };
+
+    svcPagosHoy.unshift(pago);
+    localStorage.setItem('svc_pagos_hoy', JSON.stringify(svcPagosHoy));
+
+    // Registrar también en ventasHoy como ingreso
+    ventasHoy.push({
+        id: pago.id,
+        items: [{ nombre: cfg.nombre + ' — Comisión', precio: comision, cantidad: 1 }],
+        total: comision,
+        metodo,
+        fecha: pago.fecha,
+        esServicio: true
+    });
+
+    toast(`✅ ${cfg.icon} Pago registrado — ${cfg.nombre} $${monto.toFixed(2)} + comisión $${comision.toFixed(2)}`, 'ok');
+    svcCancelar();
+    svcRenderHistorial();
+}
+
+function svcRenderHistorial() {
+    const container = document.getElementById('svcHistorial');
+    const resumen = document.getElementById('svcResumen');
+
+    if (!svcPagosHoy.length) {
+        container.innerHTML = '<div style="text-align:center;padding:20px;color:var(--subtexto);font-size:.85rem">Ningún pago registrado aún</div>';
+        resumen.style.display = 'none';
+        return;
+    }
+
+    // Resumen cards
+    const totalServicios = svcPagosHoy.length;
+    const totalMonto = svcPagosHoy.reduce((s, p) => s + p.monto, 0);
+    const totalComisiones = svcPagosHoy.reduce((s, p) => s + p.comision, 0);
+
+    resumen.style.display = 'grid';
+    resumen.innerHTML = `
+        <div style="background:#fff;border-radius:10px;padding:12px;text-align:center;border:1px solid var(--borde)">
+            <div style="font-size:1.4rem;font-weight:700;color:var(--texto)">${totalServicios}</div>
+            <div style="font-size:.7rem;color:var(--subtexto)">Pagos</div>
+        </div>
+        <div style="background:#fff;border-radius:10px;padding:12px;text-align:center;border:1px solid var(--borde)">
+            <div style="font-size:1.4rem;font-weight:700;color:var(--texto)">$${totalMonto.toFixed(0)}</div>
+            <div style="font-size:.7rem;color:var(--subtexto)">Recaudado</div>
+        </div>
+        <div style="background:#E8F5E9;border-radius:10px;padding:12px;text-align:center;border:1px solid #c8e6c9">
+            <div style="font-size:1.4rem;font-weight:700;color:#2e7d32">$${totalComisiones.toFixed(0)}</div>
+            <div style="font-size:.7rem;color:#2e7d32">Ganancia</div>
+        </div>
+    `;
+
+    // Rows
+    container.innerHTML = svcPagosHoy.map(p => `
+        <div style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--borde)">
+            <div style="font-size:1.5rem;width:36px;text-align:center">${p.icon}</div>
+            <div style="flex:1;min-width:0">
+                <div style="font-weight:600;font-size:.85rem">${esc(p.servicio)}</div>
+                <div style="font-size:.72rem;color:var(--subtexto)">${esc(p.cliente)} · Ref: ${esc(p.referencia)}</div>
+            </div>
+            <div style="text-align:right">
+                <div style="font-weight:700;font-size:.9rem">$${p.monto.toFixed(2)}</div>
+                <div style="font-size:.68rem;color:#2e7d32;font-weight:600">+$${p.comision.toFixed(2)} comisión</div>
+            </div>
+            <div style="font-size:.7rem;color:var(--subtexto);white-space:nowrap">${p.hora}</div>
+        </div>
+    `).join('');
 }
 
 // ══════════════════════════════════════════════════
