@@ -618,7 +618,7 @@
         <button class="header-btn" id="btnVoz" onclick="toggleView('voz')">🎤 Voz</button>
         <button class="header-btn" id="btnSalud" onclick="toggleView('salud')">💰 Salud</button>
         <button class="header-btn" id="btnSurtir" onclick="toggleView('surtir')">🛒 Surtir</button>
-        <button class="header-btn" onclick="location.href='admin.html'">⚙️ Admin</button>
+
         <span id="clock"></span>
     </div>
 </header>
@@ -728,6 +728,10 @@
             <button class="inv-filter" onclick="setInvFilter('medio',this)">🟠 Medio (11-25)</button>
             <button class="inv-filter" onclick="setInvFilter('ok',this)">🟢 Bien surtido</button>
             <button class="inv-filter" onclick="setInvFilter('agotado',this)">⛔ Agotados (0)</button>
+        </div>
+        <div style="display:flex;gap:8px;margin-top:8px">
+            <button onclick="invExportCSV()" style="flex:1;padding:8px 14px;border:1.5px solid var(--borde);border-radius:8px;background:#E8F5E9;color:#2e7d32;font-weight:600;font-size:.78rem;cursor:pointer;font-family:var(--font-body);display:flex;align-items:center;justify-content:center;gap:6px">📥 Descargar CSV</button>
+            <button onclick="invEnviarCorreo()" style="flex:1;padding:8px 14px;border:1.5px solid var(--borde);border-radius:8px;background:#E3F2FD;color:#1565C0;font-weight:600;font-size:.78rem;cursor:pointer;font-family:var(--font-body);display:flex;align-items:center;justify-content:center;gap:6px">📧 Enviar por correo</button>
         </div>
         <div id="invResurtir" class="inv-resurtir" style="display:none"></div>
         <table class="s-table">
@@ -1853,6 +1857,54 @@ function setInvFilter(filter, btn) {
     document.querySelectorAll('.inv-filter').forEach(b => b.classList.remove('active'));
     if (btn) btn.classList.add('active');
     renderInventario();
+}
+
+// ── Exportar inventario ──
+function invGetCSV() {
+    const data = (invFiltered && invFiltered.length ? invFiltered : productos);
+    const header = 'Nombre,Categoría,Precio,Stock,Unidad,Código de barras';
+    const rows = data.map(p => {
+        const nombre = (p.nombre || '').replace(/"/g, '""');
+        return `"${nombre}","${p.categoria || ''}",${p.precio || 0},${p.stock || 0},"${p.unidad || 'pza'}","${p.codigo_barras || ''}"`;
+    });
+    return header + '\n' + rows.join('\n');
+}
+
+function invExportCSV() {
+    const csv = '\uFEFF' + invGetCSV(); // BOM for Excel UTF-8
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    const fecha = new Date().toISOString().slice(0,10);
+    a.href = url;
+    a.download = `inventario_super10_${fecha}.csv`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    toast('📥 CSV descargado — ' + (invFiltered ? invFiltered.length : productos.length) + ' productos', 'ok');
+}
+
+function invEnviarCorreo() {
+    const data = (invFiltered && invFiltered.length ? invFiltered : productos);
+    const fecha = new Date().toLocaleDateString('es-MX');
+    const total = data.length;
+    const bajos = data.filter(p => (p.stock||0) <= 10).length;
+    const agotados = data.filter(p => (p.stock||0) === 0).length;
+
+    let body = `Inventario Super 10 — ${fecha}%0A`;
+    body += `Total: ${total} productos | Stock bajo: ${bajos} | Agotados: ${agotados}%0A%0A`;
+
+    // Top 30 products sorted by stock (lowest first)
+    const sorted = [...data].sort((a,b) => (a.stock||0) - (b.stock||0)).slice(0, 30);
+    sorted.forEach(p => {
+        body += `• ${p.nombre} — Stock: ${p.stock||0} — $${(p.precio||0).toFixed(2)}%0A`;
+    });
+    if (data.length > 30) body += `%0A... y ${data.length - 30} productos más.`;
+
+    const subject = encodeURIComponent(`Inventario Super 10 — ${fecha}`);
+    window.open(`mailto:?subject=${subject}&body=${body}`, '_self');
+    toast('📧 Abriendo correo con inventario...', 'ok');
 }
 
 function renderInventario() {
