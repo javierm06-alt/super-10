@@ -593,9 +593,66 @@
             .header-right { gap: 2px; }
             .header-btn { padding: 3px 5px; font-size: .6rem; }
         }
+        /* ── LOGIN SCREEN ── */
+        .login-screen {
+            position: fixed; inset: 0; z-index: 9999;
+            background: linear-gradient(135deg, #1B4F8A 0%, #132F52 100%);
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            font-family: var(--font-body);
+        }
+        .login-screen.hidden { display: none; }
+        .login-logo { font-size: 3rem; margin-bottom: 6px; }
+        .login-title { color: #fff; font-size: 1.4rem; font-weight: 700; font-family: var(--font-title); margin-bottom: 4px; }
+        .login-sub { color: rgba(255,255,255,.6); font-size: .82rem; margin-bottom: 28px; }
+        .pin-dots { display: flex; gap: 14px; margin-bottom: 24px; }
+        .pin-dot { width: 18px; height: 18px; border-radius: 50%; border: 2px solid rgba(255,255,255,.4); background: transparent; transition: all 150ms; }
+        .pin-dot.filled { background: #8BC34A; border-color: #8BC34A; }
+        .pin-dot.error { background: #ef5350; border-color: #ef5350; animation: pinShake .4s; }
+        @keyframes pinShake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-8px)} 75%{transform:translateX(8px)} }
+        .pin-pad { display: grid; grid-template-columns: repeat(3, 72px); gap: 10px; }
+        .pin-key { width: 72px; height: 56px; border: none; border-radius: 12px; background: rgba(255,255,255,.12);
+            color: #fff; font-size: 1.3rem; font-weight: 700; cursor: pointer; font-family: var(--font-body);
+            transition: background 120ms; }
+        .pin-key:hover { background: rgba(255,255,255,.22); }
+        .pin-key:active { background: rgba(255,255,255,.32); }
+        .pin-key.backspace { font-size: 1.1rem; }
+        .login-user { color: rgba(255,255,255,.5); font-size: .7rem; margin-top: 20px; }
+        .login-user select { background: rgba(255,255,255,.15); border: 1px solid rgba(255,255,255,.2);
+            color: #fff; padding: 4px 8px; border-radius: 6px; font-size: .72rem; margin-left: 4px; }
     </style>
 </head>
 <body>
+
+<!-- ══ LOGIN SCREEN ══ -->
+<div class="login-screen" id="loginScreen">
+    <div class="login-logo">🏪</div>
+    <div class="login-title">Super 10</div>
+    <div class="login-sub">Ingresa tu PIN para continuar</div>
+    <div class="pin-dots" id="pinDots">
+        <div class="pin-dot"></div><div class="pin-dot"></div><div class="pin-dot"></div><div class="pin-dot"></div>
+    </div>
+    <div class="pin-pad" id="pinPad">
+        <button class="pin-key" onclick="pinInput('1')">1</button>
+        <button class="pin-key" onclick="pinInput('2')">2</button>
+        <button class="pin-key" onclick="pinInput('3')">3</button>
+        <button class="pin-key" onclick="pinInput('4')">4</button>
+        <button class="pin-key" onclick="pinInput('5')">5</button>
+        <button class="pin-key" onclick="pinInput('6')">6</button>
+        <button class="pin-key" onclick="pinInput('7')">7</button>
+        <button class="pin-key" onclick="pinInput('8')">8</button>
+        <button class="pin-key" onclick="pinInput('9')">9</button>
+        <button class="pin-key" style="visibility:hidden"></button>
+        <button class="pin-key" onclick="pinInput('0')">0</button>
+        <button class="pin-key backspace" onclick="pinBorrar()">⌫</button>
+    </div>
+    <div class="login-user">
+        Cajero: <select id="loginUsuario">
+            <option value="dueño">👑 Dueño</option>
+            <option value="cajero1">🧑 Cajero 1</option>
+            <option value="cajero2">🧑 Cajero 2</option>
+        </select>
+    </div>
+</div>
 
 <header class="pos-header">
     <h1>🏪 Super 10 <span>Punto de Venta</span></h1>
@@ -621,6 +678,8 @@
         <button class="header-btn" id="btnServicios" onclick="toggleView('servicios')" style="background:#FFF3E0;color:#E65100">⚡ Servicios</button>
 
         <span id="clock"></span>
+        <span style="font-size:.7rem;color:rgba(255,255,255,.7);margin-left:6px" id="usuarioLabel">—</span>
+        <button class="header-btn" onclick="cerrarSesion()" style="background:rgba(255,255,255,.1);font-size:.7rem;padding:4px 8px" title="Cerrar sesión">🔒</button>
     </div>
 </header>
 
@@ -784,13 +843,26 @@
 <!-- === CORTE VIEW === -->
 <div class="side-view" id="corteView">
     <div class="side-card">
-        <h3>📊 Resumen del día — <span id="corteFecha"></span></h3>
+        <h3>📊 Corte de Caja — <span id="corteFecha"></span></h3>
+        <!-- Fondo de caja -->
+        <div style="display:flex;align-items:center;gap:10px;margin:12px 0;padding:10px 14px;background:var(--crema);border-radius:10px;border:1px solid var(--borde)">
+            <label style="font-size:.78rem;font-weight:600;white-space:nowrap">💰 Fondo de caja:</label>
+            <div style="position:relative;flex:1;max-width:140px">
+                <span style="position:absolute;left:8px;top:50%;transform:translateY(-50%);color:var(--subtexto);font-weight:600;font-size:.85rem">$</span>
+                <input type="number" id="corteFondo" value="500" min="0" step="100" oninput="renderCorte()" style="width:100%;padding:6px 6px 6px 22px;border:1.5px solid var(--borde);border-radius:6px;font-size:.9rem;font-weight:600">
+            </div>
+        </div>
         <div class="stat-grid" id="corteStats"></div>
     </div>
-    <div class="side-card">
+    <!-- Desglose caja física vs digital -->
+    <div class="side-card" style="margin-top:10px">
+        <h3 style="margin-bottom:10px">🧮 Arqueo de Caja</h3>
+        <div id="corteArqueo"></div>
+    </div>
+    <div class="side-card" style="margin-top:10px">
         <h3>📋 Ventas del día</h3>
         <table class="s-table">
-            <thead><tr><th>Hora</th><th>Caja</th><th>Productos</th><th>Método</th><th style="text-align:right">Total</th></tr></thead>
+            <thead><tr><th>Hora</th><th>Cajero</th><th>Productos</th><th>Método</th><th style="text-align:right">Total</th></tr></thead>
             <tbody id="corteBody"></tbody>
         </table>
     </div>
@@ -1133,6 +1205,76 @@
 <div class="toast-box" id="toasts"></div>
 
 <script>
+// ══════════════════════════════════════════════════
+// LOGIN / PIN
+// ══════════════════════════════════════════════════
+const PIN_USERS = {
+    'dueño':   { pin: '1010', nombre: 'Dueño', rol: 'admin' },
+    'cajero1': { pin: '1111', nombre: 'Cajero 1', rol: 'cajero' },
+    'cajero2': { pin: '2222', nombre: 'Cajero 2', rol: 'cajero' }
+};
+let pinBuffer = '';
+let usuarioActivo = null;
+
+function pinInput(n) {
+    if (pinBuffer.length >= 4) return;
+    pinBuffer += n;
+    pinUpdateDots();
+    if (pinBuffer.length === 4) {
+        setTimeout(pinValidar, 200);
+    }
+}
+
+function pinBorrar() {
+    pinBuffer = pinBuffer.slice(0, -1);
+    pinUpdateDots();
+}
+
+function pinUpdateDots() {
+    const dots = document.querySelectorAll('#pinDots .pin-dot');
+    dots.forEach((d, i) => {
+        d.classList.remove('filled', 'error');
+        if (i < pinBuffer.length) d.classList.add('filled');
+    });
+}
+
+function pinValidar() {
+    const uid = document.getElementById('loginUsuario').value;
+    const user = PIN_USERS[uid];
+    if (user && pinBuffer === user.pin) {
+        usuarioActivo = { id: uid, ...user };
+        document.getElementById('loginScreen').classList.add('hidden');
+        document.getElementById('usuarioLabel').textContent = user.nombre;
+        localStorage.setItem('pos_last_user', uid);
+        document.getElementById('searchInput').focus();
+    } else {
+        // Error animation
+        const dots = document.querySelectorAll('#pinDots .pin-dot');
+        dots.forEach(d => { d.classList.remove('filled'); d.classList.add('error'); });
+        setTimeout(() => {
+            pinBuffer = '';
+            pinUpdateDots();
+        }, 500);
+    }
+}
+
+function cerrarSesion() {
+    usuarioActivo = null;
+    pinBuffer = '';
+    pinUpdateDots();
+    document.getElementById('loginScreen').classList.remove('hidden');
+    localStorage.removeItem('pos_last_user');
+}
+
+// Keyboard support for PIN
+document.addEventListener('keydown', e => {
+    const login = document.getElementById('loginScreen');
+    if (!login.classList.contains('hidden')) {
+        if (e.key >= '0' && e.key <= '9') pinInput(e.key);
+        else if (e.key === 'Backspace') pinBorrar();
+    }
+});
+
 // ══════════════════════════════════════════════════
 // SUPABASE CONFIG
 // ══════════════════════════════════════════════════
@@ -1583,7 +1725,8 @@ function cobrar() {
             cantidad: i.cantidad, subtotal: i.precio * i.cantidad
         })),
         total, metodo_pago: metodo,
-        pago_recibido: paga, cambio
+        pago_recibido: paga, cambio,
+        cajero: usuarioActivo ? usuarioActivo.nombre : 'Sin login'
     };
 
     // Mostrar preview del recibo SIN registrar la venta
@@ -2158,6 +2301,12 @@ function renderCorte() {
     const ta = ventasHoy.filter(v => v.metodo_pago==='tarjeta').reduce((s,v) => s+v.total, 0);
     const tr = ventasHoy.filter(v => v.metodo_pago==='transferencia').reduce((s,v) => s+v.total, 0);
     const prods = ventasHoy.reduce((s,v) => s + v.items.reduce((si,i) => si+(i.cantidad||1), 0), 0);
+    const fondo = parseFloat(document.getElementById('corteFondo').value) || 0;
+
+    // Cambios dados (efectivo devuelto)
+    const cambiosDados = ventasHoy.filter(v => v.metodo_pago==='efectivo').reduce((s,v) => s+(v.cambio||0), 0);
+    const efectivoEnCaja = fondo + ef - cambiosDados;
+    const digitalTotal = ta + tr;
 
     document.getElementById('corteStats').innerHTML = `
         <div class="stat"><div class="val">$${tot.toFixed(2)}</div><div class="lbl">Venta total</div></div>
@@ -2168,6 +2317,37 @@ function renderCorte() {
         <div class="stat"><div class="val">$${ta.toFixed(2)}</div><div class="lbl">💳 Tarjeta</div></div>
         <div class="stat"><div class="val">$${tr.toFixed(2)}</div><div class="lbl">📱 Transferencia</div></div>`;
 
+    // Arqueo de caja
+    const arqueo = document.getElementById('corteArqueo');
+    arqueo.innerHTML = `
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+            <div style="background:#E8F5E9;border-radius:10px;padding:14px;border:1px solid #c8e6c9">
+                <div style="font-size:.72rem;font-weight:700;color:#2e7d32;text-transform:uppercase;margin-bottom:8px">💵 Efectivo en caja</div>
+                <div style="font-size:1.5rem;font-weight:700;color:#2e7d32">$${efectivoEnCaja.toFixed(2)}</div>
+                <div style="font-size:.7rem;color:#4a7c59;margin-top:6px;line-height:1.5">
+                    Fondo inicial: $${fondo.toFixed(2)}<br>
+                    + Cobros efectivo: $${ef.toFixed(2)}<br>
+                    − Cambios dados: $${cambiosDados.toFixed(2)}
+                </div>
+                <div style="margin-top:8px;padding-top:8px;border-top:1px solid #c8e6c9;font-size:.75rem;font-weight:600;color:#2e7d32">
+                    Retirar ganancia: $${(efectivoEnCaja - fondo).toFixed(2)}
+                </div>
+            </div>
+            <div style="background:#E3F2FD;border-radius:10px;padding:14px;border:1px solid #bbdefb">
+                <div style="font-size:.72rem;font-weight:700;color:#1565C0;text-transform:uppercase;margin-bottom:8px">💳 Digital (por depositar)</div>
+                <div style="font-size:1.5rem;font-weight:700;color:#1565C0">$${digitalTotal.toFixed(2)}</div>
+                <div style="font-size:.7rem;color:#4a6fa5;margin-top:6px;line-height:1.5">
+                    Tarjeta (Mercado Pago): $${ta.toFixed(2)}<br>
+                    Transferencias: $${tr.toFixed(2)}<br>
+                    Comisión MP ~3.5%: −$${(ta * 0.035).toFixed(2)}
+                </div>
+                <div style="margin-top:8px;padding-top:8px;border-top:1px solid #bbdefb;font-size:.75rem;font-weight:600;color:#1565C0">
+                    Recibirás ~$${(ta * 0.965 + tr).toFixed(2)}
+                </div>
+            </div>
+        </div>
+    `;
+
     const tb = document.getElementById('corteBody');
     if (!ventasHoy.length) {
         tb.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:20px;color:#999">Sin ventas hoy</td></tr>';
@@ -2177,7 +2357,7 @@ function renderCorte() {
         const hora = new Date(v.fecha).toLocaleTimeString('es-MX', { hour:'2-digit', minute:'2-digit' });
         const ps = v.items.map(i => `${i.cantidad}x ${i.nombre}`).join(', ');
         const ico = { efectivo:'💵', tarjeta:'💳', transferencia:'📱' }[v.metodo_pago] || '💰';
-        return `<tr><td>${hora}</td><td>Caja ${v.caja}</td><td style="max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(ps)}</td><td>${ico}</td><td style="text-align:right;font-weight:700">$${v.total.toFixed(2)}</td></tr>`;
+        return `<tr><td>${hora}</td><td>${esc(v.cajero||'—')}</td><td style="max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(ps)}</td><td>${ico}</td><td style="text-align:right;font-weight:700">$${v.total.toFixed(2)}</td></tr>`;
     }).join('');
 }
 
