@@ -120,6 +120,8 @@
         }
         .scanner-flash.on { display: flex; align-items: center; gap: 3px; }
         @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
+        @keyframes vozPulseAnim { 0%{transform:scale(.9);opacity:.6} 50%{transform:scale(1.15);opacity:.2} 100%{transform:scale(.9);opacity:.6} }
+        .voz-listening .voz-pulse { animation: vozPulseAnim 1.6s ease-in-out infinite; }
 
         .cat-bar {
             padding: 6px 14px; background: #fff;
@@ -612,6 +614,10 @@
         <button class="header-btn" id="btnCorte" onclick="toggleView('corte')">📊 Corte</button>
         <button class="header-btn" id="btnHistorial" onclick="toggleView('historial')">🧾 Ventas</button>
         <button class="header-btn" id="btnDevoluciones" onclick="toggleView('devoluciones')">↩️ Devoluciones</button>
+        <button class="header-btn" id="btnNuevoProducto" onclick="toggleView('nuevoProducto')" style="background:#E8F5E9;color:#2e7d32">➕ Nuevo</button>
+        <button class="header-btn" id="btnVoz" onclick="toggleView('voz')">🎤 Voz</button>
+        <button class="header-btn" id="btnSalud" onclick="toggleView('salud')">💰 Salud</button>
+        <button class="header-btn" id="btnSurtir" onclick="toggleView('surtir')">🛒 Surtir</button>
         <button class="header-btn" onclick="location.href='admin.html'">⚙️ Admin</button>
         <span id="clock"></span>
     </div>
@@ -826,6 +832,152 @@
         <div id="devList">
             <div style="text-align:center;padding:20px;color:var(--subtexto)">Cargando...</div>
         </div>
+    </div>
+</div>
+
+<!-- === NUEVO PRODUCTO === -->
+<div class="side-view" id="nuevoProductoView">
+    <div class="side-card">
+        <h3 style="margin-bottom:14px">➕ Registrar Producto Nuevo</h3>
+        <div style="display:flex;flex-direction:column;gap:12px">
+            <div>
+                <label style="font-size:.72rem;font-weight:700;color:var(--subtexto);text-transform:uppercase;letter-spacing:.5px;display:block;margin-bottom:4px">Código de barras</label>
+                <div style="display:flex;gap:6px">
+                    <input type="text" id="npBarcode" placeholder="Escanea o escribe..." style="flex:1;padding:10px;border:1.5px solid var(--borde);border-radius:8px;font-size:.9rem">
+                    <button onclick="npSimularScan()" style="padding:10px 14px;border:1.5px solid var(--borde);border-radius:8px;background:var(--crema);cursor:pointer;font-size:1.1rem" title="Escanear">▦</button>
+                </div>
+            </div>
+            <div>
+                <label style="font-size:.72rem;font-weight:700;color:var(--subtexto);text-transform:uppercase;letter-spacing:.5px;display:block;margin-bottom:4px">Nombre del producto *</label>
+                <input type="text" id="npNombre" placeholder="ej. Coca-Cola 600ml" style="width:100%;padding:10px;border:1.5px solid var(--borde);border-radius:8px;font-size:.9rem">
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+                <div>
+                    <label style="font-size:.72rem;font-weight:700;color:var(--subtexto);text-transform:uppercase;letter-spacing:.5px;display:block;margin-bottom:4px">Categoría</label>
+                    <select id="npCategoria" style="width:100%;padding:10px;border:1.5px solid var(--borde);border-radius:8px;font-size:.85rem;background:#fff">
+                        <option value="">Seleccionar...</option>
+                        <option>Abarrotes</option><option>Bebidas</option><option>Botanas</option>
+                        <option>Básicos</option><option>Enlatados</option><option>Higiene</option>
+                        <option>Limpieza</option><option>Lácteos</option><option>Mascotas</option>
+                        <option>Panadería</option>
+                    </select>
+                </div>
+                <div>
+                    <label style="font-size:.72rem;font-weight:700;color:var(--subtexto);text-transform:uppercase;letter-spacing:.5px;display:block;margin-bottom:4px">Unidad</label>
+                    <select id="npUnidad" style="width:100%;padding:10px;border:1.5px solid var(--borde);border-radius:8px;font-size:.85rem;background:#fff">
+                        <option value="pza">Pieza (pza)</option>
+                        <option value="kilo">Kilo (kg)</option>
+                        <option value="litro">Litro (lt)</option>
+                    </select>
+                </div>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px">
+                <div>
+                    <label style="font-size:.72rem;font-weight:700;color:var(--subtexto);text-transform:uppercase;letter-spacing:.5px;display:block;margin-bottom:4px">Precio venta *</label>
+                    <div style="position:relative">
+                        <span style="position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--subtexto);font-weight:600">$</span>
+                        <input type="number" id="npPrecio" placeholder="0.00" step="0.50" min="0" style="width:100%;padding:10px 10px 10px 24px;border:1.5px solid var(--borde);border-radius:8px;font-size:.9rem">
+                    </div>
+                </div>
+                <div>
+                    <label style="font-size:.72rem;font-weight:700;color:var(--subtexto);text-transform:uppercase;letter-spacing:.5px;display:block;margin-bottom:4px">Costo</label>
+                    <div style="position:relative">
+                        <span style="position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--subtexto);font-weight:600">$</span>
+                        <input type="number" id="npCosto" placeholder="0.00" step="0.50" min="0" style="width:100%;padding:10px 10px 10px 24px;border:1.5px solid var(--borde);border-radius:8px;font-size:.9rem">
+                    </div>
+                </div>
+                <div>
+                    <label style="font-size:.72rem;font-weight:700;color:var(--subtexto);text-transform:uppercase;letter-spacing:.5px;display:block;margin-bottom:4px">Stock</label>
+                    <input type="number" id="npStock" placeholder="0" min="0" style="width:100%;padding:10px;border:1.5px solid var(--borde);border-radius:8px;font-size:.9rem">
+                </div>
+            </div>
+            <div id="npMargenBox" style="display:none;background:#E8F5E9;border-radius:8px;padding:10px 14px;text-align:center">
+                <span style="font-size:.72rem;color:var(--subtexto)">Margen:</span>
+                <span id="npMargenVal" style="font-weight:700;color:var(--verde);font-size:1.1rem;margin-left:6px">—</span>
+            </div>
+            <div>
+                <label style="font-size:.72rem;font-weight:700;color:var(--subtexto);text-transform:uppercase;letter-spacing:.5px;display:block;margin-bottom:4px">📷 Foto del producto</label>
+                <div id="npFotoZone" style="border:2px dashed var(--borde);border-radius:12px;padding:20px;text-align:center;cursor:pointer;position:relative;overflow:hidden;transition:border-color 150ms" onclick="document.getElementById('npFotoInput').click()">
+                    <input type="file" accept="image/*" capture="environment" id="npFotoInput" onchange="npPreviewFoto(this)" style="display:none">
+                    <img id="npFotoPreview" style="width:100%;max-height:200px;object-fit:contain;border-radius:8px;display:none">
+                    <div id="npFotoPlaceholder">
+                        <div style="font-size:2.5rem;margin-bottom:6px">📷</div>
+                        <div style="font-size:.85rem;font-weight:700;color:var(--texto)">Toca para tomar foto</div>
+                        <div style="font-size:.75rem;color:var(--subtexto)">JPG, PNG · Máx 5 MB</div>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <label style="font-size:.72rem;font-weight:700;color:var(--subtexto);text-transform:uppercase;letter-spacing:.5px;display:block;margin-bottom:4px">Descripción (opcional)</label>
+                <textarea id="npDescripcion" placeholder="Notas sobre el producto..." rows="2" style="width:100%;padding:10px;border:1.5px solid var(--borde);border-radius:8px;font-size:.85rem;resize:vertical"></textarea>
+            </div>
+            <div style="display:flex;gap:10px;margin-top:4px">
+                <button onclick="npLimpiar()" style="flex:1;padding:12px;border:1.5px solid var(--borde);border-radius:10px;background:var(--crema);font-weight:600;cursor:pointer;font-size:.9rem">Cancelar</button>
+                <button onclick="npGuardar()" style="flex:2;padding:12px;border:none;border-radius:10px;background:var(--verde);color:#fff;font-weight:700;cursor:pointer;font-size:.9rem">💾 Guardar producto</button>
+            </div>
+        </div>
+    </div>
+    <div class="side-card">
+        <h3>📦 Recién agregados</h3>
+        <div id="npRecientes" style="font-size:.85rem;color:var(--subtexto);padding:8px 0">Cargando...</div>
+    </div>
+</div>
+
+<!-- === VOZ (INVENTARIO POR VOZ) === -->
+<div class="side-view" id="vozView">
+    <div class="side-card" style="text-align:center;padding:28px 16px">
+        <h2 style="font-size:1.2rem;margin-bottom:6px">🎤 Inventario por Voz</h2>
+        <p style="font-size:.85rem;color:var(--subtexto);margin-bottom:28px;line-height:1.5">
+            Di el producto y la cantidad, por ejemplo:<br>"Tres leches" o "Cinco cocas"
+        </p>
+        <div id="vozMicWrap" style="position:relative;display:inline-flex;align-items:center;justify-content:center;margin-bottom:20px">
+            <div class="voz-pulse" style="position:absolute;width:88px;height:88px;border-radius:50%;background:rgba(27,79,138,.12)"></div>
+            <div class="voz-pulse" style="position:absolute;width:112px;height:112px;border-radius:50%;background:rgba(27,79,138,.08)"></div>
+            <div class="voz-pulse" style="position:absolute;width:138px;height:138px;border-radius:50%;background:rgba(27,79,138,.05)"></div>
+            <button id="vozMicBtn" onclick="vozToggle()" style="position:relative;z-index:1;width:80px;height:80px;border-radius:50%;background:var(--verde);color:#fff;border:none;cursor:pointer;font-size:2rem;box-shadow:0 4px 16px rgba(27,79,138,.35);transition:all 200ms">🎤</button>
+        </div>
+        <div id="vozStatusText" style="font-size:1rem;color:var(--subtexto);min-height:28px;margin-bottom:16px">Toca para hablar</div>
+        <div style="display:flex;gap:8px;max-width:340px;margin:0 auto">
+            <input type="text" id="vozTextInput" placeholder="ej: 'llegaron seis coca colas'" style="flex:1;padding:10px;border:1.5px solid var(--borde);border-radius:10px;font-size:.85rem" onkeydown="if(event.key==='Enter')vozProbarTexto()">
+            <button onclick="vozProbarTexto()" style="padding:10px 14px;border:none;border-radius:10px;background:var(--verde);color:#fff;font-weight:700;font-size:.85rem;cursor:pointer">Probar →</button>
+        </div>
+        <div style="font-size:.72rem;color:#aaa;margin-top:6px">Modo texto — para probar sin micrófono</div>
+    </div>
+    <div id="vozConfirmCard" class="side-card" style="display:none;text-align:center">
+        <div id="vozConfirmThumb" style="margin-bottom:10px"></div>
+        <div id="vozConfirmName" style="font-weight:700;font-size:1.05rem;margin-bottom:4px"></div>
+        <div id="vozConfirmQty" style="color:var(--subtexto);margin-bottom:16px"></div>
+        <div style="display:flex;gap:10px">
+            <button onclick="vozRechazar()" style="flex:1;padding:10px;border:1.5px solid var(--borde);border-radius:10px;background:var(--crema);font-weight:700;cursor:pointer">✗ No es este</button>
+            <button onclick="vozConfirmar()" style="flex:1;padding:10px;border:none;border-radius:10px;background:var(--acento);color:#fff;font-weight:700;cursor:pointer">✓ Sí, correcto</button>
+        </div>
+    </div>
+    <div id="vozPickerWrap" class="side-card" style="display:none">
+        <p style="font-size:.88rem;color:var(--subtexto);text-align:center;margin-bottom:12px">Elige el producto:</p>
+        <div id="vozPickerGrid" style="display:grid;grid-template-columns:1fr 1fr;gap:10px"></div>
+    </div>
+    <div class="side-card">
+        <h3>📦 Inventario actual</h3>
+        <table style="width:100%;border-collapse:collapse;font-size:.82rem" id="vozInvTable">
+            <thead>
+                <tr><th style="text-align:left;padding:8px 0;border-bottom:2px solid var(--borde);font-size:.7rem;color:var(--subtexto);text-transform:uppercase">Producto</th><th style="padding:8px 0;border-bottom:2px solid var(--borde);font-size:.7rem;color:var(--subtexto);text-transform:uppercase">Stock</th></tr>
+            </thead>
+            <tbody id="vozInvBody"></tbody>
+        </table>
+    </div>
+</div>
+
+<!-- === SALUD DEL NEGOCIO === -->
+<div class="side-view" id="saludView">
+    <div id="saludContent" style="padding:4px 0">
+        <div style="text-align:center;padding:30px;color:var(--subtexto)">Calculando salud del negocio...</div>
+    </div>
+</div>
+
+<!-- === SURTIR === -->
+<div class="side-view" id="surtirView">
+    <div id="surtirContent" style="padding:4px 0">
+        <div style="text-align:center;padding:30px;color:var(--subtexto)">Analizando inventario...</div>
     </div>
 </div>
 
@@ -1776,7 +1928,7 @@ function appendInvPage() {
 // VIEW SWITCHING
 // ══════════════════════════════════════════════════
 function toggleView(view) {
-    const views = ['inventario', 'pedidos', 'corte', 'historial', 'devoluciones'];
+    const views = ['inventario', 'pedidos', 'corte', 'historial', 'devoluciones', 'nuevoProducto', 'voz', 'salud', 'surtir'];
     const posMain = document.getElementById('posMain');
 
     // If clicking the same view, close it
@@ -1791,7 +1943,8 @@ function toggleView(view) {
 
     // Close any open view
     views.forEach(v => {
-        document.getElementById(v + 'View').classList.remove('on');
+        const el = document.getElementById(v + 'View');
+        if (el) el.classList.remove('on');
         const btn = document.getElementById('btn' + cap(v));
         if (btn) btn.classList.remove('active');
     });
@@ -1808,14 +1961,19 @@ function toggleView(view) {
     if (view === 'pedidos') renderPedidos();
     if (view === 'historial') cargarHistorial();
     if (view === 'devoluciones') cargarDevoluciones();
+    if (view === 'nuevoProducto') npCargarRecientes();
+    if (view === 'voz') vozRenderInv();
+    if (view === 'salud') renderSalud();
+    if (view === 'surtir') renderSurtir();
 }
 
 function cap(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
 
 function volverInicio() {
-    const views = ['inventario', 'pedidos', 'corte', 'historial', 'devoluciones'];
+    const views = ['inventario', 'pedidos', 'corte', 'historial', 'devoluciones', 'nuevoProducto', 'voz', 'salud', 'surtir'];
     views.forEach(v => {
-        document.getElementById(v + 'View').classList.remove('on');
+        const el = document.getElementById(v + 'View');
+        if (el) el.classList.remove('on');
         const btn = document.getElementById('btn' + cap(v));
         if (btn) btn.classList.remove('active');
     });
@@ -2214,6 +2372,552 @@ function initTeclas() {
             switchCaja(parseInt(e.key) - 1);
         }
     });
+}
+
+// ══════════════════════════════════════════════════
+// NUEVO PRODUCTO
+// ══════════════════════════════════════════════════
+let npFotoFile = null;
+
+function npPreviewFoto(input) {
+    if (!input.files[0]) return;
+    npFotoFile = input.files[0];
+    const reader = new FileReader();
+    reader.onload = e => {
+        const img = document.getElementById('npFotoPreview');
+        img.src = e.target.result;
+        img.style.display = 'block';
+        document.getElementById('npFotoPlaceholder').style.display = 'none';
+    };
+    reader.readAsDataURL(input.files[0]);
+}
+
+function npCalcMargen() {
+    const precio = parseFloat(document.getElementById('npPrecio').value) || 0;
+    const costo = parseFloat(document.getElementById('npCosto').value) || 0;
+    const box = document.getElementById('npMargenBox');
+    if (precio > 0 && costo > 0) {
+        const margen = ((precio - costo) / costo * 100).toFixed(1);
+        document.getElementById('npMargenVal').textContent = margen + '%';
+        box.style.display = 'block';
+    } else {
+        box.style.display = 'none';
+    }
+}
+document.getElementById('npPrecio')?.addEventListener('input', npCalcMargen);
+document.getElementById('npCosto')?.addEventListener('input', npCalcMargen);
+
+function npSimularScan() {
+    const codes = [
+        { barcode: '7501055361008', nombre: 'Coca-Cola 600ml', cat: 'Bebidas' },
+        { barcode: '7501034911697', nombre: 'Marinela Gansito', cat: 'Botanas' },
+        { barcode: '7501000150230', nombre: 'Maseca 1kg', cat: 'Básicos' },
+    ];
+    const d = codes[Math.floor(Math.random() * codes.length)];
+    document.getElementById('npBarcode').value = d.barcode;
+    document.getElementById('npNombre').value = d.nombre;
+    document.getElementById('npCategoria').value = d.cat;
+    toast('▦ Código escaneado', 'ok');
+}
+
+async function npGuardar() {
+    const nombre = document.getElementById('npNombre').value.trim();
+    const precio = parseFloat(document.getElementById('npPrecio').value) || 0;
+    if (!nombre) { toast('⚠️ Escribe el nombre del producto', 'err'); return; }
+    if (precio <= 0) { toast('⚠️ El precio debe ser mayor a 0', 'err'); return; }
+
+    const producto = {
+        nombre,
+        categoria: document.getElementById('npCategoria').value || 'Abarrotes',
+        unidad: document.getElementById('npUnidad').value || 'pza',
+        precio,
+        costo: parseFloat(document.getElementById('npCosto').value) || null,
+        stock: parseInt(document.getElementById('npStock').value) || 0,
+        codigo_barras: document.getElementById('npBarcode').value.trim() || null,
+        descripcion: document.getElementById('npDescripcion').value.trim() || null,
+    };
+
+    // Si hay foto, subir a Supabase Storage primero
+    let imagen_url = null;
+    if (npFotoFile) {
+        try {
+            const ext = npFotoFile.name.split('.').pop().toLowerCase() || 'jpg';
+            const fileName = `np_${Date.now()}.${ext}`;
+            const uploadRes = await fetch(
+                `${SUPABASE_URL}/storage/v1/object/productos/${fileName}`,
+                {
+                    method: 'POST',
+                    headers: {
+                        'apikey': SUPABASE_KEY,
+                        'Authorization': `Bearer ${SUPABASE_KEY}`,
+                        'Content-Type': npFotoFile.type,
+                    },
+                    body: npFotoFile
+                }
+            );
+            if (uploadRes.ok) {
+                imagen_url = `${SUPABASE_URL}/storage/v1/object/public/productos/${fileName}`;
+            }
+        } catch (e) {
+            console.warn('Error subiendo foto:', e);
+        }
+    }
+    if (imagen_url) producto.imagen_url = imagen_url;
+
+    // Guardar en Supabase
+    try {
+        const res = await fetch(`${SUPABASE_URL}/rest/v1/catalogo_productos`, {
+            method: 'POST',
+            headers: { ...SB, 'Prefer': 'return=representation' },
+            body: JSON.stringify(producto)
+        });
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        const [nuevo] = await res.json();
+        // Agregar al catálogo local
+        productos.push(nuevo);
+        renderCats();
+        renderGrid();
+        toast(`✅ "${nombre}" guardado — $${precio.toFixed(2)}`, 'ok');
+        npLimpiar();
+        npCargarRecientes();
+    } catch (e) {
+        console.error('Error guardando producto:', e);
+        toast('❌ Error al guardar — revisa conexión', 'err');
+    }
+}
+
+function npLimpiar() {
+    ['npBarcode', 'npNombre', 'npPrecio', 'npCosto', 'npStock', 'npDescripcion'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.value = '';
+    });
+    document.getElementById('npCategoria').value = '';
+    document.getElementById('npUnidad').value = 'pza';
+    document.getElementById('npMargenBox').style.display = 'none';
+    document.getElementById('npFotoPreview').style.display = 'none';
+    document.getElementById('npFotoPlaceholder').style.display = 'block';
+    npFotoFile = null;
+}
+
+async function npCargarRecientes() {
+    try {
+        const r = await fetch(
+            `${SUPABASE_URL}/rest/v1/catalogo_productos?select=nombre,precio,categoria,created_at&order=created_at.desc&limit=5`,
+            { headers: SB }
+        );
+        const recientes = await r.json();
+        const box = document.getElementById('npRecientes');
+        if (!recientes.length) { box.innerHTML = '<span style="color:var(--subtexto)">No hay productos recientes</span>'; return; }
+        box.innerHTML = recientes.map(p =>
+            `<div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--borde)">
+                <div>
+                    <div style="font-weight:600;font-size:.88rem">${esc(p.nombre)}</div>
+                    <div style="font-size:.72rem;color:var(--subtexto)">${p.categoria || 'Sin categoría'}</div>
+                </div>
+                <div style="font-weight:700;color:var(--verde)">$${Number(p.precio).toFixed(2)}</div>
+            </div>`
+        ).join('');
+    } catch (e) {
+        document.getElementById('npRecientes').innerHTML = '<span style="color:var(--subtexto)">Error cargando</span>';
+    }
+}
+
+// ══════════════════════════════════════════════════
+// VOZ — INVENTARIO POR VOZ
+// ══════════════════════════════════════════════════
+const VOZ_NUMEROS = {
+    uno:1, una:1, dos:2, tres:3, cuatro:4, cinco:5,
+    seis:6, siete:7, ocho:8, nueve:9, diez:10,
+    once:11, doce:12, quince:15, veinte:20
+};
+
+let vozRecognition = null;
+let vozEstado = 'idle';
+let vozCandidato = null;
+
+function vozNormalize(str) {
+    return String(str).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').trim();
+}
+
+function vozExtractCantidad(texto) {
+    for (const [palabra, val] of Object.entries(VOZ_NUMEROS)) {
+        if (new RegExp('\\b' + palabra + '\\b').test(texto)) return val;
+    }
+    const digitMatch = texto.match(/\b(\d+)\b(?!\s*(?:lts?|litros?|ml|kg|kgs?|gramos?|g\b|pzas?|piezas?|cm|mm))/i);
+    if (digitMatch) return parseInt(digitMatch[1]);
+    return 1;
+}
+
+function vozBuscarProducto(texto) {
+    const t = vozNormalize(texto);
+    let mejorScore = 0, mejorProd = null;
+    productos.forEach(p => {
+        const palabras = vozNormalize(p.nombre).split(/\s+/);
+        let score = 0;
+        palabras.forEach(w => { if (w.length > 2 && t.includes(w)) score++; });
+        if (score > mejorScore) { mejorScore = score; mejorProd = p; }
+    });
+    return mejorScore >= 1 ? mejorProd : null;
+}
+
+function vozToggle() {
+    if (vozEstado === 'listening') {
+        if (vozRecognition) vozRecognition.stop();
+        vozSetEstado('idle');
+        return;
+    }
+    if (vozEstado === 'processing' || vozEstado === 'confirming') return;
+
+    const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SR) { toast('Tu navegador no soporta voz', 'err'); return; }
+
+    vozRecognition = new SR();
+    vozRecognition.lang = 'es-MX';
+    vozRecognition.continuous = false;
+    vozRecognition.interimResults = false;
+
+    vozRecognition.onstart = () => vozSetEstado('listening');
+    vozRecognition.onresult = (e) => vozProcesar(e.results[0][0].transcript.toLowerCase());
+    vozRecognition.onerror = (e) => {
+        vozSetEstado('idle');
+        if (e.error !== 'no-speech') toast('Error micrófono: ' + e.error, 'err');
+    };
+    vozRecognition.onend = () => { if (vozEstado === 'listening') vozSetEstado('idle'); };
+    vozRecognition.start();
+}
+
+function vozSetEstado(estado, texto) {
+    vozEstado = estado;
+    const btn = document.getElementById('vozMicBtn');
+    const status = document.getElementById('vozStatusText');
+    const wrap = document.getElementById('vozMicWrap');
+    wrap.classList.remove('voz-listening');
+    if (estado === 'idle') {
+        btn.textContent = '🎤'; btn.style.background = 'var(--verde)';
+        status.textContent = texto || 'Toca para hablar';
+    } else if (estado === 'listening') {
+        btn.textContent = '🛑'; btn.style.background = '#e53935';
+        wrap.classList.add('voz-listening');
+        status.textContent = 'Te escucho...';
+    } else if (estado === 'processing') {
+        btn.textContent = '⏳'; btn.style.background = 'var(--subtexto)';
+        status.textContent = 'Buscando producto...';
+    }
+}
+
+function vozProcesar(texto) {
+    vozSetEstado('processing');
+    setTimeout(() => {
+        const prod = vozBuscarProducto(texto);
+        const cant = vozExtractCantidad(texto);
+        if (prod) {
+            vozCandidato = { producto: prod, cantidad: cant };
+            vozMostrarConfirm(prod, cant);
+        } else {
+            vozSetEstado('idle', 'No entendí — elige manualmente');
+            vozMostrarPicker(cant);
+        }
+    }, 400);
+}
+
+function vozProbarTexto() {
+    const texto = document.getElementById('vozTextInput').value.trim().toLowerCase();
+    if (!texto) return;
+    vozProcesar(texto);
+}
+
+function vozMostrarConfirm(prod, cant) {
+    vozSetEstado('idle');
+    vozEstado = 'confirming';
+    const emoji = CAT_EMOJI[prod.categoria] || '📦';
+    const thumb = document.getElementById('vozConfirmThumb');
+    if (prod.imagen_url && prod.imagen_url.startsWith('http')) {
+        thumb.innerHTML = `<img src="${prod.imagen_url}" style="width:100px;height:100px;object-fit:contain;border-radius:12px;background:var(--crema);margin:0 auto;display:block"
+            onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+            <div style="width:100px;height:100px;font-size:3rem;background:var(--crema);border-radius:12px;display:none;align-items:center;justify-content:center;margin:0 auto">${emoji}</div>`;
+    } else {
+        thumb.innerHTML = `<div style="width:100px;height:100px;font-size:3rem;background:var(--crema);border-radius:12px;display:flex;align-items:center;justify-content:center;margin:0 auto">${emoji}</div>`;
+    }
+    document.getElementById('vozConfirmName').textContent = prod.nombre;
+    document.getElementById('vozConfirmQty').textContent = `¿Agregar ${cant} unidad${cant !== 1 ? 'es' : ''} al inventario?`;
+    document.getElementById('vozConfirmCard').style.display = 'block';
+    document.getElementById('vozPickerWrap').style.display = 'none';
+}
+
+async function vozConfirmar() {
+    if (!vozCandidato) return;
+    const { producto, cantidad } = vozCandidato;
+    // Update stock en Supabase
+    const newStock = (producto.stock || 0) + cantidad;
+    try {
+        await fetch(`${SUPABASE_URL}/rest/v1/catalogo_productos?id=eq.${producto.id}`, {
+            method: 'PATCH',
+            headers: { ...SB, 'Prefer': 'return=minimal' },
+            body: JSON.stringify({ stock: newStock })
+        });
+        // Update local
+        producto.stock = newStock;
+        renderGrid();
+    } catch (e) { console.warn('Error actualizando stock:', e); }
+    toast(`✅ ${producto.nombre} +${cantidad} → Stock: ${newStock}`, 'ok');
+    vozReset();
+    vozRenderInv();
+}
+
+function vozRechazar() {
+    const cant = vozCandidato ? vozCandidato.cantidad : 1;
+    document.getElementById('vozConfirmCard').style.display = 'none';
+    vozMostrarPicker(cant);
+}
+
+function vozMostrarPicker(cant) {
+    const grid = document.getElementById('vozPickerGrid');
+    // Show top 20 products
+    const top20 = productos.slice(0, 20);
+    grid.innerHTML = top20.map(p => {
+        const emoji = CAT_EMOJI[p.categoria] || '📦';
+        const hasImg = p.imagen_url && p.imagen_url.startsWith('http');
+        return `<div style="background:#fff;border-radius:12px;padding:12px;display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer;border:2px solid var(--borde);transition:all 150ms;text-align:center" onclick="vozSelManual(${p.id},${cant})" onmouseover="this.style.borderColor='var(--verde)'" onmouseout="this.style.borderColor='var(--borde)'">
+            ${hasImg ? `<img src="${p.imagen_url}" style="width:48px;height:48px;object-fit:contain;border-radius:6px;background:var(--crema)" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div style="width:48px;height:48px;font-size:1.5rem;background:var(--crema);border-radius:6px;display:none;align-items:center;justify-content:center">${emoji}</div>`
+            : `<div style="width:48px;height:48px;font-size:1.5rem;background:var(--crema);border-radius:6px;display:flex;align-items:center;justify-content:center">${emoji}</div>`}
+            <span style="font-size:.73rem;font-weight:600">${esc(p.nombre)}</span>
+        </div>`;
+    }).join('');
+    document.getElementById('vozPickerWrap').style.display = 'block';
+}
+
+function vozSelManual(id, cant) {
+    const prod = productos.find(p => p.id === id);
+    if (!prod) return;
+    vozCandidato = { producto: prod, cantidad: cant };
+    document.getElementById('vozPickerWrap').style.display = 'none';
+    vozMostrarConfirm(prod, cant);
+}
+
+function vozReset() {
+    vozCandidato = null;
+    vozEstado = 'idle';
+    document.getElementById('vozConfirmCard').style.display = 'none';
+    document.getElementById('vozPickerWrap').style.display = 'none';
+    document.getElementById('vozStatusText').textContent = 'Toca para hablar';
+}
+
+function vozRenderInv() {
+    const tbody = document.getElementById('vozInvBody');
+    if (!tbody) return;
+    tbody.innerHTML = productos.slice(0, 30).map(p => {
+        const emoji = CAT_EMOJI[p.categoria] || '📦';
+        const stock = p.stock || 0;
+        const color = stock <= 5 ? '#ef4444' : stock <= 15 ? '#f59e0b' : 'var(--verde)';
+        return `<tr>
+            <td style="padding:8px 0;border-bottom:1px solid var(--borde)">${emoji} ${esc(p.nombre)}</td>
+            <td style="padding:8px 0;border-bottom:1px solid var(--borde);text-align:center;font-weight:700;color:${color}">${stock}</td>
+        </tr>`;
+    }).join('');
+}
+
+// ══════════════════════════════════════════════════
+// SALUD DEL NEGOCIO
+// ══════════════════════════════════════════════════
+function renderSalud() {
+    const panel = document.getElementById('saludContent');
+    if (!ventasHoy.length && productos.length === 0) {
+        panel.innerHTML = '<div style="text-align:center;padding:40px;color:var(--subtexto)">📊 Sin datos de ventas aún.<br>Realiza ventas para ver la salud del negocio.</div>';
+        return;
+    }
+
+    // Aggregate sales data from ventasHoy
+    const ventasPorProd = {};
+    ventasHoy.forEach(v => {
+        (v.items || []).forEach(item => {
+            if (!ventasPorProd[item.nombre]) {
+                ventasPorProd[item.nombre] = { nombre: item.nombre, vendidos: 0, ingreso: 0, precio: item.precio };
+            }
+            ventasPorProd[item.nombre].vendidos += item.cantidad || 1;
+            ventasPorProd[item.nombre].ingreso += (item.precio * (item.cantidad || 1));
+        });
+    });
+    const ventasArr = Object.values(ventasPorProd).sort((a, b) => b.vendidos - a.vendidos);
+    const totalVentas = ventasHoy.length;
+    const totalIngreso = ventasHoy.reduce((s, v) => s + (v.total || 0), 0);
+    const campeon = ventasArr[0];
+
+    // Low stock products
+    const bajoStock = productos.filter(p => (p.stock || 0) <= 5 && (p.stock || 0) >= 0).slice(0, 8);
+
+    let html = `
+    <div class="side-card" style="background:linear-gradient(135deg,#E8F0FA,#F5F8FC)">
+        <div style="font-size:1.4rem;margin-bottom:4px">📊</div>
+        <div style="font-weight:700;font-size:1rem;margin-bottom:6px">Resumen del día</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px">
+            <div style="text-align:center;background:#fff;border-radius:10px;padding:10px">
+                <div style="font-size:1.3rem;font-weight:700;color:var(--verde)">${totalVentas}</div>
+                <div style="font-size:.7rem;color:var(--subtexto)">Ventas</div>
+            </div>
+            <div style="text-align:center;background:#fff;border-radius:10px;padding:10px">
+                <div style="font-size:1.3rem;font-weight:700;color:var(--verde)">$${totalIngreso.toFixed(0)}</div>
+                <div style="font-size:.7rem;color:var(--subtexto)">Ingreso</div>
+            </div>
+            <div style="text-align:center;background:#fff;border-radius:10px;padding:10px">
+                <div style="font-size:1.3rem;font-weight:700;color:var(--verde)">${ventasArr.length}</div>
+                <div style="font-size:.7rem;color:var(--subtexto)">Productos</div>
+            </div>
+        </div>
+    </div>`;
+
+    if (campeon) {
+        html += `
+        <div class="side-card" style="background:#E8F5E9">
+            <div style="font-size:1.2rem;margin-bottom:4px">🏆</div>
+            <div style="font-weight:700;margin-bottom:4px">Campeón del día</div>
+            <div style="font-size:.88rem;color:var(--subtexto)">
+                <strong>${esc(campeon.nombre)}</strong> — ${campeon.vendidos} vendidos = $${campeon.ingreso.toFixed(2)}
+            </div>
+        </div>`;
+    }
+
+    if (ventasArr.length > 1) {
+        html += `<div class="side-card">
+            <div style="font-size:1.2rem;margin-bottom:4px">📈</div>
+            <div style="font-weight:700;margin-bottom:10px">Top productos</div>
+            <table style="width:100%;border-collapse:collapse;font-size:.82rem">
+                <thead><tr>
+                    <th style="text-align:left;padding:6px 0;border-bottom:2px solid var(--borde);font-size:.7rem;color:var(--subtexto);text-transform:uppercase">Producto</th>
+                    <th style="padding:6px;border-bottom:2px solid var(--borde);font-size:.7rem;color:var(--subtexto);text-transform:uppercase">Pzas</th>
+                    <th style="text-align:right;padding:6px 0;border-bottom:2px solid var(--borde);font-size:.7rem;color:var(--subtexto);text-transform:uppercase">Ingreso</th>
+                </tr></thead>
+                <tbody>${ventasArr.slice(0, 8).map((p, i) =>
+                    `<tr><td style="padding:6px 0;border-bottom:1px solid var(--borde)">${esc(p.nombre)}${i === 0 ? ' 🔥' : ''}</td>
+                    <td style="padding:6px;border-bottom:1px solid var(--borde);text-align:center">${p.vendidos}</td>
+                    <td style="padding:6px 0;border-bottom:1px solid var(--borde);text-align:right;font-weight:700;color:var(--verde)">$${p.ingreso.toFixed(2)}</td></tr>`
+                ).join('')}</tbody>
+            </table>
+        </div>`;
+    }
+
+    if (bajoStock.length) {
+        html += `<div class="side-card" style="background:#FFFDE7">
+            <div style="font-size:1.2rem;margin-bottom:4px">⚠️</div>
+            <div style="font-weight:700;margin-bottom:8px">Stock bajo</div>
+            ${bajoStock.map(p => {
+                const s = p.stock || 0;
+                const badge = s <= 2
+                    ? '<span style="font-size:.73rem;font-weight:700;padding:2px 8px;border-radius:20px;background:rgba(239,68,68,.12);color:#b91c1c">' + s + ' pz</span>'
+                    : '<span style="font-size:.73rem;font-weight:700;padding:2px 8px;border-radius:20px;background:rgba(245,158,11,.15);color:#b45309">' + s + ' pz</span>';
+                return `<div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid rgba(0,0,0,.06);font-size:.86rem">
+                    <span>${esc(p.nombre)}</span>${badge}</div>`;
+            }).join('')}
+        </div>`;
+    }
+
+    // Tip
+    const urgente = bajoStock.find(p => (p.stock || 0) <= 2);
+    let tip = 'Todo bien hoy. Sigue atendiendo a tus clientes.';
+    if (urgente) tip = `<strong>${esc(urgente.nombre)}</strong> ya casi no tienes — considera surtirlo hoy.`;
+    html += `<div class="side-card" style="background:#F0F7FF">
+        <div style="font-size:1.2rem;margin-bottom:4px">💡</div>
+        <div style="font-weight:700;margin-bottom:4px">Tip del día</div>
+        <div style="font-size:.86rem;color:var(--subtexto);line-height:1.5">${tip}</div>
+    </div>`;
+
+    panel.innerHTML = html;
+}
+
+// ══════════════════════════════════════════════════
+// SURTIR (RESTOCKING + WHATSAPP)
+// ══════════════════════════════════════════════════
+const SURTIR_WA = '525513222091'; // Proveedor WhatsApp
+
+function renderSurtir() {
+    const panel = document.getElementById('surtirContent');
+    if (!productos.length) {
+        panel.innerHTML = '<div style="text-align:center;padding:40px;color:var(--subtexto)">Cargando productos...</div>';
+        return;
+    }
+
+    // Calculate restocking needs based on stock levels
+    const urgentes = productos.filter(p => (p.stock || 0) <= 2 && (p.stock || 0) >= 0).sort((a,b) => (a.stock||0) - (b.stock||0));
+    const pronto = productos.filter(p => (p.stock || 0) > 2 && (p.stock || 0) <= 10).sort((a,b) => (a.stock||0) - (b.stock||0));
+    const bien = productos.filter(p => (p.stock || 0) > 10).slice(0, 10);
+
+    let html = `
+    <div class="side-card">
+        <div style="font-weight:700;font-size:1.05rem;margin-bottom:4px">🛒 ¿Qué necesitas surtir?</div>
+        <div style="font-size:.84rem;color:var(--subtexto);margin-bottom:4px">Basado en el stock actual de ${productos.length} productos</div>
+    </div>`;
+
+    if (urgentes.length) {
+        html += `<div class="side-card" style="border-left:4px solid #ef4444">
+            <div style="font-weight:700;color:#b91c1c;margin-bottom:8px">🔴 Urgente — pide hoy (${urgentes.length})</div>
+            ${urgentes.map(p => `
+                <div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--borde)">
+                    <div style="flex:1;min-width:0">
+                        <div style="font-weight:600;font-size:.88rem">${esc(p.nombre)}</div>
+                        <div style="font-size:.72rem;color:var(--subtexto)">Quedan ${p.stock || 0} · Sugerido: +20</div>
+                    </div>
+                    <button onclick="surtirMarcar(${p.id})" style="padding:6px 10px;border:none;border-radius:8px;background:#E8F5E9;color:var(--verde);font-weight:700;font-size:.76rem;cursor:pointer;white-space:nowrap">✓ Surtí</button>
+                </div>`).join('')}
+        </div>`;
+    }
+
+    if (pronto.length) {
+        html += `<div class="side-card" style="border-left:4px solid #f59e0b">
+            <div style="font-weight:700;color:#b45309;margin-bottom:8px">🟡 Esta semana (${pronto.length})</div>
+            ${pronto.slice(0, 10).map(p => `
+                <div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--borde)">
+                    <div style="flex:1;min-width:0">
+                        <div style="font-weight:600;font-size:.88rem">${esc(p.nombre)}</div>
+                        <div style="font-size:.72rem;color:var(--subtexto)">Quedan ${p.stock || 0}</div>
+                    </div>
+                    <button onclick="surtirMarcar(${p.id})" style="padding:6px 10px;border:none;border-radius:8px;background:#E8F5E9;color:var(--verde);font-weight:700;font-size:.76rem;cursor:pointer;white-space:nowrap">✓ Surtí</button>
+                </div>`).join('')}
+        </div>`;
+    }
+
+    if (bien.length) {
+        html += `<div class="side-card" style="background:#F1F8E9">
+            <div style="font-weight:700;color:#558b2f;margin-bottom:8px">🟢 Bien surtidos</div>
+            ${bien.map(p => `
+                <div style="display:flex;justify-content:space-between;padding:5px 0;font-size:.84rem;border-bottom:1px solid rgba(139,195,74,.2)">
+                    <span>${esc(p.nombre)}</span>
+                    <span style="font-weight:700;color:#558b2f">${p.stock || 0} pz</span>
+                </div>`).join('')}
+        </div>`;
+    }
+
+    // WhatsApp button
+    html += `<div style="padding:0 4px">
+        <button onclick="surtirEnviarWA()" style="width:100%;padding:14px;background:#25D366;color:#fff;border:none;border-radius:14px;font-weight:700;font-size:1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 4px 14px rgba(37,211,102,.3)">
+            📋 Enviar lista al proveedor por WhatsApp
+        </button>
+    </div>`;
+
+    panel.innerHTML = html;
+}
+
+async function surtirMarcar(id) {
+    const p = productos.find(x => x.id === id);
+    if (!p) return;
+    const newStock = (p.stock || 0) + 20;
+    try {
+        await fetch(`${SUPABASE_URL}/rest/v1/catalogo_productos?id=eq.${id}`, {
+            method: 'PATCH',
+            headers: { ...SB, 'Prefer': 'return=minimal' },
+            body: JSON.stringify({ stock: newStock })
+        });
+        p.stock = newStock;
+    } catch (e) { console.warn('Error actualizando stock:', e); p.stock = newStock; }
+    toast(`✅ ${p.nombre} — stock +20 → ${newStock}`, 'ok');
+    renderSurtir();
+    renderGrid();
+}
+
+function surtirEnviarWA() {
+    const urgentes = productos.filter(p => (p.stock || 0) <= 10);
+    if (!urgentes.length) { toast('No hay productos urgentes', 'info'); return; }
+    const lineas = urgentes.slice(0, 20).map(p => `- ${p.nombre}: ${p.stock || 0} pz → pedir ~20`).join('\n');
+    const msg = `📦 Lista de compras Super 10\n\n${lineas}\n\n_Generado desde POS Super 10_`;
+    window.open(`https://wa.me/${SURTIR_WA}?text=${encodeURIComponent(msg)}`, '_blank');
 }
 
 // ══════════════════════════════════════════════════
