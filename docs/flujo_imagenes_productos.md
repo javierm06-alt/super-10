@@ -263,6 +263,31 @@ El POS es responsive y funciona en celular/tablet:
 - Header compacto, barra de atajos oculta (no aplica en touch)
 - Modal de recibo adaptado a pantalla pequeña
 
+### Venta a granel (productos por kilo)
+
+Para productos que se venden por peso (arroz, frijol, azúcar suelto, etc.):
+
+```
+Click en producto a granel
+  → Modal de peso:
+    → Botones rápidos: ¼ kg, ½ kg, ¾ kg, 1 kg, 1½ kg, 2 kg
+    → O input manual de peso (precisión a gramos: 0.001 kg)
+    → Cálculo en vivo: precio/kg × peso = total
+    → Cancelar / ⚖️ Agregar
+  → Se agrega al carrito como línea única:
+    → Nombre: "Arroz (kilo) (0.500 kg)"
+    → Precio: calculado (ej: $14.00 por medio kilo a $28/kg)
+    → Sin botones +/− (cada pesada es única)
+    → Botón 🗑️ para eliminar
+```
+
+Detección automática de productos granel:
+
+- Por campo `unidad` en Supabase: `kilo`, `kg`, `kilogramo`, `granel`
+- Por nombre del producto: si contiene `(kilo)`, `(kg)`, `(kilogramo)`, `(granel)` entre paréntesis
+
+Para agregar más productos a granel, cambiar su `unidad` a `kilo` en Supabase o incluir `(kilo)` en el nombre.
+
 ---
 
 ## Archivos del proyecto

@@ -841,6 +841,41 @@
     </div>
 </div>
 
+<!-- === GRANEL / PESO MODAL === -->
+<div class="overlay" id="pesoModal">
+    <div class="modal" style="max-width:340px">
+        <div style="padding:20px;text-align:center">
+            <div style="font-size:1.8rem;margin-bottom:4px" id="pesoEmoji">⚖️</div>
+            <div style="font-family:var(--font-head);font-size:1rem;color:var(--verde);margin-bottom:2px" id="pesoNombre">Producto</div>
+            <div style="font-size:.8rem;color:var(--subtexto);margin-bottom:14px">
+                Precio: <strong id="pesoPrecioKg">$0.00</strong>/kg
+            </div>
+            <div style="display:flex;gap:6px;justify-content:center;margin-bottom:12px;flex-wrap:wrap">
+                <button class="qc-btn" onclick="setPeso(0.250)" style="min-width:60px">¼ kg</button>
+                <button class="qc-btn" onclick="setPeso(0.500)" style="min-width:60px">½ kg</button>
+                <button class="qc-btn" onclick="setPeso(0.750)" style="min-width:60px">¾ kg</button>
+                <button class="qc-btn" onclick="setPeso(1.000)" style="min-width:60px">1 kg</button>
+                <button class="qc-btn" onclick="setPeso(1.500)" style="min-width:60px">1½ kg</button>
+                <button class="qc-btn" onclick="setPeso(2.000)" style="min-width:60px">2 kg</button>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;justify-content:center;margin-bottom:8px">
+                <label style="font-size:.8rem;font-weight:600">Peso (kg):</label>
+                <input type="number" id="pesoInput" step="0.001" min="0.001" placeholder="0.000"
+                    style="width:100px;padding:8px;border:2px solid var(--borde);border-radius:8px;font-size:1.1rem;
+                    font-weight:700;text-align:center;font-family:var(--font-body)"
+                    oninput="calcPesoTotal()">
+            </div>
+            <div style="font-size:1.4rem;font-weight:700;color:var(--verde);margin:10px 0" id="pesoTotalCalc">
+                = $0.00
+            </div>
+        </div>
+        <div class="modal-btns">
+            <button class="m-btn sec" onclick="cerrarPeso()">Cancelar</button>
+            <button class="m-btn pri" id="btnAgregarPeso" onclick="confirmarPeso()" disabled>⚖️ Agregar</button>
+        </div>
+    </div>
+</div>
+
 <!-- === MOBILE CART FAB + OVERLAY === -->
 <button class="cart-fab" id="cartFab" onclick="toggleMobileCart()">
     🛒
@@ -1067,9 +1102,26 @@ function updateCajaTabs() {
 // ══════════════════════════════════════════════════
 // CART
 // ══════════════════════════════════════════════════
+let pesoProductoActual = null;
+const UNIDADES_GRANEL = ['kilo', 'kg', 'kilogramo', 'granel'];
+
+function esGranel(unidad, nombre) {
+    if (unidad && UNIDADES_GRANEL.includes(unidad.toLowerCase().trim())) return true;
+    // También detectar por nombre: "Arroz (kilo)", "Frijol (kg)", etc.
+    if (nombre && /\(\s*(kilo|kg|kilogramo|granel)\s*\)/i.test(nombre)) return true;
+    return false;
+}
+
 function agregar(id) {
     const p = productos.find(x => x.id === id);
     if (!p) return;
+
+    // Si es producto a granel → abrir modal de peso
+    if (esGranel(p.unidad, p.nombre)) {
+        abrirPesoModal(p);
+        return;
+    }
+
     const carrito = getCarrito();
     const ex = carrito.find(x => x.id === id);
     if (ex) { ex.cantidad++; }
@@ -1083,9 +1135,67 @@ function agregar(id) {
     renderCarrito();
 }
 
+function abrirPesoModal(p) {
+    pesoProductoActual = p;
+    const emoji = CAT_EMOJI[p.categoria] || '⚖️';
+    document.getElementById('pesoEmoji').textContent = emoji;
+    document.getElementById('pesoNombre').textContent = p.nombre;
+    document.getElementById('pesoPrecioKg').textContent = `$${Number(p.precio).toFixed(2)}`;
+    document.getElementById('pesoInput').value = '';
+    document.getElementById('pesoTotalCalc').textContent = '= $0.00';
+    document.getElementById('btnAgregarPeso').disabled = true;
+    document.getElementById('pesoModal').classList.add('on');
+    setTimeout(() => document.getElementById('pesoInput').focus(), 100);
+}
+
+function setPeso(kg) {
+    document.getElementById('pesoInput').value = kg.toFixed(3);
+    calcPesoTotal();
+}
+
+function calcPesoTotal() {
+    if (!pesoProductoActual) return;
+    const peso = parseFloat(document.getElementById('pesoInput').value) || 0;
+    const total = peso * Number(pesoProductoActual.precio);
+    document.getElementById('pesoTotalCalc').textContent = `= $${total.toFixed(2)}`;
+    document.getElementById('btnAgregarPeso').disabled = peso <= 0;
+}
+
+function cerrarPeso() {
+    pesoProductoActual = null;
+    document.getElementById('pesoModal').classList.remove('on');
+}
+
+function confirmarPeso() {
+    if (!pesoProductoActual) return;
+    const peso = parseFloat(document.getElementById('pesoInput').value) || 0;
+    if (peso <= 0) return;
+    const p = pesoProductoActual;
+    const precioTotal = Math.round(peso * Number(p.precio) * 100) / 100;
+    const carrito = getCarrito();
+
+    // Cada entrada de granel es única (no se acumula como pza)
+    carrito.push({
+        id: p.id,
+        nombre: `${p.nombre} (${peso.toFixed(3)} kg)`,
+        precio: precioTotal,
+        cantidad: 1,
+        imagen_url: p.imagen_url,
+        unidad: 'kg',
+        categoria: p.categoria,
+        esGranel: true,
+        pesoKg: peso,
+        precioKg: Number(p.precio)
+    });
+
+    cerrarPeso();
+    renderCarrito();
+    toast(`⚖️ ${p.nombre} — ${peso.toFixed(3)} kg = $${precioTotal.toFixed(2)}`, 'ok');
+}
+
 function cambiaQty(id, d) {
     const carrito = getCarrito();
-    const it = carrito.find(x => x.id === id);
+    const it = carrito.find(x => x.id === id && !x.esGranel);
     if (!it) return;
     it.cantidad += d;
     if (it.cantidad <= 0) {
@@ -1093,6 +1203,14 @@ function cambiaQty(id, d) {
         carrito.splice(idx, 1);
     }
     renderCarrito();
+}
+
+function quitarGranel(idx) {
+    const carrito = getCarrito();
+    if (idx >= 0 && idx < carrito.length) {
+        carrito.splice(idx, 1);
+        renderCarrito();
+    }
 }
 
 function limpiar() {
@@ -1134,8 +1252,16 @@ function renderCarrito() {
     }
 
     const emoji = c => CAT_EMOJI[c] || '📦';
-    box.innerHTML = carrito.map(i => {
+    box.innerHTML = carrito.map((i, idx) => {
         const hasImg = i.imagen_url && i.imagen_url.startsWith('http');
+        const precioLabel = i.esGranel
+            ? `$${i.precioKg.toFixed(2)}/kg × ${i.pesoKg.toFixed(3)} kg`
+            : `$${i.precio.toFixed(2)} / ${i.unidad || 'pza'}`;
+        const controls = i.esGranel
+            ? `<button class="q-btn del" onclick="quitarGranel(${idx})" title="Quitar">🗑️</button>`
+            : `<button class="q-btn del" onclick="cambiaQty(${i.id},-1)">−</button>
+                <span class="c-qty">${i.cantidad}</span>
+                <button class="q-btn" onclick="cambiaQty(${i.id},1)">+</button>`;
         return `<div class="c-item">
             ${hasImg
                 ? `<img src="${i.imagen_url}" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">`
@@ -1143,13 +1269,9 @@ function renderCarrito() {
             <div class="c-emoji" ${hasImg ? 'style="display:none"' : ''}>${emoji(i.categoria)}</div>
             <div class="c-info">
                 <div class="c-name">${esc(i.nombre)}</div>
-                <div class="c-uprice">$${i.precio.toFixed(2)} / ${i.unidad || 'pza'}</div>
+                <div class="c-uprice">${precioLabel}</div>
             </div>
-            <div class="c-controls">
-                <button class="q-btn del" onclick="cambiaQty(${i.id},-1)">−</button>
-                <span class="c-qty">${i.cantidad}</span>
-                <button class="q-btn" onclick="cambiaQty(${i.id},1)">+</button>
-            </div>
+            <div class="c-controls">${controls}</div>
             <div class="c-sub">$${(i.precio * i.cantidad).toFixed(2)}</div>
         </div>`;
     }).join('');
